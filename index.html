@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
 <title>ConvoLink — Chat</title>
 <script src="https://accounts.google.com/gsi/client" async defer></script>
-<script src="/socket.io/socket.io.js"></script>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
@@ -247,7 +246,7 @@
   .input-bar .send-btn:disabled { opacity: .4; cursor: not-allowed; }
   .input-bar .send-btn svg { width: 18px; height: 18px; }
 
-  /* Drawer (same as before — collapsed for brevity) */
+  /* Drawer */
   .drawer-overlay {
     position: fixed; inset: 0;
     background: rgba(15, 20, 35, 0.45);
@@ -363,12 +362,6 @@
   }
   .signed-pill svg { width: 14px; height: 14px; flex-shrink: 0; }
   .signed-pill .sp-email { color: #15803d; font-weight: 500; word-break: break-all; }
-  .gsi-note {
-    display: flex; align-items: flex-start; gap: 6px;
-    font-size: 10.5px; color: var(--muted);
-    line-height: 1.5; margin-top: 10px;
-  }
-  .gsi-note svg { width: 12px; height: 12px; flex-shrink: 0; margin-top: 2px; }
   .drawer-foot {
     padding: 12px 18px 16px;
     border-top: 1px solid var(--line);
@@ -485,7 +478,7 @@
 
 </div>
 
-<!-- ================= DRAWER ================= -->
+<!-- Drawer -->
 <div class="drawer-overlay" id="drawerOverlay"></div>
 <aside class="drawer" id="drawer">
   <div class="drawer-head">
@@ -583,24 +576,42 @@
   <span id="toastMsg">Copied!</span>
 </div>
 
+<!-- Firebase SDK (compat version — works without modules) -->
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-database-compat.js"></script>
+
 <script>
 /* ============================================================
-   ConvoLink — AUTO-CONNECT (server-based)
-   ============================================================
-   जैसे ही कोई ID paste करके Connect दबाता है:
-     → server से request जाती है
-     → दूसरा user auto-connect हो जाता है
-     → दोनों तुरंत chat कर सकते हैं
-     → कोई Accept/Decline नहीं
+   ConvoLink — Firebase-powered chat
+   ✅ Auto-connect
+   ✅ Real-time across devices (without any server)
    ============================================================ */
 
 const GOOGLE_CLIENT_ID = "617375562543-iojpcek0skc33nd3tvi1osn4iguivktd.apps.googleusercontent.com";
 
+/* ---------- Firebase config ---------- */
+const firebaseConfig = {
+  apiKey: "AIzaSyB664ss54zAPuKsXHoXgc47HgIO-I5945w",
+  authDomain: "my-chat-f66d9.firebaseapp.com",
+  databaseURL: "https://my-chat-f66d9-default-rtdb.firebaseio.com",
+  projectId: "my-chat-f66d9",
+  storageBucket: "my-chat-f66d9.firebasestorage.app",
+  messagingSenderId: "362465791785",
+  appId: "1:362465791785:web:9d56b5335f1185ae2bb138",
+  measurementId: "G-D3W0974QLF"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
 let me = null;
 let partnerId = null;
 let partnerName = 'Friend';
-let socket = null;
 let gsiReady = false;
+let presenceRef = null;
+let incomingReqRef = null;
+let messageRef = null;
+let partnerPresenceRef = null;
 
 const ME_KEY = "convolink_me";
 const PARTNER_KEY = "convolink_partner";
@@ -608,10 +619,10 @@ const MSG_KEY = "convolink_messages";
 
 const $ = id => document.getElementById(id);
 
-const messagesEl = $('messages');
-const emptyState = $('emptyState');
-const myIdVal    = $('myIdVal');
-const copyIdBtn  = $('copyIdBtn');
+const messagesEl   = $('messages');
+const emptyState   = $('emptyState');
+const myIdVal      = $('myIdVal');
+const copyIdBtn    = $('copyIdBtn');
 const connectInput = $('connectInput');
 const connectBtn   = $('connectBtn');
 const connectBar   = $('connectBar');
@@ -652,16 +663,14 @@ function esc(s) {
 function initials(name) {
   return (name || '?').trim().split(/\s+/).map(w => w[0]).slice(0,2).join('').toUpperCase();
 }
+function chatKey(a, b) {
+  // Consistent key regardless of order
+  return [a, b].sort().join('__');
+}
 
 /* ---------- Drawer ---------- */
-function openDrawer() {
-  drawer.classList.add('open');
-  drawerOverlay.classList.add('open');
-}
-function closeDrawer() {
-  drawer.classList.remove('open');
-  drawerOverlay.classList.remove('open');
-}
+function openDrawer() { drawer.classList.add('open'); drawerOverlay.classList.add('open'); }
+function closeDrawer() { drawer.classList.remove('open'); drawerOverlay.classList.remove('open'); }
 $('menuBtn').addEventListener('click', openDrawer);
 $('closeDrawer').addEventListener('click', closeDrawer);
 drawerOverlay.addEventListener('click', closeDrawer);
@@ -685,17 +694,19 @@ window.handleGoogleResponse = function(response) {
 };
 
 function applyGoogleUser(u) {
+  const oldId = me ? me.id : null;
   const newId = genId();
+
+  // If old session existed, clean it up
+  if (oldId && presenceRef) presenceRef.remove();
+
   me = { id: newId, name: u.name, email: u.email, picture: u.picture, provider: 'google' };
   localStorage.setItem(ME_KEY, JSON.stringify(me));
   paintMe();
   closeDrawer();
-  // Re-register with new ID
-  if (socket) {
-    socket.emit('register', {
-      chatId: me.id, name: me.name, picture: me.picture
-    });
-  }
+
+  // Register with new ID
+  registerPresence();
 }
 
 function initGoogle() {
@@ -755,119 +766,182 @@ function initMe() {
 }
 
 /* ============================================================
-   SOCKET.IO — connect to server
+   Firebase Presence — register our Chat ID
    ============================================================ */
-function setupSocket() {
-  if (typeof io === 'undefined') {
-    console.warn('Socket.io client not loaded — running in offline mode');
-    return;
-  }
+function registerPresence() {
+  if (presenceRef) presenceRef.remove();
 
-  socket = io({
-    transports: ['websocket', 'polling'],
-    reconnection: true,
-    reconnectionDelay: 1000,
-    reconnectionAttempts: Infinity
+  presenceRef = db.ref('users/' + me.id);
+  presenceRef.set({
+    id: me.id,
+    name: me.name,
+    picture: me.picture,
+    email: me.email,
+    online: true,
+    lastSeen: firebase.database.ServerValue.TIMESTAMP
   });
 
-  socket.on('connect', () => {
-    console.log('🔗 Connected to server:', socket.id);
-    // Register our Chat ID
-    socket.emit('register', {
-      chatId: me.id,
-      name: me.name,
-      picture: me.picture
-    });
+  // On disconnect, mark offline
+  presenceRef.onDisconnect().update({
+    online: false,
+    lastSeen: firebase.database.ServerValue.TIMESTAMP
   });
 
-  /* ---------- AUTO-CONNECT: someone requested us ---------- */
-  socket.on('auto-connect', ({ from, fromName, fromPicture }) => {
+  // Listen for incoming auto-connect requests
+  incomingReqRef = db.ref('incoming/' + me.id);
+  incomingReqRef.on('value', (snap) => {
+    const data = snap.val();
+    if (!data) return;
+
+    // Someone wants to connect with us
+    const { from, fromName, fromPicture } = data;
+    if (!from) return;
+
     console.log('⚡ Auto-connect from', fromName);
+
+    // Accept it: set connection on both sides
     partnerId = from;
     partnerName = fromName || 'Friend';
     localStorage.setItem(PARTNER_KEY, partnerId);
+
+    // Write our side of connection
+    db.ref('connections/' + me.id).set({
+      partnerId: from,
+      partnerName: fromName || 'Friend',
+      at: firebase.database.ServerValue.TIMESTAMP
+    });
+
+    // Clear the incoming request
+    incomingReqRef.remove();
+
+    // Notify the other side we accepted
+    db.ref('accepted/' + from).set({
+      partnerId: me.id,
+      partnerName: me.name,
+      at: firebase.database.ServerValue.TIMESTAMP
+    });
+
     setConnected(true, partnerName);
     addSystem(`⚡ ${partnerName} connected with you`);
     render();
+    listenMessages();
     showToast(`${partnerName} connected!`);
   });
 
-  /* ---------- We requested someone — server confirms ---------- */
-  socket.on('connect-success', ({ to, toName }) => {
-    console.log('✅ Connect success with', to);
-    partnerId = to;
-    partnerName = toName || 'Friend';
+  // Listen for accept confirmations (when WE sent a request)
+  db.ref('accepted/' + me.id).on('value', (snap) => {
+    const data = snap.val();
+    if (!data) return;
+    const { partnerId: pId, partnerName: pName } = data;
+
+    partnerId = pId;
+    partnerName = pName || 'Friend';
     localStorage.setItem(PARTNER_KEY, partnerId);
+
+    // Clear the accepted flag so it doesn't re-fire
+    db.ref('accepted/' + me.id).remove();
+
     setConnected(true, partnerName);
-    addSystem(`Connected with ${partnerName}`);
+    addSystem(`Connected with ${partnerName} 🎉`);
     render();
+    listenMessages();
     showToast('Connected! Start chatting');
-  });
-
-  /* ---------- Target is offline ---------- */
-  socket.on('connect-failed', ({ to, reason }) => {
-    console.log('❌ Connect failed:', reason);
-    addSystem(`Couldn't connect to ${to} — ${reason || 'user offline'}`);
-    render();
-    showToast('User is offline');
-    setConnected(false);
-  });
-
-  /* ---------- Incoming message ---------- */
-  socket.on('new-message', ({ from, fromName, text, time }) => {
-    saveMsg({ from, fromName, text, time: time || timeNow() });
-    render();
-  });
-
-  /* ---------- Partner disconnected ---------- */
-  socket.on('partner-offline', ({ from }) => {
-    if (from === partnerId) {
-      addSystem(`${partnerName} went offline`);
-      render();
-      showToast(`${partnerName} went offline`);
-    }
-  });
-
-  socket.on('disconnect', () => {
-    console.log('🔌 Disconnected from server');
-    setStatus('', 'Reconnecting…');
-  });
-
-  socket.on('connect_error', (err) => {
-    console.warn('Socket connect error:', err.message);
   });
 }
 
 /* ============================================================
-   Send connect request (AUTO-CONNECT — no accept needed)
+   Listen for incoming messages
    ============================================================ */
-connectBtn.addEventListener('click', () => {
+function listenMessages() {
+  if (messageRef) messageRef.off();
+  if (!partnerId) return;
+
+  const key = chatKey(me.id, partnerId);
+  messageRef = db.ref('messages/' + key).limitToLast(200);
+
+  messageRef.on('child_added', (snap) => {
+    const m = snap.val();
+    if (!m) return;
+    // Avoid double-saving our own sent messages
+    const existing = getMsgs();
+    if (existing.some(x => x._key === snap.key)) return;
+
+    saveMsg({
+      _key: snap.key,
+      from: m.from,
+      fromName: m.fromName,
+      text: m.text,
+      time: m.time || timeNow()
+    });
+    render();
+  });
+}
+
+/* ============================================================
+   Auto-connect: write a request to target's incoming
+   ============================================================ */
+connectBtn.addEventListener('click', async () => {
   const id = connectInput.value.trim().toUpperCase();
   if (!id) { showToast('Paste a Chat ID'); return; }
   if (id === me.id) { showToast("That's your own ID!"); return; }
   if (!id.startsWith('CL-')) { showToast('Invalid Chat ID'); return; }
   if (id === partnerId) { showToast('Already connected'); return; }
 
-  if (!socket || !socket.connected) {
-    showToast('Not connected to server. Please wait…');
-    return;
-  }
-
   setStatus('connecting', 'Connecting…');
   connectBtn.disabled = true;
 
-  // Tell server to auto-connect both sides
-  socket.emit('auto-connect', {
-    from: me.id,
-    fromName: me.name,
-    fromPicture: me.picture,
-    to: id
-  });
+  try {
+    // Check if user exists
+    const snap = await db.ref('users/' + id).once('value');
+    const target = snap.val();
 
-  showToast('Connecting…');
+    if (!target) {
+      showToast('User not found — check the ID');
+      setStatus('', 'Not connected');
+      connectBtn.disabled = false;
+      return;
+    }
 
-  // Reset button after 8s if no response
-  setTimeout(() => { connectBtn.disabled = false; }, 8000);
+    // If target is offline
+    if (!target.online) {
+      showToast(`${target.name || 'User'} is offline`);
+      setStatus('', 'Not connected');
+      connectBtn.disabled = false;
+      return;
+    }
+
+    // Write incoming request for target
+    await db.ref('incoming/' + id).set({
+      from: me.id,
+      fromName: me.name,
+      fromPicture: me.picture,
+      at: firebase.database.ServerValue.TIMESTAMP
+    });
+
+    // Also write our side immediately (both sides connected)
+    partnerId = id;
+    partnerName = target.name || 'Friend';
+    localStorage.setItem(PARTNER_KEY, partnerId);
+
+    await db.ref('connections/' + me.id).set({
+      partnerId: id,
+      partnerName: partnerName,
+      at: firebase.database.ServerValue.TIMESTAMP
+    });
+
+    setConnected(true, partnerName);
+    addSystem(`Connected with ${partnerName}`);
+    render();
+    listenMessages();
+    showToast('Connected! Start chatting');
+
+  } catch (e) {
+    console.error(e);
+    showToast('Connection failed');
+    setStatus('', 'Not connected');
+  } finally {
+    connectBtn.disabled = false;
+  }
 });
 
 connectInput.addEventListener('keydown', e => { if (e.key === 'Enter') connectBtn.click(); });
@@ -885,8 +959,7 @@ function setConnected(on, name) {
     connectBar.style.display = 'none';
     connectBtn.disabled = false;
   } else {
-    statusChip.classList.remove('online');
-    statusChip.classList.remove('connecting');
+    statusChip.classList.remove('online', 'connecting');
     statusText.textContent = 'Not connected';
     msgInput.disabled = true;
     sendBtn.disabled = true;
@@ -903,9 +976,23 @@ function setStatus(kind, text) {
 /* ============================================================
    Messages
    ============================================================ */
-function getMsgs() { try { return JSON.parse(localStorage.getItem(MSG_KEY) || '[]'); } catch { return []; } }
-function saveMsg(m) { const a = getMsgs(); a.push(m); localStorage.setItem(MSG_KEY, JSON.stringify(a)); }
-function addSystem(text) { const a = getMsgs(); a.push({ system:true, text, time: timeNow() }); localStorage.setItem(MSG_KEY, JSON.stringify(a)); }
+function getMsgs() {
+  try {
+    const raw = localStorage.getItem(MSG_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch { return []; }
+}
+function saveMsg(m) {
+  const a = getMsgs();
+  a.push(m);
+  if (a.length > 500) a.splice(0, a.length - 500);
+  localStorage.setItem(MSG_KEY, JSON.stringify(a));
+}
+function addSystem(text) {
+  const a = getMsgs();
+  a.push({ system: true, text, time: timeNow() });
+  localStorage.setItem(MSG_KEY, JSON.stringify(a));
+}
 
 function render() {
   const all = getMsgs();
@@ -932,19 +1019,35 @@ function render() {
 }
 
 sendBtn.addEventListener('click', send);
-msgInput.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); } });
+msgInput.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); }
+});
 
-function send() {
+async function send() {
   const text = msgInput.value.trim();
   if (!text || !partnerId) return;
-  const m = { from: me.id, fromName: me.name, text, time: timeNow() };
-  saveMsg(m); render();
+
+  const m = {
+    from: me.id,
+    fromName: me.name,
+    text,
+    time: timeNow(),
+    at: firebase.database.ServerValue.TIMESTAMP
+  };
+
+  // Save locally with a temp key
+  const tempKey = 'local_' + Date.now() + '_' + Math.random();
+  saveMsg({ _key: tempKey, ...m });
+  render();
   msgInput.value = '';
-  if (socket && socket.connected) {
-    socket.emit('send-message', {
-      from: me.id, fromName: me.name,
-      to: partnerId, text, time: m.time
-    });
+
+  // Push to Firebase
+  try {
+    const key = chatKey(me.id, partnerId);
+    await db.ref('messages/' + key).push(m);
+  } catch (e) {
+    console.error('Send failed', e);
+    showToast('Message failed to send');
   }
 }
 
@@ -972,6 +1075,9 @@ $('menuNewChat').addEventListener('click', () => {
 });
 $('menuReset').addEventListener('click', () => {
   if (!confirm('Reset session? Your Chat ID will change.')) return;
+  if (presenceRef) presenceRef.remove();
+  if (incomingReqRef) incomingReqRef.off();
+  if (messageRef) messageRef.off();
   [ME_KEY, PARTNER_KEY, MSG_KEY].forEach(k => localStorage.removeItem(k));
   location.reload();
 });
@@ -980,13 +1086,14 @@ $('menuReset').addEventListener('click', () => {
 window.addEventListener('load', () => {
   initMe();
   paintMe();
-  setupSocket();
   tryInitGoogle();
+  registerPresence();
 
   const savedPartner = localStorage.getItem(PARTNER_KEY);
   if (savedPartner && savedPartner !== me.id) {
     partnerId = savedPartner;
     setConnected(true, 'Friend');
+    listenMessages();
   }
   render();
 });
