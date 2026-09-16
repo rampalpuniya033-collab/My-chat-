@@ -1,0 +1,1196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+<title>ConvoLink — Chat</title>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  :root {
+    --bg: #fdf6ec;
+    --card: #ffffff;
+    --ink: #1f2430;
+    --ink-2: #4a5163;
+    --muted: #8b93a7;
+    --line: #ececf2;
+    --brand: #2b4a8b;
+    --brand-2: #1f3a72;
+    --gold: #e0b100;
+    --gold-soft: #fdf2c9;
+    --blue-soft: #e3eafb;
+    --green: #22c55e;
+    --red: #ef4444;
+    --shadow-sm: 0 1px 2px rgba(16,24,40,.04), 0 1px 3px rgba(16,24,40,.06);
+    --shadow-md: 0 4px 10px rgba(16,24,40,.06), 0 2px 4px rgba(16,24,40,.04);
+    --shadow-lg: 0 20px 60px rgba(16,24,40,.18);
+    --radius: 14px;
+  }
+
+  html, body {
+    height: 100%;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    overflow: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .app {
+    width: 100%;
+    max-width: 480px;
+    height: 100vh;
+    height: 100dvh;
+    margin: 0 auto;
+    background: var(--bg);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* ========== Top bar ========== */
+  .topbar {
+    background: var(--brand);
+    color: #fff;
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+    box-shadow: var(--shadow-md);
+    position: relative;
+    z-index: 3;
+  }
+  .topbar .menu-btn {
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.12);
+    border: none;
+    color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    transition: background .15s;
+  }
+  .topbar .menu-btn:hover { background: rgba(255,255,255,.22); }
+  .topbar .menu-btn svg { width: 16px; height: 16px; }
+  .topbar .title {
+    flex: 1;
+    text-align: center;
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: .2px;
+  }
+  .topbar .avatar-chip {
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.15);
+    border: 1.5px solid rgba(255,255,255,.35);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700;
+    color: #fff;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  .topbar .avatar-chip img { width: 100%; height: 100%; object-fit: cover; }
+
+  /* ========== My ID card ========== */
+  .id-card {
+    margin: 12px 14px 6px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 12px 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: var(--shadow-sm);
+    flex-shrink: 0;
+  }
+  .id-card .label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .8px;
+    color: var(--muted);
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .id-card .val {
+    flex: 1;
+    min-width: 0;
+    font-family: 'SF Mono', 'Menlo', monospace;
+    font-size: 13px;
+    color: var(--ink);
+    background: var(--blue-soft);
+    border-radius: 8px;
+    padding: 7px 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    letter-spacing: .4px;
+    font-weight: 600;
+  }
+  .id-card .copy-btn {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    background: var(--gold);
+    border: none;
+    color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    transition: transform .15s, background .15s;
+    flex-shrink: 0;
+  }
+  .id-card .copy-btn:hover { transform: translateY(-1px); }
+  .id-card .copy-btn.done { background: var(--green); }
+  .id-card .copy-btn svg { width: 16px; height: 16px; }
+
+  /* ========== Status chip ========== */
+  .status-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 4px 14px 8px;
+    flex-shrink: 0;
+  }
+  .status-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 5px 12px;
+    font-size: 11.5px;
+    font-weight: 600;
+    color: var(--ink-2);
+    box-shadow: var(--shadow-sm);
+  }
+  .status-chip .dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--red);
+    transition: background .3s;
+  }
+  .status-chip.online .dot { background: var(--green); box-shadow: 0 0 0 3px rgba(34,197,94,.15); }
+
+  /* ========== Messages ========== */
+  .messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 6px 14px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    scroll-behavior: smooth;
+  }
+  .messages::-webkit-scrollbar { width: 5px; }
+  .messages::-webkit-scrollbar-thumb { background: #d6d9e3; border-radius: 8px; }
+
+  .empty {
+    margin: auto;
+    text-align: center;
+    max-width: 260px;
+    color: var(--muted);
+    padding: 20px 10px;
+  }
+  .empty .icon {
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    background: var(--blue-soft);
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 14px;
+    color: var(--brand);
+  }
+  .empty .icon svg { width: 26px; height: 26px; }
+  .empty h3 { font-size: 14px; color: var(--ink); font-weight: 700; margin-bottom: 6px; }
+  .empty p { font-size: 12.5px; line-height: 1.55; }
+
+  .msg {
+    max-width: 78%;
+    padding: 9px 13px;
+    border-radius: 14px;
+    font-size: 13.5px;
+    line-height: 1.45;
+    word-wrap: break-word;
+    animation: pop .22s ease;
+    position: relative;
+    box-shadow: var(--shadow-sm);
+  }
+  @keyframes pop {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .msg .time {
+    font-size: 10px;
+    opacity: .65;
+    margin-top: 4px;
+    display: block;
+    text-align: right;
+    font-weight: 500;
+  }
+  .msg.mine {
+    align-self: flex-end;
+    background: var(--brand);
+    color: #fff;
+    border-bottom-right-radius: 4px;
+  }
+  .msg.mine .time { color: rgba(255,255,255,.75); }
+  .msg.theirs {
+    align-self: flex-start;
+    background: var(--card);
+    color: var(--ink);
+    border: 1px solid var(--line);
+    border-bottom-left-radius: 4px;
+  }
+  .msg.system {
+    align-self: center;
+    background: #eef1f7;
+    color: var(--ink-2);
+    font-size: 11.5px;
+    font-weight: 500;
+    padding: 6px 14px;
+    border-radius: 20px;
+    max-width: 88%;
+    text-align: center;
+    box-shadow: none;
+  }
+
+  /* ========== Connect bar ========== */
+  .connect-bar {
+    padding: 12px 14px;
+    background: var(--card);
+    border-top: 1px solid var(--line);
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+  .connect-bar input {
+    flex: 1;
+    min-width: 0;
+    padding: 12px 14px;
+    background: #f5f6fa;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    color: var(--ink);
+    font-size: 13.5px;
+    outline: none;
+    font-family: 'SF Mono', 'Menlo', monospace;
+    letter-spacing: .5px;
+    font-weight: 600;
+    transition: border-color .15s, background .15s;
+  }
+  .connect-bar input::placeholder {
+    color: var(--muted);
+    font-family: inherit;
+    letter-spacing: 0;
+    font-weight: 400;
+  }
+  .connect-bar input:focus { border-color: var(--brand); background: #fff; }
+  .connect-bar .btn {
+    padding: 0 20px;
+    background: var(--brand);
+    border: none;
+    border-radius: 12px;
+    color: #fff;
+    font-size: 13.5px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex; align-items: center; gap: 7px;
+    transition: transform .15s, background .15s;
+    white-space: nowrap;
+  }
+  .connect-bar .btn:hover { background: var(--brand-2); transform: translateY(-1px); }
+  .connect-bar .btn svg { width: 15px; height: 15px; }
+
+  /* ========== Message input ========== */
+  .input-bar {
+    padding: 12px 14px calc(12px + env(safe-area-inset-bottom, 0px));
+    background: var(--card);
+    border-top: 1px solid var(--line);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+  .input-bar input {
+    flex: 1;
+    min-width: 0;
+    padding: 12px 16px;
+    background: #f5f6fa;
+    border: 1px solid var(--line);
+    border-radius: 22px;
+    color: var(--ink);
+    font-size: 13.5px;
+    outline: none;
+    transition: border-color .15s, background .15s;
+  }
+  .input-bar input::placeholder { color: var(--muted); }
+  .input-bar input:focus { border-color: var(--brand); background: #fff; }
+  .input-bar input:disabled { opacity: .55; cursor: not-allowed; }
+
+  .input-bar .send-btn {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background: var(--brand);
+    border: none;
+    color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    transition: transform .15s, background .15s, opacity .15s;
+    flex-shrink: 0;
+  }
+  .input-bar .send-btn:hover:not(:disabled) { background: var(--brand-2); transform: translateY(-1px); }
+  .input-bar .send-btn:disabled { opacity: .4; cursor: not-allowed; }
+  .input-bar .send-btn svg { width: 18px; height: 18px; }
+
+  /* ===================================================
+     DRAWER MENU
+     =================================================== */
+  .drawer-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 20, 35, 0.45);
+    backdrop-filter: blur(2px);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity .25s ease, visibility .25s;
+    z-index: 40;
+  }
+  .drawer-overlay.open { opacity: 1; visibility: visible; }
+
+  .drawer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 82%;
+    max-width: 320px;
+    background: var(--card);
+    box-shadow: var(--shadow-lg);
+    transform: translateX(-105%);
+    transition: transform .3s cubic-bezier(.2,.8,.2,1);
+    z-index: 50;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .drawer.open { transform: translateX(0); }
+
+  /* Drawer header */
+  .drawer-head {
+    background: var(--brand);
+    color: #fff;
+    padding: 22px 18px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    flex-shrink: 0;
+    position: relative;
+  }
+  .drawer-head .close-btn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.14);
+    border: none;
+    color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    transition: background .15s;
+  }
+  .drawer-head .close-btn:hover { background: rgba(255,255,255,.26); }
+  .drawer-head .close-btn svg { width: 15px; height: 15px; }
+
+  .drawer-head .avatar-lg {
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.18);
+    border: 2px solid rgba(255,255,255,.4);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; font-weight: 700;
+    color: #fff;
+    overflow: hidden;
+  }
+  .drawer-head .avatar-lg img { width: 100%; height: 100%; object-fit: cover; }
+
+  .drawer-head .who .name {
+    font-size: 16px;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.25;
+  }
+  .drawer-head .who .email {
+    font-size: 12px;
+    color: rgba(255,255,255,.78);
+    margin-top: 3px;
+    word-break: break-all;
+  }
+
+  /* Drawer body */
+  .drawer-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 14px 12px 20px;
+  }
+  .drawer-body::-webkit-scrollbar { width: 4px; }
+  .drawer-body::-webkit-scrollbar-thumb { background: #d6d9e3; border-radius: 8px; }
+
+  .drawer-section-label {
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 12px 10px 8px;
+  }
+
+  .drawer-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 12px;
+    border-radius: 10px;
+    font-size: 14px;
+    color: var(--ink);
+    cursor: pointer;
+    transition: background .15s;
+    border: none;
+    background: transparent;
+    width: 100%;
+    text-align: left;
+    font-family: inherit;
+    font-weight: 500;
+  }
+  .drawer-item:hover { background: #f5f6fa; }
+  .drawer-item .ic {
+    width: 34px; height: 34px;
+    border-radius: 9px;
+    background: var(--blue-soft);
+    color: var(--brand);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .drawer-item .ic svg { width: 17px; height: 17px; }
+  .drawer-item .txt { flex: 1; min-width: 0; }
+  .drawer-item .txt small {
+    display: block;
+    font-size: 11.5px;
+    color: var(--muted);
+    font-weight: 500;
+    margin-top: 1px;
+  }
+  .drawer-item.danger .ic { background: #fde8e8; color: var(--red); }
+  .drawer-item.danger { color: var(--red); }
+
+  .drawer-divider {
+    height: 1px;
+    background: var(--line);
+    margin: 8px 10px;
+  }
+
+  /* ===== Google Sign-In card ===== */
+  .google-card {
+    margin: 6px 6px 4px;
+    background: linear-gradient(180deg, #ffffff 0%, #f7f9ff 100%);
+    border: 1.5px solid #e3e8f5;
+    border-radius: 14px;
+    padding: 14px;
+    box-shadow: 0 2px 8px rgba(43,74,139,.06);
+  }
+  .google-card .gc-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12.5px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 4px;
+  }
+  .google-card .gc-title svg { width: 16px; height: 16px; }
+  .google-card .gc-sub {
+    font-size: 11.5px;
+    color: var(--muted);
+    line-height: 1.5;
+    margin-bottom: 12px;
+  }
+  .gsi-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 12px 14px;
+    background: #fff;
+    border: 1.5px solid #dadce0;
+    border-radius: 10px;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: #3c4043;
+    cursor: pointer;
+    transition: background .15s, border-color .15s, transform .1s, box-shadow .15s;
+    font-family: inherit;
+    box-shadow: 0 1px 2px rgba(60,64,67,.08);
+    position: relative;
+    overflow: hidden;
+  }
+  .gsi-btn:hover {
+    background: #f8f9fa;
+    border-color: #c6cbd1;
+    box-shadow: 0 2px 6px rgba(60,64,67,.12);
+  }
+  .gsi-btn:active { transform: translateY(1px); }
+  .gsi-btn svg { width: 18px; height: 18px; flex-shrink: 0; }
+
+  /* When Google renders its own button, we hide ours and use theirs */
+  .gsi-btn.has-real-gsi { padding: 0; border: none; background: transparent; box-shadow: none; height: 44px; }
+  .gsi-btn.has-real-gsi > *:not(.real-gsi-mount) { display: none; }
+  .real-gsi-mount {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.001;
+  }
+  .real-gsi-mount > div { width: 100% !important; }
+
+  .gsi-note {
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    font-size: 10.5px;
+    color: var(--muted);
+    line-height: 1.5;
+    margin-top: 10px;
+  }
+  .gsi-note svg { width: 12px; height: 12px; flex-shrink: 0; margin-top: 2px; }
+
+  /* Signed-in pill */
+  .signed-pill {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 8px;
+    padding: 8px 12px;
+    background: #e7f8ef;
+    border: 1px solid #bfe9d2;
+    border-radius: 10px;
+    font-size: 11.5px;
+    font-weight: 600;
+    color: #146c43;
+  }
+  .signed-pill svg { width: 14px; height: 14px; flex-shrink: 0; }
+  .signed-pill .sp-email { color: #15803d; font-weight: 500; word-break: break-all; }
+
+  /* Drawer footer */
+  .drawer-foot {
+    padding: 12px 18px 16px;
+    border-top: 1px solid var(--line);
+    font-size: 10.5px;
+    color: var(--muted);
+    text-align: center;
+    background: #fafbfd;
+    flex-shrink: 0;
+  }
+  .drawer-foot b { color: var(--ink-2); font-weight: 700; }
+
+  /* ========== Toast ========== */
+  .toast {
+    position: fixed;
+    left: 50%;
+    bottom: 24px;
+    transform: translateX(-50%) translateY(120px);
+    background: #1f2430;
+    color: #fff;
+    padding: 10px 18px;
+    border-radius: 10px;
+    font-size: 12.5px;
+    font-weight: 600;
+    box-shadow: 0 10px 30px rgba(0,0,0,.25);
+    display: flex; align-items: center; gap: 8px;
+    opacity: 0;
+    transition: transform .3s cubic-bezier(.2,.8,.2,1), opacity .3s;
+    z-index: 999;
+    pointer-events: none;
+    max-width: 90vw;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+  .toast svg { width: 15px; height: 15px; color: var(--green); flex-shrink: 0; }
+
+  /* ========== Desktop ========== */
+  @media (min-width: 720px) {
+    body {
+      background: #f4ede1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .app {
+      height: 90vh;
+      max-height: 780px;
+      border-radius: 22px;
+      box-shadow: 0 20px 60px rgba(16,24,40,.12), 0 6px 20px rgba(16,24,40,.06);
+      border: 1px solid var(--line);
+      overflow: hidden;
+    }
+    .drawer {
+      position: fixed;
+      height: 90vh;
+      max-height: 780px;
+      border-radius: 22px 0 0 22px;
+      top: 50%;
+      transform: translate(-105%, -50%);
+    }
+    .drawer.open { transform: translate(0, -50%); }
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ===== Top bar ===== -->
+  <header class="topbar">
+    <button class="menu-btn" id="menuBtn" title="Menu">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
+        <line x1="3" y1="6" x2="21" y2="6"/>
+        <line x1="3" y1="12" x2="21" y2="12"/>
+        <line x1="3" y1="18" x2="21" y2="18"/>
+      </svg>
+    </button>
+    <div class="title">ConvoLink</div>
+    <div class="avatar-chip" id="topAvatar">?</div>
+  </header>
+
+  <!-- ===== My ID card ===== -->
+  <div class="id-card">
+    <span class="label">Your ID</span>
+    <span class="val" id="myIdVal">—</span>
+    <button class="copy-btn" id="copyIdBtn" title="Copy ID">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+      </svg>
+    </button>
+  </div>
+
+  <!-- ===== Status chip ===== -->
+  <div class="status-row">
+    <div class="status-chip" id="statusChip">
+      <span class="dot"></span>
+      <span id="statusText">Not connected</span>
+    </div>
+  </div>
+
+  <!-- ===== Messages ===== -->
+  <main class="messages" id="messages">
+    <div class="empty" id="emptyState">
+      <div class="icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 11.5C21 16.1944 16.9706 20 12 20C10.663 20 9.396 19.7444 8.253 19.283L4 21L5.085 17.025C3.774 15.526 3 13.598 3 11.5C3 6.80558 7.02944 3 12 3C16.9706 3 21 6.80558 21 11.5Z"/>
+        </svg>
+      </div>
+      <h3>No connection yet</h3>
+      <p>Copy your Chat ID above and share it with a friend. When they paste it below, you'll be connected.</p>
+    </div>
+  </main>
+
+  <!-- ===== Connect bar ===== -->
+  <div class="connect-bar" id="connectBar">
+    <input type="text" id="connectInput" placeholder="Paste friend's Chat ID…" autocomplete="off" spellcheck="false" />
+    <button class="btn" id="connectBtn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+        <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+      </svg>
+      Connect
+    </button>
+  </div>
+
+  <!-- ===== Message input ===== -->
+  <div class="input-bar">
+    <input type="text" id="msgInput" placeholder="Type a message…" disabled autocomplete="off" />
+    <button class="send-btn" id="sendBtn" disabled>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="22" y1="2" x2="11" y2="13"/>
+        <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+      </svg>
+    </button>
+  </div>
+
+</div>
+
+<!-- ================= DRAWER ================= -->
+<div class="drawer-overlay" id="drawerOverlay"></div>
+<aside class="drawer" id="drawer">
+  <div class="drawer-head">
+    <button class="close-btn" id="closeDrawer" title="Close">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round">
+        <line x1="18" y1="6" x2="6" y2="18"/>
+        <line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </button>
+    <div class="avatar-lg" id="drawerAvatar">?</div>
+    <div class="who">
+      <div class="name" id="drawerName">Guest User</div>
+      <div class="email" id="drawerEmail">Not signed in</div>
+    </div>
+  </div>
+
+  <div class="drawer-body">
+
+    <div class="drawer-section-label">Account</div>
+
+    <!-- Google Sign-In Card -->
+    <div class="google-card" id="googleCard">
+      <div class="gc-title">
+        <svg viewBox="0 0 48 48">
+          <path fill="#FFC107" d="M43.611 20.083H42V20H24v8h11.303c-1.649 4.657-6.08 8-11.303 8-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 12.955 4 4 12.955 4 24s8.955 20 20 20 20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z"/>
+          <path fill="#FF3D00" d="M6.306 14.691l6.571 4.819C14.655 15.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 16.318 4 9.656 8.337 6.306 14.691z"/>
+          <path fill="#4CAF50" d="M24 44c5.166 0 9.86-1.977 13.409-5.192l-6.19-5.238A11.91 11.91 0 0 1 24 36c-5.202 0-9.619-3.317-11.283-7.946l-6.522 5.025C9.505 39.556 16.227 44 24 44z"/>
+          <path fill="#1976D2" d="M43.611 20.083H42V20H24v8h11.303a12.04 12.04 0 0 1-4.087 5.571l.003-.002 6.19 5.238C36.971 39.205 44 34 44 24c0-1.341-.138-2.65-.389-3.917z"/>
+        </svg>
+        Sign in with Google
+      </div>
+      <div class="gc-sub" id="gcSub">Get a verified Chat ID linked to your Google account so friends can always find you.</div>
+
+      <button class="gsi-btn" id="googleSignInBtn">
+        <!-- Our styled UI (visible when real GSI hasn't loaded) -->
+        <svg class="our-g" viewBox="0 0 48 48">
+          <path fill="#FFC107" d="M43.611 20.083H42V20H24v8h11.303c-1.649 4.657-6.08 8-11.303 8-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 12.955 4 4 12.955 4 24s8.955 20 20 20 20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z"/>
+          <path fill="#FF3D00" d="M6.306 14.691l6.571 4.819C14.655 15.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 16.318 4 9.656 8.337 6.306 14.691z"/>
+          <path fill="#4CAF50" d="M24 44c5.166 0 9.86-1.977 13.409-5.192l-6.19-5.238A11.91 11.91 0 0 1 24 36c-5.202 0-9.619-3.317-11.283-7.946l-6.522 5.025C9.505 39.556 16.227 44 24 44z"/>
+          <path fill="#1976D2" d="M43.611 20.083H42V20H24v8h11.303a12.04 12.04 0 0 1-4.087 5.571l.003-.002 6.19 5.238C36.971 39.205 44 34 44 24c0-1.341-.138-2.65-.389-3.917z"/>
+        </svg>
+        <span class="our-label">Continue with Google</span>
+
+        <!-- Real Google button mounts here (invisible overlay) -->
+        <span class="real-gsi-mount" id="realGsiMount"></span>
+      </button>
+
+      <!-- Signed-in confirmation pill -->
+      <div class="signed-pill hidden" id="signedPill" style="display:none;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+        <span>Signed in · <span class="sp-email" id="signedEmail">—</span></span>
+      </div>
+
+      <div class="gsi-note" id="gsiNote">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="16" x2="12" y2="12"/>
+          <line x1="12" y1="8" x2="12.01" y2="8"/>
+        </svg>
+        <span>Your email is only used to create your Chat ID. It is never shared with anyone.</span>
+      </div>
+    </div>
+
+    <div class="drawer-divider"></div>
+
+    <div class="drawer-section-label">Chat</div>
+
+    <button class="drawer-item" id="menuCopyId">
+      <span class="ic">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+        </svg>
+      </span>
+      <span class="txt">Copy my Chat ID<small>Share with a friend</small></span>
+    </button>
+
+    <button class="drawer-item" id="menuNewChat">
+      <span class="ic">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 5v14M5 12h14"/>
+        </svg>
+      </span>
+      <span class="txt">New connection<small>Paste a Chat ID</small></span>
+    </button>
+
+    <div class="drawer-divider"></div>
+
+    <div class="drawer-section-label">More</div>
+
+    <button class="drawer-item" id="menuAbout">
+      <span class="ic">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="16" x2="12" y2="12"/>
+          <line x1="12" y1="8" x2="12.01" y2="8"/>
+        </svg>
+      </span>
+      <span class="txt">About ConvoLink<small>Version 1.0</small></span>
+    </button>
+
+    <button class="drawer-item danger" id="menuReset">
+      <span class="ic">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+          <polyline points="16 17 21 12 16 7"/>
+          <line x1="21" y1="12" x2="9" y2="12"/>
+        </svg>
+      </span>
+      <span class="txt">Reset session<small>Get a new Chat ID</small></span>
+    </button>
+
+  </div>
+
+  <div class="drawer-foot">
+    Made with <b>ConvoLink</b> · v1.0
+  </div>
+</aside>
+
+<!-- Toast -->
+<div class="toast" id="toast">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+    <polyline points="20 6 9 17 4 12"/>
+  </svg>
+  <span id="toastMsg">Copied!</span>
+</div>
+
+<script>
+/* ============================================================
+   ConvoLink — Real Google Sign-In
+   Client ID configured ✅
+   ============================================================ */
+
+const GOOGLE_CLIENT_ID = "617375562543-iojpcek0skc33nd3tvi1osn4iguivktd.apps.googleusercontent.com";
+
+let me = null;
+let partnerId = null;
+let channel = null;
+let gsiReady = false;
+const ME_KEY = "convolink_me";
+const PARTNER_KEY = "convolink_partner";
+const MSG_KEY = "convolink_messages";
+
+const $ = id => document.getElementById(id);
+const messagesEl  = $('messages');
+const emptyState  = $('emptyState');
+const myIdVal     = $('myIdVal');
+const copyIdBtn   = $('copyIdBtn');
+const connectInput= $('connectInput');
+const connectBtn  = $('connectBtn');
+const connectBar  = $('connectBar');
+const msgInput    = $('msgInput');
+const sendBtn     = $('sendBtn');
+const statusChip  = $('statusChip');
+const statusText  = $('statusText');
+const topAvatar   = $('topAvatar');
+const drawerAvatar= $('drawerAvatar');
+const drawerName  = $('drawerName');
+const drawerEmail = $('drawerEmail');
+const drawer      = $('drawer');
+const drawerOverlay = $('drawerOverlay');
+const signedPill  = $('signedPill');
+const signedEmail = $('signedEmail');
+const googleSignInBtn = $('googleSignInBtn');
+const realGsiMount = $('realGsiMount');
+
+/* ---------- Utils ---------- */
+function genId() {
+  const c = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  const p = () => Array.from({length:4}, () => c[Math.floor(Math.random()*c.length)]).join('');
+  return `CL-${p()}-${p()}`;
+}
+function showToast(msg) {
+  const t = $('toast');
+  $('toastMsg').textContent = msg;
+  t.classList.add('show');
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.classList.remove('show'), 2400);
+}
+function timeNow() {
+  return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+}
+function esc(s) {
+  return String(s).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+}
+function initials(name) {
+  return (name || '?').trim().split(/\s+/).map(w => w[0]).slice(0,2).join('').toUpperCase();
+}
+
+/* ---------- Drawer ---------- */
+function openDrawer() {
+  drawer.classList.add('open');
+  drawerOverlay.classList.add('open');
+}
+function closeDrawer() {
+  drawer.classList.remove('open');
+  drawerOverlay.classList.remove('open');
+}
+$('menuBtn').addEventListener('click', openDrawer);
+$('closeDrawer').addEventListener('click', closeDrawer);
+drawerOverlay.addEventListener('click', closeDrawer);
+
+/* ============================================================
+   Google Sign-In (REAL)
+   ============================================================ */
+window.handleGoogleResponse = function(response) {
+  try {
+    const payload = JSON.parse(atob(response.credential.split('.')[1]));
+    applyGoogleUser({
+      name: payload.name || 'Google User',
+      email: payload.email || '',
+      picture: payload.picture || null
+    });
+    showToast('Signed in as ' + (payload.name || payload.email));
+  } catch (e) {
+    console.error('Google decode error:', e);
+    showToast('Google sign-in failed');
+  }
+};
+
+function applyGoogleUser(u) {
+  // Give a fresh Chat ID when signing in with Google
+  const newId = genId();
+  me = {
+    id: newId,
+    name: u.name,
+    email: u.email,
+    picture: u.picture,
+    provider: 'google'
+  };
+  localStorage.setItem(ME_KEY, JSON.stringify(me));
+  paintMe();
+  closeDrawer();
+}
+
+function initGoogle() {
+  if (!window.google || !google.accounts || !google.accounts.id) return false;
+
+  google.accounts.id.initialize({
+    client_id: GOOGLE_CLIENT_ID,
+    callback: window.handleGoogleResponse,
+    auto_select: false,
+    cancel_on_tap_outside: true,
+    ux_mode: 'popup'
+  });
+
+  // Render Google's own button invisible inside our styled button
+  // so the entire card remains clickable via Google's real flow.
+  google.accounts.id.renderButton(realGsiMount, {
+    type: 'standard',
+    theme: 'outline',
+    size: 'large',
+    text: 'continue_with',
+    shape: 'rectangular',
+    logo_alignment: 'left',
+    width: 280
+  });
+
+  // Mark that real Google flow is active
+  gsiReady = true;
+  googleSignInBtn.classList.add('has-real-gsi');
+  return true;
+}
+
+// Try to init as soon as the GSI script loads
+function tryInitGoogle() {
+  if (initGoogle()) return;
+  // retry a few times (GSI script may still be loading)
+  let tries = 0;
+  const iv = setInterval(() => {
+    tries++;
+    if (initGoogle() || tries > 20) clearInterval(iv);
+  }, 250);
+}
+tryInitGoogle();
+
+/* ---------- Fallback: if Google script hasn't loaded after 5s ---------- */
+setTimeout(() => {
+  if (!gsiReady) {
+    // Show a helpful toast but keep our styled button visible
+    console.warn('Google Identity Services not loaded yet.');
+  }
+}, 5000);
+
+/* ---------- Paint user info ---------- */
+function paintMe() {
+  myIdVal.textContent = me.id;
+  const ini = initials(me.name);
+
+  if (me.picture) {
+    topAvatar.innerHTML    = `<img src="${me.picture}" alt="">`;
+    drawerAvatar.innerHTML = `<img src="${me.picture}" alt="">`;
+  } else {
+    topAvatar.textContent    = ini;
+    drawerAvatar.textContent = ini;
+  }
+  drawerName.textContent  = me.name;
+  drawerEmail.textContent = me.email || 'Not signed in';
+
+  // Show "signed in" pill if it's a real Google account
+  if (me.provider === 'google' && me.email) {
+    signedPill.style.display = 'flex';
+    signedEmail.textContent = me.email;
+  } else {
+    signedPill.style.display = 'none';
+  }
+}
+
+/* ---------- Auto-login as guest ---------- */
+function initMe() {
+  const saved = localStorage.getItem(ME_KEY);
+  if (saved) { try { me = JSON.parse(saved); return; } catch {} }
+  me = { id: genId(), name: 'Guest User', email: null, picture: null, provider: 'guest' };
+  localStorage.setItem(ME_KEY, JSON.stringify(me));
+}
+
+/* ---------- Realtime channel (same-browser demo) ---------- */
+function setupChannel() {
+  try {
+    channel = new BroadcastChannel('convolink');
+    channel.onmessage = e => {
+      const d = e.data;
+      if (!d || d.to !== me.id) return;
+      if (d.type === 'connect') {
+        partnerId = d.from;
+        localStorage.setItem(PARTNER_KEY, partnerId);
+        setConnected(true, d.fromName || 'Friend');
+        addSystem(`Connected with ${d.fromName || 'Friend'}`);
+        channel.postMessage({ type:'connect-ack', from: me.id, fromName: me.name, to: d.from });
+        render();
+      } else if (d.type === 'connect-ack') {
+        partnerId = d.from;
+        localStorage.setItem(PARTNER_KEY, partnerId);
+        setConnected(true, d.fromName || 'Friend');
+        addSystem(`${d.fromName || 'Friend'} connected`);
+        render();
+      } else if (d.type === 'message') {
+        saveMsg({ from: d.from, fromName: d.fromName, text: d.text, time: d.time });
+        render();
+      }
+    };
+  } catch(e) { console.warn(e); }
+}
+
+/* ---------- Connect ---------- */
+connectBtn.addEventListener('click', () => {
+  const id = connectInput.value.trim().toUpperCase();
+  if (!id) { showToast('Paste a Chat ID'); return; }
+  if (id === me.id) { showToast("That's your own ID!"); return; }
+  if (!id.startsWith('CL-')) { showToast('Invalid Chat ID'); return; }
+  partnerId = id;
+  localStorage.setItem(PARTNER_KEY, id);
+  setConnected(true, 'Connecting…');
+  addSystem(`Request sent to ${id}`);
+  if (channel) channel.postMessage({ type:'connect', from: me.id, fromName: me.name, to: id });
+  showToast('Connection request sent');
+});
+connectInput.addEventListener('keydown', e => { if (e.key === 'Enter') connectBtn.click(); });
+
+function setConnected(on, name) {
+  if (on) {
+    statusChip.classList.add('online');
+    statusText.textContent = 'Connected' + (name ? ' · ' + name : '');
+    msgInput.disabled = false;
+    sendBtn.disabled = false;
+    connectBar.style.display = 'none';
+  } else {
+    statusChip.classList.remove('online');
+    statusText.textContent = 'Not connected';
+    msgInput.disabled = true;
+    sendBtn.disabled = true;
+    connectBar.style.display = 'flex';
+  }
+}
+
+/* ---------- Messages ---------- */
+function getMsgs() { try { return JSON.parse(localStorage.getItem(MSG_KEY) || '[]'); } catch { return []; } }
+function saveMsg(m) { const a = getMsgs(); a.push(m); localStorage.setItem(MSG_KEY, JSON.stringify(a)); }
+function addSystem(text) { const a = getMsgs(); a.push({ system:true, text, time: timeNow() }); localStorage.setItem(MSG_KEY, JSON.stringify(a)); }
+
+function render() {
+  const all = getMsgs();
+  messagesEl.innerHTML = '';
+  if (!all.length) {
+    messagesEl.appendChild(emptyState);
+    emptyState.style.display = 'block';
+    return;
+  }
+  emptyState.style.display = 'none';
+  all.forEach(m => {
+    const div = document.createElement('div');
+    if (m.system) {
+      div.className = 'msg system';
+      div.textContent = m.text;
+    } else {
+      const mine = m.from === me.id;
+      div.className = 'msg ' + (mine ? 'mine' : 'theirs');
+      div.innerHTML = `${esc(m.text)}<span class="time">${m.time || ''}</span>`;
+    }
+    messagesEl.appendChild(div);
+  });
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+}
+
+sendBtn.addEventListener('click', send);
+msgInput.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); } });
+
+function send() {
+  const text = msgInput.value.trim();
+  if (!text || !partnerId) return;
+  const m = { from: me.id, fromName: me.name, text, time: timeNow() };
+  saveMsg(m); render();
+  msgInput.value = '';
+  if (channel) channel.postMessage({ type:'message', from: me.id, fromName: me.name, to: partnerId, text, time: m.time });
+}
+
+/* ---------- Copy ID ---------- */
+async function copyMyId() {
+  try { await navigator.clipboard.writeText(me.id); }
+  catch {
+    const ta = document.createElement('textarea');
+    ta.value = me.id; document.body.appendChild(ta);
+    ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+  }
+  showToast('Chat ID copied');
+}
+copyIdBtn.addEventListener('click', async () => {
+  await copyMyId();
+  copyIdBtn.classList.add('done');
+  setTimeout(() => copyIdBtn.classList.remove('done'), 1500);
+});
+
+/* ---------- Drawer actions ---------- */
+$('menuCopyId').addEventListener('click', async () => { await copyMyId(); closeDrawer(); });
+$('menuNewChat').addEventListener('click', () => {
+  closeDrawer();
+  setTimeout(() => connectInput.focus(), 250);
+});
+$('menuAbout').addEventListener('click', () => {
+  alert('ConvoLink v1.0\n\nA private, ID-based chat app.\nShare your Chat ID with a friend to connect.');
+});
+$('menuReset').addEventListener('click', () => {
+  if (!confirm('Reset session? Your Chat ID will change.')) return;
+  if (channel) channel.close();
+  [ME_KEY, PARTNER_KEY, MSG_KEY].forEach(k => localStorage.removeItem(k));
+  location.reload();
+});
+
+/* ---------- Boot ---------- */
+window.addEventListener('load', () => {
+  initMe();
+  paintMe();
+  setupChannel();
+  tryInitGoogle(); // ensure Google renders when GSI becomes ready
+
+  const savedPartner = localStorage.getItem(PARTNER_KEY);
+  if (savedPartner && savedPartner !== me.id) {
+    partnerId = savedPartner;
+    setConnected(true, 'Friend');
+  }
+  render();
+});
+</script>
+</body>
+</html>
