@@ -619,8 +619,10 @@
   .call-head .call-peer-avatar img{width:100%;height:100%;object-fit:cover}
   .call-head .call-peer-info{min-width:0;flex:1}.call-peer-name{font-weight:700;font-size:14px}.call-peer-status{font-size:11px;opacity:.7;margin-top:2px}
   .call-stage{position:relative;flex:1;min-height:0;background:#05070c;display:flex;align-items:center;justify-content:center;overflow:hidden}
-  #remoteVideo{width:100%;height:100%;object-fit:cover;background:#05070c;display:block}
-  #localVideo{position:absolute;right:16px;bottom:16px;width:180px;max-width:32%;aspect-ratio:16/10;object-fit:cover;background:#18202d;border:2px solid rgba(255,255,255,.75);border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,.4);display:none;z-index:2}
+  #remoteVideo{width:100%;height:100%;object-fit:cover;background:#05070c;display:block;cursor:pointer}
+  #localVideo{position:absolute;right:16px;bottom:16px;width:180px;max-width:32%;aspect-ratio:16/10;object-fit:cover;background:#18202d;border:2px solid rgba(255,255,255,.75);border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,.4);display:none;z-index:2;cursor:pointer;transition:all .25s ease}
+  .call-stage.swap-local #remoteVideo{position:absolute;right:16px;bottom:16px;width:180px;max-width:32%;height:auto;aspect-ratio:16/10;border:2px solid rgba(255,255,255,.75);border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,.4);z-index:2;transition:all .25s ease}
+  .call-stage.swap-local #localVideo{position:relative;inset:auto;width:100%;max-width:none;height:100%;aspect-ratio:auto;border:0;border-radius:0;box-shadow:none;z-index:1}
   .call-audio-avatar{position:absolute;width:120px;height:120px;border-radius:50%;display:grid;place-items:center;background:#2b4a8b;color:#fff;font-size:36px;font-weight:800;box-shadow:0 0 0 14px rgba(43,74,139,.16)}
   .call-audio-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%}
   .call-status-center{position:absolute;left:20px;right:20px;bottom:18px;text-align:center;color:#fff;font-size:12px;opacity:.8;text-shadow:0 1px 4px #000}
@@ -631,7 +633,7 @@
   .incoming-call-avatar{width:76px;height:76px;border-radius:50%;background:var(--brand);color:#fff;display:grid;place-items:center;margin:0 auto 14px;font-size:25px;font-weight:800;overflow:hidden}
   .incoming-call-avatar img{width:100%;height:100%;object-fit:cover}.incoming-call-card h3{font-size:19px;margin-bottom:5px}.incoming-call-card p{font-size:12.5px;color:var(--muted);margin-bottom:20px}
   .incoming-actions{display:flex;gap:10px}.incoming-actions button{flex:1;border:0;border-radius:13px;padding:13px;font-weight:700;cursor:pointer}.incoming-reject{background:var(--red-soft);color:var(--red)}.incoming-accept{background:var(--brand);color:#fff}
-  @media(max-width:600px){.call-overlay{padding:0}.call-shell{width:100%;height:100%;border-radius:0}.call-head{height:60px}.call-controls{padding-bottom:calc(16px + env(safe-area-inset-bottom,0px))}#localVideo{width:125px;max-width:38%;right:10px;bottom:10px}}
+  @media(max-width:600px){.call-overlay{padding:0}.call-shell{width:100%;height:100%;border-radius:0}.call-head{height:60px}.call-controls{padding-bottom:calc(16px + env(safe-area-inset-bottom,0px))}#localVideo{width:125px;max-width:38%;right:10px;bottom:10px}.call-stage.swap-local #remoteVideo{width:125px;max-width:38%;right:10px;bottom:10px}.call-stage.swap-local #localVideo{width:100%;max-width:none;height:100%}}
 
   /* ===== DESKTOP FULL WIDTH FIX ===== */
   @media (min-width: 720px) {
@@ -1239,6 +1241,7 @@ const recordingBar = $('recordingBar'), recTimer = $('recTimer'), recCancel = $(
 const inputBarMain = $('inputBarMain');
 const callModal = $('callModal'), incomingCallModal = $('incomingCallModal');
 const remoteVideo = $('remoteVideo'), localVideo = $('localVideo');
+const callStage = document.querySelector('.call-stage');
 const callPeerAvatar = $('callPeerAvatar'), callPeerName = $('callPeerName'), callPeerStatus = $('callPeerStatus');
 const callAudioAvatar = $('callAudioAvatar'), callStatusCenter = $('callStatusCenter');
 const callMuteBtn = $('callMuteBtn'), callCameraBtn = $('callCameraBtn'), callEndBtn = $('callEndBtn');
@@ -2052,21 +2055,27 @@ function startCallTone(mode){
     const AC=window.AudioContext||window.webkitAudioContext;
     if(!AC)return;
     callToneContext=new AC();
-    const beep=()=>{
+    const playBurst=(duration=1.9)=>{
       if(!callToneContext)return;
       const now=callToneContext.currentTime;
-      const osc=callToneContext.createOscillator();
-      const gain=callToneContext.createGain();
-      osc.type='sine';
-      osc.frequency.value=mode==='ringback'?440:620;
-      gain.gain.setValueAtTime(0.0001,now);
-      gain.gain.exponentialRampToValueAtTime(0.09,now+0.02);
-      gain.gain.exponentialRampToValueAtTime(0.0001,now+0.42);
-      osc.connect(gain).connect(callToneContext.destination);
-      osc.start(now);osc.stop(now+0.45);
+      // Two-tone telephone ringback: 440 Hz + 480 Hz, long ON / OFF cadence.
+      const freqs=mode==='ringback'?[440,480]:[440,480];
+      freqs.forEach(freq=>{
+        const osc=callToneContext.createOscillator();
+        const gain=callToneContext.createGain();
+        osc.type='sine'; osc.frequency.value=freq;
+        gain.gain.setValueAtTime(0.0001,now);
+        gain.gain.exponentialRampToValueAtTime(mode==='ringback'?0.055:0.07,now+0.025);
+        gain.gain.setValueAtTime(mode==='ringback'?0.055:0.07,now+duration-0.06);
+        gain.gain.exponentialRampToValueAtTime(0.0001,now+duration);
+        osc.connect(gain).connect(callToneContext.destination);
+        osc.start(now); osc.stop(now+duration+0.02);
+      });
     };
-    beep();
-    callToneTimer=setInterval(beep,mode==='ringback'?2200:1400);
+    const duration=mode==='ringback'?1.9:0.9;
+    const interval=mode==='ringback'?6000:2000;
+    playBurst(duration);
+    callToneTimer=setInterval(()=>playBurst(duration),interval);
     if(callToneContext.state==='suspended')callToneContext.resume().catch(()=>{});
   }catch(e){console.warn('call tone',e);}
 }
@@ -2093,6 +2102,11 @@ function setCallMode(type){
   callAudioAvatar.style.display=video?'none':'grid';
   callCameraBtn.style.display=video?'grid':'none';
   callCameraBtn.disabled=!video;
+  if(callStage) callStage.classList.remove('swap-local');
+}
+function swapCallVideos(){
+  if(currentCallType!=='video' || !callStage) return;
+  callStage.classList.toggle('swap-local');
 }
 function openCallUI(type, status, picture){
   setCallMode(type); setCallPeerVisual(partnerName, picture||null); setCallStatus(status||'Connecting…');
@@ -2103,6 +2117,7 @@ function openCallUI(type, status, picture){
 function closeCallUI(){
   callModal.classList.remove('open');
   incomingCallModal.classList.remove('open');
+  if(callStage) callStage.classList.remove('swap-local');
   remoteVideo.srcObject=null; localVideo.srcObject=null;
   callPeerAvatar.textContent='?'; callAudioAvatar.textContent='?';
   callMuteBtn.classList.remove('active'); callCameraBtn.classList.remove('active');
@@ -2324,6 +2339,10 @@ callCameraBtn.addEventListener('click',()=>{
 callEndBtn.addEventListener('click',()=>endWebRTCCall('ended'));
 incomingAccept.addEventListener('click',acceptIncomingCall);
 incomingReject.addEventListener('click',rejectIncomingCall);
+if(callStage){
+  localVideo.addEventListener('click',e=>{e.stopPropagation();swapCallVideos();});
+  remoteVideo.addEventListener('click',e=>{e.stopPropagation();swapCallVideos();});
+}
 $('voiceCallBtn').addEventListener('click',()=>startWebRTCCall('voice'));
 $('videoCallBtn').addEventListener('click',()=>startWebRTCCall('video'));
 window.addEventListener('beforeunload',()=>{
