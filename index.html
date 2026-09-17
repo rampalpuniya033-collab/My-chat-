@@ -610,6 +610,29 @@
   .toast svg { width: 15px; height: 15px; color: var(--green); flex-shrink: 0; }
   .hidden { display: none !important; }
 
+  /* ===== WEBRTC CALL UI ===== */
+  .call-overlay{position:fixed;inset:0;background:rgba(8,12,22,.94);display:none;align-items:center;justify-content:center;z-index:500;padding:16px}
+  .call-overlay.open{display:flex}
+  .call-shell{width:min(980px,100%);height:min(760px,100%);background:#111827;border:1px solid rgba(255,255,255,.1);border-radius:24px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 30px 90px rgba(0,0,0,.45)}
+  .call-head{height:64px;display:flex;align-items:center;gap:12px;padding:0 18px;color:#fff;background:rgba(255,255,255,.04);flex-shrink:0}
+  .call-head .call-peer-avatar{width:38px;height:38px;border-radius:50%;background:#2b4a8b;display:grid;place-items:center;font-weight:700;overflow:hidden}
+  .call-head .call-peer-avatar img{width:100%;height:100%;object-fit:cover}
+  .call-head .call-peer-info{min-width:0;flex:1}.call-peer-name{font-weight:700;font-size:14px}.call-peer-status{font-size:11px;opacity:.7;margin-top:2px}
+  .call-stage{position:relative;flex:1;min-height:0;background:#05070c;display:flex;align-items:center;justify-content:center;overflow:hidden}
+  #remoteVideo{width:100%;height:100%;object-fit:cover;background:#05070c;display:block}
+  #localVideo{position:absolute;right:16px;bottom:16px;width:180px;max-width:32%;aspect-ratio:16/10;object-fit:cover;background:#18202d;border:2px solid rgba(255,255,255,.75);border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,.4);display:none;z-index:2}
+  .call-audio-avatar{position:absolute;width:120px;height:120px;border-radius:50%;display:grid;place-items:center;background:#2b4a8b;color:#fff;font-size:36px;font-weight:800;box-shadow:0 0 0 14px rgba(43,74,139,.16)}
+  .call-audio-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+  .call-status-center{position:absolute;left:20px;right:20px;bottom:18px;text-align:center;color:#fff;font-size:12px;opacity:.8;text-shadow:0 1px 4px #000}
+  .call-controls{display:flex;justify-content:center;align-items:center;gap:12px;padding:16px;background:rgba(255,255,255,.04);flex-shrink:0}
+  .call-control{width:48px;height:48px;border-radius:50%;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.1);color:#fff;display:grid;place-items:center;cursor:pointer}
+  .call-control svg{width:20px;height:20px}.call-control.active{background:#fff;color:#111827}.call-control.end{background:#ef4444;border-color:#ef4444}.call-control:disabled{opacity:.45;cursor:not-allowed}
+  .incoming-call-card{width:min(390px,100%);background:var(--card);border-radius:24px;padding:24px;box-shadow:0 30px 80px rgba(0,0,0,.35);text-align:center}
+  .incoming-call-avatar{width:76px;height:76px;border-radius:50%;background:var(--brand);color:#fff;display:grid;place-items:center;margin:0 auto 14px;font-size:25px;font-weight:800;overflow:hidden}
+  .incoming-call-avatar img{width:100%;height:100%;object-fit:cover}.incoming-call-card h3{font-size:19px;margin-bottom:5px}.incoming-call-card p{font-size:12.5px;color:var(--muted);margin-bottom:20px}
+  .incoming-actions{display:flex;gap:10px}.incoming-actions button{flex:1;border:0;border-radius:13px;padding:13px;font-weight:700;cursor:pointer}.incoming-reject{background:var(--red-soft);color:var(--red)}.incoming-accept{background:var(--brand);color:#fff}
+  @media(max-width:600px){.call-overlay{padding:0}.call-shell{width:100%;height:100%;border-radius:0}.call-head{height:60px}.call-controls{padding-bottom:calc(16px + env(safe-area-inset-bottom,0px))}#localVideo{width:125px;max-width:38%;right:10px;bottom:10px}}
+
   /* ===== DESKTOP FULL WIDTH FIX ===== */
   @media (min-width: 720px) {
     body { background: var(--bg); display: block; padding: 0; }
@@ -699,6 +722,40 @@
     </div>
     <button class="rec-btn cancel" id="recCancel" title="Cancel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
     <button class="rec-btn send" id="recSend" title="Send voice message"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
+  </div>
+</div>
+
+<!-- WebRTC Call Modal -->
+<div class="call-overlay" id="callModal">
+  <div class="call-shell">
+    <div class="call-head">
+      <div class="call-peer-avatar" id="callPeerAvatar">?</div>
+      <div class="call-peer-info"><div class="call-peer-name" id="callPeerName">Friend</div><div class="call-peer-status" id="callPeerStatus">Connecting…</div></div>
+    </div>
+    <div class="call-stage">
+      <video id="remoteVideo" playsinline autoplay></video>
+      <video id="localVideo" playsinline autoplay muted></video>
+      <div class="call-audio-avatar" id="callAudioAvatar">?</div>
+      <div class="call-status-center" id="callStatusCenter">Connecting…</div>
+    </div>
+    <div class="call-controls">
+      <button class="call-control" id="callMuteBtn" title="Mute microphone" aria-label="Mute microphone"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg></button>
+      <button class="call-control" id="callCameraBtn" title="Turn camera off" aria-label="Turn camera off"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg></button>
+      <button class="call-control end" id="callEndBtn" title="End call" aria-label="End call"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 1 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 1 2.81.7A2 2 0 0 1 22 16.92z"/></svg></button>
+    </div>
+  </div>
+</div>
+
+<!-- Incoming WebRTC Call -->
+<div class="call-overlay" id="incomingCallModal">
+  <div class="incoming-call-card">
+    <div class="incoming-call-avatar" id="incomingCallAvatar">?</div>
+    <h3 id="incomingCallName">Incoming call</h3>
+    <p id="incomingCallType">Voice call</p>
+    <div class="incoming-actions">
+      <button class="incoming-reject" id="incomingReject">Decline</button>
+      <button class="incoming-accept" id="incomingAccept">Accept</button>
+    </div>
   </div>
 </div>
 
@@ -1180,6 +1237,14 @@ const imgModal = $('imgModal'), imgPreview = $('imgPreview'), imgClose = $('imgC
 const attachPreview = $('attachPreview'), apThumb = $('apThumb'), apName = $('apName'), apSize = $('apSize'), apRemove = $('apRemove');
 const recordingBar = $('recordingBar'), recTimer = $('recTimer'), recCancel = $('recCancel'), recSend = $('recSend');
 const inputBarMain = $('inputBarMain');
+const callModal = $('callModal'), incomingCallModal = $('incomingCallModal');
+const remoteVideo = $('remoteVideo'), localVideo = $('localVideo');
+const callPeerAvatar = $('callPeerAvatar'), callPeerName = $('callPeerName'), callPeerStatus = $('callPeerStatus');
+const callAudioAvatar = $('callAudioAvatar'), callStatusCenter = $('callStatusCenter');
+const callMuteBtn = $('callMuteBtn'), callCameraBtn = $('callCameraBtn'), callEndBtn = $('callEndBtn');
+const incomingCallAvatar = $('incomingCallAvatar'), incomingCallName = $('incomingCallName'), incomingCallType = $('incomingCallType');
+const incomingAccept = $('incomingAccept'), incomingReject = $('incomingReject');
+
 
 function firebaseUid(uid){
   if(!uid) throw new Error('Missing Firebase UID');
@@ -1895,9 +1960,12 @@ if(firebaseReady && auth){
     try{
       if(user){
         await ensureUserProfile(user);
+        listenForIncomingCalls();
         paintMe();setConnected(false);render();
         showToast('Signed in · Firebase UID ready');
       }else{
+        try{await endWebRTCCall('ended');}catch{}
+        if(incomingCallsRef){try{incomingCallsRef.off();}catch{} incomingCallsRef=null;}
         me=null;partnerId=null;partnerUid=null;LOCAL_ONLY=true;
         if(recordingBar.classList.contains('show')){ recCancelled=true; stopRecording(false); }
         stopCurrentAudio();
@@ -1927,19 +1995,289 @@ if(firebaseReady && auth){
   });
 }else{setStatus('','Firebase unavailable');showToast('Firebase could not initialize');}
 
-/* ===== CALL FUNCTIONALITY ===== */
-$('voiceCallBtn').addEventListener('click', () => {
-  if (!signedIn()) { showToast('Please sign in with Google first'); return; }
-  if (!partnerUid) { showToast('Connect with a friend first'); return; }
-  showToast(`Calling ${partnerName}... (Voice call feature requires WebRTC setup)`);
-});
+/* ===== WEBRTC VOICE + VIDEO CALLING =====
+   Firebase Realtime Database is used only for signaling (offer/answer/ICE).
+   Media itself travels peer-to-peer through WebRTC.
+*/
+const RTC_CONFIG = {
+  iceServers: [
+    { urls: 'stun:stun.l.google.com:19302' }
+    // Production: add your TURN server here, e.g.
+    // { urls: 'turn:YOUR_TURN_HOST:3478', username: 'TURN_USER', credential: 'TURN_PASSWORD' }
+  ]
+};
 
-$('videoCallBtn').addEventListener('click', () => {
-  if (!signedIn()) { showToast('Please sign in with Google first'); return; }
-  if (!partnerUid) { showToast('Connect with a friend first'); return; }
-  showToast(`Calling ${partnerName}... (Video call feature requires WebRTC setup)`);
-});
+let peerConnection = null;
+let localStream = null;
+let remoteStream = null;
+let currentCallId = null;
+let currentCallType = null;
+let currentCallRole = null;
+let currentCallRef = null;
+let currentCallerCandidatesRef = null;
+let currentCalleeCandidatesRef = null;
+let answerValueHandler = null;
+let callValueHandler = null;
+let callerCandidateHandler = null;
+let calleeCandidateHandler = null;
+let incomingCallsRef = null;
+let incomingCallHandler = null;
+let incomingCallData = null;
+let pendingRemoteCandidates = [];
+let remoteDescriptionReady = false;
+let callTimer = null;
+let callStartedAt = 0;
+let callEnding = false;
+let callCleanupTimer = null;
+let activeCallPath = null;
 
+function callIcon(kind, active){
+  if(kind==='mute') return active
+    ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 1l22 22"/><path d="M9 9v3a3 3 0 0 0 5.12 2.12M19 10v2a7 7 0 0 1-11.93 4.93M12 19v4M8 23h8"/><path d="M15 5.35V4a3 3 0 0 0-5.12-2.12"/></svg>'
+    : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>';
+  return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>';
+}
+function setCallPeerVisual(name, picture){
+  callPeerName.textContent=name||'Friend';
+  const ini=initials(name||'Friend');
+  if(picture){
+    const img='<img src="'+esc(picture)+'" alt="">';
+    callPeerAvatar.innerHTML=img; callAudioAvatar.innerHTML=img;
+  }else{ callPeerAvatar.textContent=ini; callAudioAvatar.textContent=ini; }
+}
+function setCallStatus(text){ callPeerStatus.textContent=text; callStatusCenter.textContent=text; }
+function setCallMode(type){
+  const video=type==='video';
+  remoteVideo.style.display=video?'block':'none';
+  localVideo.style.display=video?'block':'none';
+  callAudioAvatar.style.display=video?'none':'grid';
+  callCameraBtn.style.display=video?'grid':'none';
+  callCameraBtn.disabled=!video;
+}
+function openCallUI(type, status){
+  setCallMode(type); setCallPeerVisual(partnerName, null); setCallStatus(status||'Connecting…');
+  callModal.classList.add('open');
+  inputBarMain.classList.add('hide');
+  recordingBar.classList.remove('show');
+}
+function closeCallUI(){
+  callModal.classList.remove('open');
+  incomingCallModal.classList.remove('open');
+  remoteVideo.srcObject=null; localVideo.srcObject=null;
+  callPeerAvatar.textContent='?'; callAudioAvatar.textContent='?';
+  callMuteBtn.classList.remove('active'); callCameraBtn.classList.remove('active');
+  callMuteBtn.innerHTML=callIcon('mute',false); callCameraBtn.innerHTML=callIcon('camera',false);
+  if(!recordingBar.classList.contains('show')) inputBarMain.classList.remove('hide');
+}
+function startCallTimer(){
+  clearInterval(callTimer); callStartedAt=Date.now();
+  callTimer=setInterval(()=>{ if(callStartedAt) setCallStatus('Connected · '+fmtDur((Date.now()-callStartedAt)/1000)); },1000);
+}
+function stopCallTimer(){ clearInterval(callTimer); callTimer=null; callStartedAt=0; }
+
+function stopLocalMedia(){
+  if(localStream){ try{localStream.getTracks().forEach(t=>t.stop());}catch{} localStream=null; }
+  localVideo.srcObject=null;
+}
+function closePeerConnection(){
+  if(peerConnection){
+    try{peerConnection.ontrack=null;peerConnection.onicecandidate=null;peerConnection.onconnectionstatechange=null;peerConnection.close();}catch{}
+    peerConnection=null;
+  }
+  if(remoteStream){try{remoteStream.getTracks().forEach(t=>t.stop());}catch{} remoteStream=null;}
+  remoteVideo.srcObject=null;
+}
+async function getCallMedia(type){
+  if(!window.isSecureContext){ throw Object.assign(new Error('Secure context required'),{name:'SecurityError'}); }
+  if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) throw new Error('getUserMedia is not supported');
+  return navigator.mediaDevices.getUserMedia({
+    audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true},
+    video:type==='video'?{facingMode:{ideal:'user'},width:{ideal:1280},height:{ideal:720}}:false
+  });
+}
+function mediaErrorMessage(err){
+  if(err?.name==='NotAllowedError') return 'Microphone/camera permission was denied. Allow access in browser settings.';
+  if(err?.name==='NotFoundError') return 'Required microphone or camera was not found.';
+  if(err?.name==='NotReadableError') return 'Microphone/camera is being used by another app.';
+  if(err?.name==='SecurityError') return 'Calls require HTTPS (or localhost).';
+  return 'Could not start the call: '+(err?.message||'media access failed');
+}
+function addLocalTracks(){
+  if(!peerConnection||!localStream)return;
+  localStream.getTracks().forEach(track=>peerConnection.addTrack(track,localStream));
+}
+function makePeerConnection(callId, role){
+  const pc=new RTCPeerConnection(RTC_CONFIG);
+  remoteStream=new MediaStream();
+  remoteVideo.srcObject=remoteStream;
+  pc.ontrack=e=>{
+    if(e.streams && e.streams[0]) e.streams[0].getTracks().forEach(t=>{ if(!remoteStream.getTracks().some(x=>x.id===t.id)) remoteStream.addTrack(t); });
+    else if(e.track) remoteStream.addTrack(e.track);
+    if(currentCallType==='video') remoteVideo.play().catch(()=>{});
+  };
+  pc.onicecandidate=e=>{
+    if(!e.candidate || !currentCallRef)return;
+    const target=role==='caller'?currentCallerCandidatesRef:currentCalleeCandidatesRef;
+    if(target) target.push(e.candidate.toJSON()).catch(err=>console.error('ICE write',err));
+  };
+  pc.onconnectionstatechange=()=>{
+    const st=pc.connectionState;
+    if(st==='connected'){setCallStatus('Connected');startCallTimer();}
+    else if(st==='connecting') setCallStatus('Connecting…');
+    else if(st==='disconnected') setCallStatus('Connection interrupted…');
+    else if(st==='failed'){setCallStatus('Connection failed');setTimeout(()=>endWebRTCCall('failed'),1200);}
+    else if(st==='closed') setCallStatus('Call ended');
+  };
+  return pc;
+}
+async function addRemoteCandidate(candidate){
+  if(!candidate || !peerConnection)return;
+  if(!remoteDescriptionReady){pendingRemoteCandidates.push(candidate);return;}
+  try{await peerConnection.addIceCandidate(new RTCIceCandidate(candidate));}
+  catch(e){console.warn('addIceCandidate failed',e);}
+}
+async function flushRemoteCandidates(){
+  if(!peerConnection||!remoteDescriptionReady)return;
+  const list=pendingRemoteCandidates.splice(0);
+  for(const c of list) await addRemoteCandidate(c);
+}
+function listenCalleeCandidates(){
+  if(calleeCandidateHandler||!currentCalleeCandidatesRef)return;
+  calleeCandidateHandler=snap=>addRemoteCandidate(snap.val());
+  currentCalleeCandidatesRef.on('child_added',calleeCandidateHandler);
+}
+function listenCallerCandidates(){
+  if(callerCandidateHandler||!currentCallerCandidatesRef)return;
+  callerCandidateHandler=snap=>addRemoteCandidate(snap.val());
+  currentCallerCandidatesRef.on('child_added',callerCandidateHandler);
+}
+function clearCallListeners(){
+  try{if(currentCallRef){if(callValueHandler)currentCallRef.off('value',callValueHandler);if(answerValueHandler)currentCallRef.off('value',answerValueHandler);}}catch{}
+  try{if(currentCallerCandidatesRef&&callerCandidateHandler)currentCallerCandidatesRef.off('child_added',callerCandidateHandler);}catch{}
+  try{if(currentCalleeCandidatesRef&&calleeCandidateHandler)currentCalleeCandidatesRef.off('child_added',calleeCandidateHandler);}catch{}
+  callValueHandler=null;answerValueHandler=null;callerCandidateHandler=null;calleeCandidateHandler=null;
+}
+async function markActiveCall(on){
+  if(!signedIn()||!currentCallId)return;
+  const path='activeCalls/'+me.uid+'/'+currentCallId;
+  activeCallPath=path;
+  try{ if(on) await db.ref(path).set({callId:currentCallId,with:partnerUid,type:currentCallType,at:firebase.database.ServerValue.TIMESTAMP}); else await db.ref(path).remove(); }catch(e){console.warn('activeCalls',e);}
+}
+async function startWebRTCCall(type){
+  if(!signedIn()){showToast('Please sign in with Google first');return;}
+  if(!partnerUid){showToast('Connect with a friend first');return;}
+  if(currentCallId||peerConnection){showToast('A call is already active');return;}
+  if(!window.RTCPeerConnection){showToast('WebRTC is not supported in this browser');return;}
+  if(!window.isSecureContext){showToast('Calls require HTTPS (or localhost)');return;}
+  currentCallType=type;currentCallRole='caller';callEnding=false;pendingRemoteCandidates=[];remoteDescriptionReady=false;
+  try{
+    setStatus('connecting','Starting '+(type==='video'?'video':'voice')+' call…');
+    localStream=await getCallMedia(type);
+    localVideo.srcObject=localStream;localVideo.muted=true;
+    currentCallRef=db.ref('calls').push();currentCallId=currentCallRef.key;
+    currentCallerCandidatesRef=currentCallRef.child('callerCandidates');
+    currentCalleeCandidatesRef=currentCallRef.child('calleeCandidates');
+    await currentCallRef.set({callerUid:me.uid,callerName:me.name||'Google User',callerPicture:me.picture||null,calleeUid:partnerUid,calleeName:partnerName,type,status:'ringing',createdAt:firebase.database.ServerValue.TIMESTAMP,expiresAt:Date.now()+60000});
+    await markActiveCall(true);
+    peerConnection=makePeerConnection(currentCallId,'caller');addLocalTracks();
+    openCallUI(type,'Calling '+partnerName+'…');
+    const offer=await peerConnection.createOffer();
+    await peerConnection.setLocalDescription(offer);
+    await currentCallRef.child('offer').set({type:offer.type,sdp:offer.sdp});
+    listenCalleeCandidates();
+    callValueHandler=snap=>{
+      const data=snap.val();if(!data)return;
+      if(data.answer && !remoteDescriptionReady && peerConnection){
+        (async()=>{try{await peerConnection.setRemoteDescription(new RTCSessionDescription(data.answer));remoteDescriptionReady=true;await flushRemoteCandidates();setCallStatus('Connecting…');}catch(e){console.error('remote answer',e);showToast('Could not establish the call');endWebRTCCall('failed');}})();
+      }
+      if(data.status==='rejected'){showToast('Call declined');endWebRTCCall('rejected');}
+      else if(data.status==='ended' || data.status==='cancelled'){showToast('Call ended');endWebRTCCall('ended');}
+    };
+    currentCallRef.on('value',callValueHandler);
+    setStatus('','Ready');
+  }catch(err){
+    console.error('start call',err);showToast(mediaErrorMessage(err));setStatus('','Ready');await endWebRTCCall('failed',false);
+  }
+}
+function showIncomingCall(callId,data){
+  incomingCallData={callId,data};
+  const name=data.callerName||'ConvoLink user';
+  incomingCallName.textContent=name;
+  incomingCallType.textContent=(data.type==='video'?'Video':'Voice')+' call';
+  if(data.callerPicture) incomingCallAvatar.innerHTML='<img src="'+esc(data.callerPicture)+'" alt="">'; else incomingCallAvatar.textContent=initials(name);
+  incomingCallModal.classList.add('open');
+}
+function listenForIncomingCalls(){
+  if(!signedIn()||!db)return;
+  if(incomingCallsRef)try{incomingCallsRef.off();}catch{}
+  incomingCallsRef=db.ref('calls').orderByChild('calleeUid').equalTo(me.uid);
+  incomingCallHandler=async snap=>{
+    const data=snap.val();if(!data)return;
+    if(data.status!=='ringing')return;
+    if(data.expiresAt && Date.now()>Number(data.expiresAt)){db.ref('calls/'+snap.key+'/status').set('expired').catch(()=>{});return;}
+    if(data.callerUid===me.uid)return;
+    if(currentCallId||peerConnection||incomingCallData){db.ref('calls/'+snap.key+'/status').set('busy').catch(()=>{});return;}
+    showIncomingCall(snap.key,data);
+  };
+  incomingCallsRef.on('child_added',incomingCallHandler);
+}
+async function acceptIncomingCall(){
+  const incoming=incomingCallData;if(!incoming)return;
+  incomingCallModal.classList.remove('open');incomingCallData=null;
+  const callId=incoming.callId,data=incoming.data;
+  if(currentCallId||peerConnection){showToast('You are already on a call');return;}
+  currentCallId=callId;currentCallType=data.type==='video'?'video':'voice';currentCallRole='callee';callEnding=false;pendingRemoteCandidates=[];remoteDescriptionReady=false;
+  partnerUid=data.callerUid;partnerName=data.callerName||'Friend';partnerId=data.callerUid;
+  try{
+    setStatus('connecting','Answering '+partnerName+'…');
+    localStream=await getCallMedia(currentCallType);localVideo.srcObject=localStream;localVideo.muted=true;
+    currentCallRef=db.ref('calls/'+callId);currentCallerCandidatesRef=currentCallRef.child('callerCandidates');currentCalleeCandidatesRef=currentCallRef.child('calleeCandidates');
+    const snap=await currentCallRef.once('value');const call=snap.val();
+    if(!call||call.status!=='ringing'||!call.offer)throw new Error('This call is no longer available');
+    peerConnection=makePeerConnection(callId,'callee');addLocalTracks();
+    openCallUI(currentCallType,'Connecting…');
+    await peerConnection.setRemoteDescription(new RTCSessionDescription(call.offer));remoteDescriptionReady=true;await flushRemoteCandidates();listenCallerCandidates();
+    const answer=await peerConnection.createAnswer();await peerConnection.setLocalDescription(answer);
+    await currentCallRef.update({answer:{type:answer.type,sdp:answer.sdp},status:'active',acceptedAt:firebase.database.ServerValue.TIMESTAMP});
+    await markActiveCall(true);
+    callValueHandler=s=>{const d=s.val();if(d&&(d.status==='ended'||d.status==='cancelled'||d.status==='rejected')){showToast('Call ended');endWebRTCCall('ended');}};
+    currentCallRef.on('value',callValueHandler);
+    setStatus('','Ready');
+  }catch(err){console.error('accept call',err);showToast(mediaErrorMessage(err));await endWebRTCCall('failed');}
+}
+async function rejectIncomingCall(){
+  const incoming=incomingCallData;if(!incoming)return;
+  incomingCallData=null;incomingCallModal.classList.remove('open');
+  try{await db.ref('calls/'+incoming.callId+'/status').set('rejected');}catch(e){console.warn(e);}
+}
+async function endWebRTCCall(reason='ended',updateRemote=true){
+  if(callEnding)return;callEnding=true;
+  const id=currentCallId,ref=currentCallRef;
+  clearCallListeners();stopCallTimer();closePeerConnection();stopLocalMedia();
+  if(updateRemote&&ref&&id){
+    try{await ref.child('status').set(reason==='rejected'?'rejected':reason==='failed'?'ended':'ended');}catch(e){console.warn('call end update',e);}
+  }
+  if(activeCallPath){try{await db.ref(activeCallPath).remove();}catch{}}
+  activeCallPath=null;closeCallUI();
+  currentCallId=null;currentCallType=null;currentCallRole=null;currentCallRef=null;currentCallerCandidatesRef=null;currentCalleeCandidatesRef=null;pendingRemoteCandidates=[];remoteDescriptionReady=false;callEnding=false;
+  setStatus('',partnerUid?'Ready · '+partnerName:'Ready');
+  if(id){clearTimeout(callCleanupTimer);callCleanupTimer=setTimeout(()=>{db.ref('calls/'+id).remove().catch(()=>{});},7000);}
+}
+callMuteBtn.addEventListener('click',()=>{
+  if(!localStream)return;const track=localStream.getAudioTracks()[0];if(!track)return;track.enabled=!track.enabled;const muted=!track.enabled;callMuteBtn.classList.toggle('active',muted);callMuteBtn.innerHTML=callIcon('mute',muted);callMuteBtn.title=muted?'Unmute microphone':'Mute microphone';
+});
+callCameraBtn.addEventListener('click',()=>{
+  if(!localStream||currentCallType!=='video')return;const track=localStream.getVideoTracks()[0];if(!track)return;track.enabled=!track.enabled;const off=!track.enabled;callCameraBtn.classList.toggle('active',off);callCameraBtn.innerHTML=callIcon('camera',off);callCameraBtn.title=off?'Turn camera on':'Turn camera off';
+});
+callEndBtn.addEventListener('click',()=>endWebRTCCall('ended'));
+incomingAccept.addEventListener('click',acceptIncomingCall);
+incomingReject.addEventListener('click',rejectIncomingCall);
+$('voiceCallBtn').addEventListener('click',()=>startWebRTCCall('voice'));
+$('videoCallBtn').addEventListener('click',()=>startWebRTCCall('video'));
+window.addEventListener('beforeunload',()=>{
+  try{if(currentCallRef&&currentCallId)currentCallRef.child('status').set('ended');}catch{}
+  try{stopLocalMedia();closePeerConnection();}catch{}
+});
 window.addEventListener('error',e=>{console.error('ConvoLink error',e.error||e.message);});
 window.addEventListener('unhandledrejection',e=>console.error('ConvoLink rejection',e.reason));
 render();
