@@ -7,35 +7,22 @@
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-
   :root {
-    --bg: #fdf6ec;
-    --card: #ffffff;
-    --ink: #1f2430;
-    --ink-2: #4a5163;
-    --muted: #8b93a7;
-    --line: #ececf2;
-    --brand: #2b4a8b;
-    --brand-2: #1f3a72;
-    --gold: #e0b100;
-    --blue-soft: #e3eafb;
-    --green: #22c55e;
-    --green-soft: #e7f8ef;
-    --red: #ef4444;
-    --red-soft: #fde8e8;
+    --bg: #fdf6ec; --card: #ffffff; --ink: #1f2430; --ink-2: #4a5163;
+    --muted: #8b93a7; --line: #ececf2; --brand: #2b4a8b; --brand-2: #1f3a72;
+    --gold: #e0b100; --blue-soft: #e3eafb; --green: #22c55e; --green-soft: #e7f8ef;
+    --red: #ef4444; --red-soft: #fde8e8;
     --shadow-sm: 0 1px 2px rgba(16,24,40,.04), 0 1px 3px rgba(16,24,40,.06);
     --shadow-md: 0 4px 10px rgba(16,24,40,.06), 0 2px 4px rgba(16,24,40,.04);
     --shadow-lg: 0 20px 60px rgba(16,24,40,.18);
     --radius: 14px;
   }
-
   html, body {
     height: 100%;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     background: var(--bg); color: var(--ink);
     overflow: hidden; -webkit-font-smoothing: antialiased;
   }
-
   .app {
     width: 100%; max-width: 480px;
     height: 100vh; height: 100dvh;
@@ -43,8 +30,6 @@
     display: flex; flex-direction: column;
     position: relative; overflow: hidden;
   }
-
-  /* ---------- Top bar ---------- */
   .topbar {
     background: var(--brand); color: #fff;
     padding: 14px 16px;
@@ -56,13 +41,12 @@
     width: 34px; height: 34px; border-radius: 50%;
     background: rgba(255,255,255,.12); border: none; color: #fff;
     display: flex; align-items: center; justify-content: center;
-    cursor: pointer; transition: background .15s;
+    cursor: pointer;
   }
-  .topbar .menu-btn:hover { background: rgba(255,255,255,.22); }
   .topbar .menu-btn svg { width: 16px; height: 16px; }
   .topbar .title {
     flex: 1; text-align: center;
-    font-size: 17px; font-weight: 700; letter-spacing: .2px;
+    font-size: 17px; font-weight: 700;
   }
   .topbar .avatar-chip {
     width: 34px; height: 34px; border-radius: 50%;
@@ -73,11 +57,9 @@
     overflow: hidden; flex-shrink: 0;
   }
   .topbar .avatar-chip img { width: 100%; height: 100%; object-fit: cover; }
-
-  /* ---------- Status chip ---------- */
   .status-row {
     display: flex; align-items: center; justify-content: center;
-    gap: 6px; padding: 10px 14px 8px; flex-shrink: 0;
+    gap: 6px; padding: 10px 14px 8px;
   }
   .status-chip {
     display: inline-flex; align-items: center; gap: 7px;
@@ -89,18 +71,12 @@
   .status-chip .dot {
     width: 7px; height: 7px; border-radius: 50%;
     background: var(--green); box-shadow: 0 0 0 3px rgba(34,197,94,.15);
-    transition: background .3s;
   }
   .status-chip.connecting .dot {
     background: var(--gold); box-shadow: 0 0 0 3px rgba(224,177,0,.18);
     animation: pulseDot 1s ease-in-out infinite;
   }
-  @keyframes pulseDot {
-    0%, 100% { opacity: 1; }
-    50% { opacity: .3; }
-  }
-
-  /* ---------- Messages ---------- */
+  @keyframes pulseDot { 0%,100%{opacity:1} 50%{opacity:.3} }
   .messages {
     flex: 1; overflow-y: auto;
     padding: 6px 14px 14px;
@@ -109,7 +85,6 @@
   }
   .messages::-webkit-scrollbar { width: 5px; }
   .messages::-webkit-scrollbar-thumb { background: #d6d9e3; border-radius: 8px; }
-
   .empty {
     margin: auto; text-align: center;
     max-width: 260px; color: var(--muted); padding: 20px 10px;
@@ -123,186 +98,111 @@
   .empty .icon svg { width: 26px; height: 26px; }
   .empty h3 { font-size: 14px; color: var(--ink); font-weight: 700; margin-bottom: 6px; }
   .empty p { font-size: 12.5px; line-height: 1.55; }
-
   .msg {
     max-width: 78%; padding: 9px 13px;
     border-radius: 14px; font-size: 13.5px; line-height: 1.45;
     word-wrap: break-word; animation: pop .22s ease;
-    position: relative; box-shadow: var(--shadow-sm);
+    box-shadow: var(--shadow-sm);
   }
-  @keyframes pop {
-    from { opacity: 0; transform: translateY(6px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
+  @keyframes pop { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
   .msg .time {
     font-size: 10px; opacity: .65; margin-top: 4px;
     display: block; text-align: right; font-weight: 500;
   }
-  .msg.mine {
-    align-self: flex-end; background: var(--brand); color: #fff;
-    border-bottom-right-radius: 4px;
-  }
+  .msg.mine { align-self: flex-end; background: var(--brand); color: #fff; border-bottom-right-radius: 4px; }
   .msg.mine .time { color: rgba(255,255,255,.75); }
-  .msg.theirs {
-    align-self: flex-start; background: var(--card); color: var(--ink);
-    border: 1px solid var(--line); border-bottom-left-radius: 4px;
-  }
+  .msg.theirs { align-self: flex-start; background: var(--card); color: var(--ink); border: 1px solid var(--line); border-bottom-left-radius: 4px; }
   .msg.system {
     align-self: center; background: #eef1f7; color: var(--ink-2);
     font-size: 11.5px; font-weight: 500;
     padding: 6px 14px; border-radius: 20px;
-    max-width: 88%; text-align: center; box-shadow: none;
+    max-width: 88%; text-align: center;
   }
-
   .msg img.msg-media {
-    max-width: 100%;
-    max-height: 260px;
-    border-radius: 10px;
-    margin: 4px 0;
-    display: block;
-    cursor: pointer;
-    object-fit: cover;
+    max-width: 100%; max-height: 260px;
+    border-radius: 10px; margin: 4px 0;
+    display: block; cursor: pointer; object-fit: cover;
   }
   .msg .file-chip {
     display: flex; align-items: center; gap: 8px;
-    background: rgba(0,0,0,.08);
-    padding: 8px 10px; border-radius: 10px;
-    margin: 4px 0;
-    font-size: 12.5px;
-    word-break: break-all;
+    background: rgba(0,0,0,.08); padding: 8px 10px;
+    border-radius: 10px; margin: 4px 0;
+    font-size: 12.5px; word-break: break-all;
   }
   .msg.mine .file-chip { background: rgba(255,255,255,.18); }
   .msg .file-chip svg { width: 16px; height: 16px; flex-shrink: 0; }
-  .msg .file-chip a {
-    color: inherit; text-decoration: underline;
-    word-break: break-all;
-  }
-
-  /* ---------- Attachment preview strip ---------- */
+  .msg .file-chip a { color: inherit; text-decoration: underline; }
   .attach-preview {
-    display: none;
-    padding: 10px 14px 0;
-    background: var(--card);
-    border-top: 1px solid var(--line);
-    animation: slideUp .22s ease;
+    display: none; padding: 10px 14px 0;
+    background: var(--card); border-top: 1px solid var(--line);
   }
   .attach-preview.show { display: block; }
-  @keyframes slideUp {
-    from { opacity: 0; transform: translateY(6px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
   .attach-preview .ap-inner {
     display: flex; align-items: center; gap: 10px;
-    background: #f5f6fa;
-    border: 1px solid var(--line);
-    border-radius: 12px;
-    padding: 8px 10px;
+    background: #f5f6fa; border: 1px solid var(--line);
+    border-radius: 12px; padding: 8px 10px;
   }
   .attach-preview .ap-thumb {
-    width: 46px; height: 46px;
-    border-radius: 8px;
+    width: 46px; height: 46px; border-radius: 8px;
     background: var(--blue-soft);
     display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0; overflow: hidden;
-    color: var(--brand);
+    flex-shrink: 0; overflow: hidden; color: var(--brand);
   }
-  .attach-preview .ap-thumb img {
-    width: 100%; height: 100%; object-fit: cover;
-  }
+  .attach-preview .ap-thumb img { width: 100%; height: 100%; object-fit: cover; }
   .attach-preview .ap-thumb svg { width: 22px; height: 22px; }
   .attach-preview .ap-info { flex: 1; min-width: 0; }
   .attach-preview .ap-info .ap-name {
     font-size: 12.5px; font-weight: 600; color: var(--ink);
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   }
-  .attach-preview .ap-info .ap-size {
-    font-size: 11px; color: var(--muted); margin-top: 2px;
-  }
+  .attach-preview .ap-info .ap-size { font-size: 11px; color: var(--muted); margin-top: 2px; }
   .attach-preview .ap-remove {
     width: 32px; height: 32px; border-radius: 8px;
     background: #fff; border: 1px solid var(--line);
     color: var(--red);
     display: flex; align-items: center; justify-content: center;
     cursor: pointer; flex-shrink: 0;
-    transition: background .15s;
   }
-  .attach-preview .ap-remove:hover { background: var(--red-soft); }
   .attach-preview .ap-remove svg { width: 15px; height: 15px; }
-
-  /* ---------- Input bar ---------- */
   .input-bar {
     padding: 10px 12px calc(10px + env(safe-area-inset-bottom, 0px));
-    background: var(--card);
-    border-top: 1px solid var(--line);
-    display: flex; align-items: flex-end; gap: 8px;
-    flex-shrink: 0;
+    background: var(--card); border-top: 1px solid var(--line);
+    display: flex; align-items: flex-end; gap: 8px; flex-shrink: 0;
   }
-
   .input-bar .tool-btn {
     width: 40px; height: 40px; border-radius: 50%;
     background: #f5f6fa; border: 1px solid var(--line);
     color: var(--ink-2);
     display: flex; align-items: center; justify-content: center;
     cursor: pointer; flex-shrink: 0;
-    transition: background .15s, transform .12s, color .15s;
-  }
-  .input-bar .tool-btn:hover {
-    background: var(--blue-soft); color: var(--brand);
-    transform: translateY(-1px);
   }
   .input-bar .tool-btn svg { width: 18px; height: 18px; }
-
   .input-bar .msg-wrap {
     flex: 1; min-width: 0;
     display: flex; align-items: center;
     background: #f5f6fa; border: 1px solid var(--line);
     border-radius: 22px; padding: 0 4px 0 14px;
-    transition: border-color .15s, background .15s;
-  }
-  .input-bar .msg-wrap:focus-within {
-    border-color: var(--brand); background: #fff;
   }
   .input-bar .msg-wrap input {
-    flex: 1; min-width: 0;
-    padding: 12px 0;
+    flex: 1; min-width: 0; padding: 12px 0;
     background: transparent; border: none; outline: none;
     color: var(--ink); font-size: 13.5px;
   }
   .input-bar .msg-wrap input::placeholder { color: var(--muted); }
-
   .input-bar .send-btn {
     width: 44px; height: 44px; border-radius: 50%;
     background: var(--brand); border: none; color: #fff;
     display: flex; align-items: center; justify-content: center;
-    cursor: pointer;
-    transition: transform .15s, background .15s;
-    flex-shrink: 0;
-    position: relative;
+    cursor: pointer; flex-shrink: 0; position: relative;
   }
-  .input-bar .send-btn:hover { background: var(--brand-2); transform: translateY(-1px); }
   .input-bar .send-btn svg { width: 18px; height: 18px; }
-  .input-bar .send-btn.has-attach {
-    background: var(--green);
-    animation: pulseSend 1.4s ease-in-out infinite;
-  }
-  @keyframes pulseSend {
-    0%, 100% { box-shadow: 0 0 0 0 rgba(34,197,94,.4); }
-    50% { box-shadow: 0 0 0 6px rgba(34,197,94,0); }
-  }
-  .input-bar .send-btn.has-attach::after {
-    content: '';
-    position: absolute; top: -2px; right: -2px;
-    width: 10px; height: 10px; border-radius: 50%;
-    background: #fff; border: 2px solid var(--green);
-  }
-
+  .input-bar .send-btn.has-attach { background: var(--green); }
   .hidden-file { display: none; }
 
-  /* ---------- Drawer ---------- */
+  /* Drawer */
   .drawer-overlay {
     position: fixed; inset: 0;
-    background: rgba(15, 20, 35, 0.45);
-    backdrop-filter: blur(2px);
+    background: rgba(15,20,35,.45); backdrop-filter: blur(2px);
     opacity: 0; visibility: hidden;
     transition: opacity .25s ease, visibility .25s;
     z-index: 40;
@@ -321,21 +221,17 @@
     background: var(--brand); color: #fff;
     padding: 22px 18px 20px;
     display: flex; flex-direction: column; gap: 12px;
-    flex-shrink: 0; position: relative;
+    position: relative;
   }
   .drawer-head .close-btn {
     position: absolute; top: 12px; right: 12px;
     width: 32px; height: 32px; border-radius: 50%;
     background: rgba(255,255,255,.14); border: none; color: #fff;
     display: flex; align-items: center; justify-content: center;
-    cursor: pointer; transition: background .15s;
+    cursor: pointer;
   }
-  .drawer-head .close-btn:hover { background: rgba(255,255,255,.26); }
   .drawer-head .close-btn svg { width: 15px; height: 15px; }
-
-  .drawer-head .avatar-row {
-    display: flex; align-items: center; gap: 12px;
-  }
+  .drawer-head .avatar-row { display: flex; align-items: center; gap: 12px; }
   .drawer-head .avatar-lg {
     width: 56px; height: 56px; border-radius: 50%;
     background: rgba(255,255,255,.18);
@@ -345,100 +241,63 @@
     flex-shrink: 0;
   }
   .drawer-head .avatar-lg img { width: 100%; height: 100%; object-fit: cover; }
-
   .google-logo-btn {
-    width: 44px; height: 44px;
-    border-radius: 50%;
-    background: #ffffff;
-    border: 1.5px solid rgba(255,255,255,.6);
+    width: 44px; height: 44px; border-radius: 50%;
+    background: #fff; border: 1.5px solid rgba(255,255,255,.6);
     display: flex; align-items: center; justify-content: center;
-    cursor: pointer;
-    flex-shrink: 0;
-    position: relative;
-    overflow: hidden;
+    cursor: pointer; flex-shrink: 0;
+    position: relative; overflow: hidden;
     box-shadow: 0 4px 12px rgba(0,0,0,.18);
-    transition: transform .15s, box-shadow .15s;
   }
-  .google-logo-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 18px rgba(0,0,0,.28);
-  }
-  .google-logo-btn:active { transform: translateY(0) scale(.96); }
-  .google-logo-btn > svg {
-    width: 22px; height: 22px;
-    pointer-events: none;
-  }
+  .google-logo-btn > svg { width: 22px; height: 22px; pointer-events: none; }
   .google-logo-btn .real-gsi-mount {
-    position: absolute;
-    inset: 0;
+    position: absolute; inset: 0;
     display: flex; align-items: center; justify-content: center;
-    opacity: 0.001;
-    overflow: hidden;
+    opacity: 0.001; overflow: hidden;
   }
-  .google-logo-btn .real-gsi-mount > div {
-    transform: scale(2.2);
-    transform-origin: center center;
-  }
+  .google-logo-btn .real-gsi-mount > div { transform: scale(2.2); transform-origin: center; }
   .google-logo-btn.no-gsi .real-gsi-mount { display: none; }
   .google-logo-btn.signed::after {
-    content: '';
-    position: absolute; bottom: -1px; right: -1px;
+    content: ''; position: absolute; bottom: -1px; right: -1px;
     width: 12px; height: 12px; border-radius: 50%;
-    background: var(--green);
-    border: 2px solid var(--brand);
-    z-index: 3;
+    background: var(--green); border: 2px solid var(--brand); z-index: 3;
   }
-
   .drawer-head .who { flex: 1; min-width: 0; }
-  .drawer-head .who .name { font-size: 16px; font-weight: 700; color: #fff; line-height: 1.25; }
+  .drawer-head .who .name { font-size: 16px; font-weight: 700; color: #fff; }
   .drawer-head .who .email { font-size: 12px; color: rgba(255,255,255,.78); margin-top: 3px; word-break: break-all; }
-
   .drawer-head .myid-mini {
     display: flex; align-items: center; gap: 8px;
-    background: rgba(0,0,0,.22);
-    border: 1px solid rgba(255,255,255,.14);
-    border-radius: 10px;
-    padding: 8px 10px;
-    margin-top: 4px;
+    background: rgba(0,0,0,.22); border: 1px solid rgba(255,255,255,.14);
+    border-radius: 10px; padding: 8px 10px; margin-top: 4px;
   }
   .drawer-head .myid-mini .lbl {
     font-size: 9.5px; font-weight: 700; letter-spacing: .8px;
     color: rgba(255,255,255,.6); text-transform: uppercase;
-    white-space: nowrap;
   }
   .drawer-head .myid-mini .v {
     flex: 1; min-width: 0;
     font-family: 'SF Mono', 'Menlo', monospace;
     font-size: 12px; font-weight: 600; color: #fff;
     overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-    letter-spacing: .4px;
   }
   .drawer-head .myid-mini .cbtn {
     width: 26px; height: 26px; border-radius: 7px;
     background: var(--gold); border: none; color: #fff;
     display: flex; align-items: center; justify-content: center;
-    cursor: pointer; flex-shrink: 0;
-    transition: transform .15s, background .15s;
+    cursor: pointer;
   }
-  .drawer-head .myid-mini .cbtn:hover { transform: translateY(-1px); }
-  .drawer-head .myid-mini .cbtn.done { background: var(--green); }
   .drawer-head .myid-mini .cbtn svg { width: 13px; height: 13px; }
-
   .drawer-body { flex: 1; overflow-y: auto; padding: 14px 12px 20px; }
-  .drawer-body::-webkit-scrollbar { width: 4px; }
-  .drawer-body::-webkit-scrollbar-thumb { background: #d6d9e3; border-radius: 8px; }
-
   .drawer-section-label {
     font-size: 10.5px; font-weight: 700; letter-spacing: 1px;
     text-transform: uppercase; color: var(--muted);
     padding: 12px 10px 8px;
   }
-
   .drawer-item {
     display: flex; align-items: center; gap: 12px;
     padding: 11px 12px; border-radius: 10px;
     font-size: 14px; color: var(--ink);
-    cursor: pointer; transition: background .15s;
+    cursor: pointer;
     border: none; background: transparent; width: 100%;
     text-align: left; font-family: inherit; font-weight: 500;
   }
@@ -447,7 +306,6 @@
     width: 34px; height: 34px; border-radius: 9px;
     background: var(--blue-soft); color: var(--brand);
     display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
   }
   .drawer-item .ic svg { width: 17px; height: 17px; }
   .drawer-item .txt { flex: 1; min-width: 0; }
@@ -462,39 +320,29 @@
   .drawer-item.danger .ic { background: var(--red-soft); color: var(--red); }
   .drawer-item.danger { color: var(--red); }
   .drawer-divider { height: 1px; background: var(--line); margin: 8px 10px; }
-
   .drawer-foot {
     padding: 12px 18px 16px;
     border-top: 1px solid var(--line);
     font-size: 10.5px; color: var(--muted);
-    text-align: center; background: #fafbfd; flex-shrink: 0;
+    text-align: center; background: #fafbfd;
   }
   .drawer-foot b { color: var(--ink-2); font-weight: 700; }
 
-  /* ---------- Generic modal ---------- */
+  /* Modal */
   .modal-overlay {
     position: fixed; inset: 0;
-    background: rgba(15, 20, 35, 0.55);
-    backdrop-filter: blur(3px);
+    background: rgba(15,20,35,.55); backdrop-filter: blur(3px);
     display: none; align-items: center; justify-content: center;
     padding: 20px; z-index: 100;
-    animation: fadeIn .2s ease;
   }
   .modal-overlay.open { display: flex; }
-  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
   .modal {
     background: var(--card); border-radius: 20px;
     width: 100%; max-width: 380px;
     max-height: 92vh; overflow-y: auto;
     padding: 22px 20px 18px;
     box-shadow: 0 24px 60px rgba(16,24,40,.28);
-    animation: popIn .26s cubic-bezier(.2,.8,.2,1);
     position: relative;
-  }
-  @keyframes popIn {
-    from { opacity: 0; transform: translateY(14px) scale(.95); }
-    to   { opacity: 1; transform: translateY(0) scale(1); }
   }
   .modal .m-close {
     position: absolute; top: 12px; right: 12px;
@@ -504,198 +352,118 @@
     display: flex; align-items: center; justify-content: center;
     cursor: pointer;
   }
-  .modal .m-close:hover { background: #eef1f7; }
   .modal .m-close svg { width: 15px; height: 15px; }
 
-  /* ========== QR - SHOW MODAL ========== */
-  .qr-modal h3 {
-    text-align: center; font-size: 17px; font-weight: 700;
-    color: var(--ink); margin-bottom: 4px;
-  }
-  .qr-modal .qr-sub {
-    text-align: center; font-size: 12px;
-    color: var(--muted); margin-bottom: 16px;
-    line-height: 1.5;
-  }
+  /* QR display */
+  .qr-modal h3 { text-align: center; font-size: 17px; font-weight: 700; color: var(--ink); margin-bottom: 4px; }
+  .qr-modal .qr-sub { text-align: center; font-size: 12px; color: var(--muted); margin-bottom: 16px; }
   .qr-wrap {
-    background: #fff;
-    border: 2px solid var(--line);
-    border-radius: 16px;
-    padding: 18px;
+    background: #fff; border: 2px solid var(--line);
+    border-radius: 16px; padding: 18px;
     display: flex; align-items: center; justify-content: center;
     margin: 0 auto 14px;
-    width: fit-content;
-    max-width: 100%;
-    box-shadow: 0 4px 20px rgba(16,24,40,.06);
+    width: fit-content; max-width: 100%;
   }
-  .qr-wrap canvas, .qr-wrap img {
-    display: block;
-    max-width: 100%;
-    height: auto;
-    image-rendering: pixelated;
-  }
+  .qr-wrap canvas, .qr-wrap img { display: block; max-width: 100%; height: auto; }
   .qr-id-box {
-    background: var(--blue-soft);
-    border: 1px solid #cdd9f5;
-    border-radius: 12px;
-    padding: 12px 14px;
-    text-align: center;
-    margin-bottom: 12px;
+    background: var(--blue-soft); border: 1px solid #cdd9f5;
+    border-radius: 12px; padding: 12px 14px;
+    text-align: center; margin-bottom: 12px;
   }
   .qr-id-box .lbl {
     font-size: 10px; font-weight: 700; letter-spacing: .8px;
-    color: var(--muted); text-transform: uppercase;
-    margin-bottom: 4px;
+    color: var(--muted); text-transform: uppercase; margin-bottom: 4px;
   }
   .qr-id-box .v {
     font-family: 'SF Mono', 'Menlo', monospace;
     font-size: 15px; font-weight: 700; color: var(--brand);
     letter-spacing: 1px;
   }
-  .qr-actions {
-    display: flex; gap: 8px;
-  }
+  .qr-actions { display: flex; gap: 8px; }
   .qr-actions button {
-    flex: 1;
-    padding: 11px 12px; border-radius: 11px;
+    flex: 1; padding: 11px 12px; border-radius: 11px;
     font-size: 13px; font-weight: 700;
     cursor: pointer; font-family: inherit;
     display: flex; align-items: center; justify-content: center;
     gap: 6px; border: none;
-    transition: transform .12s, background .15s;
   }
   .qr-actions button svg { width: 15px; height: 15px; }
-  .qr-actions .secondary {
-    background: #f5f6fa; color: var(--ink-2);
-    border: 1px solid var(--line) !important;
-  }
-  .qr-actions .secondary:hover { background: #eef1f7; }
-  .qr-actions .primary-btn {
-    background: var(--brand); color: #fff;
-  }
-  .qr-actions .primary-btn:hover {
-    background: var(--brand-2); transform: translateY(-1px);
-  }
+  .qr-actions .secondary { background: #f5f6fa; color: var(--ink-2); border: 1px solid var(--line) !important; }
+  .qr-actions .primary-btn { background: var(--brand); color: #fff; }
 
-  /* ========== QR - SCAN MODAL ========== */
-  .scan-modal h3 {
-    text-align: center; font-size: 17px; font-weight: 700;
-    color: var(--ink); margin-bottom: 4px;
-  }
-  .scan-modal .scan-sub {
-    text-align: center; font-size: 12px;
-    color: var(--muted); margin-bottom: 14px;
-    line-height: 1.5;
-  }
+  /* Scanner */
+  .scan-modal h3 { text-align: center; font-size: 17px; font-weight: 700; color: var(--ink); margin-bottom: 4px; }
+  .scan-modal .scan-sub { text-align: center; font-size: 12px; color: var(--muted); margin-bottom: 14px; }
   .scanner-box {
-    width: 100%;
-    aspect-ratio: 1;
-    max-height: 60vh;
-    background: #000;
-    border-radius: 16px;
-    overflow: hidden;
-    position: relative;
-    margin-bottom: 14px;
+    width: 100%; aspect-ratio: 1;
+    max-height: 60vh; background: #000;
+    border-radius: 16px; overflow: hidden;
+    position: relative; margin-bottom: 14px;
   }
   .scanner-box video {
-    width: 100%; height: 100%; object-fit: cover;
-    display: block;
+    width: 100%; height: 100%; object-fit: cover; display: block;
   }
   .scanner-frame {
-    position: absolute; inset: 0;
-    pointer-events: none;
+    position: absolute; inset: 0; pointer-events: none;
     display: flex; align-items: center; justify-content: center;
   }
   .scanner-frame::before {
-    content: '';
-    width: 62%; aspect-ratio: 1;
-    border: 3px solid #fff;
-    border-radius: 16px;
+    content: ''; width: 62%; aspect-ratio: 1;
+    border: 3px solid #fff; border-radius: 16px;
     box-shadow: 0 0 0 9999px rgba(0,0,0,.45);
-    animation: scanPulse 1.8s ease-in-out infinite;
-  }
-  @keyframes scanPulse {
-    0%, 100% { opacity: .9; transform: scale(1); }
-    50% { opacity: 1; transform: scale(1.02); }
   }
   .scanner-laser {
-    position: absolute;
-    left: 19%; right: 19%;
+    position: absolute; left: 19%; right: 19%;
     top: 25%; height: 2px;
     background: linear-gradient(90deg, transparent, #22c55e, transparent);
     box-shadow: 0 0 8px #22c55e;
     animation: laserMove 2s ease-in-out infinite;
-    pointer-events: none;
   }
-  @keyframes laserMove {
-    0%, 100% { top: 25%; }
-    50% { top: 75%; }
-  }
+  @keyframes laserMove { 0%,100%{top:25%} 50%{top:75%} }
   .scanner-fallback {
-    position: absolute;
-    inset: 0;
-    display: none;
-    flex-direction: column;
+    position: absolute; inset: 0;
+    display: none; flex-direction: column;
     align-items: center; justify-content: center;
-    gap: 12px;
-    padding: 30px 20px;
-    background: #1f2430;
-    text-align: center;
-    color: #fff;
+    gap: 12px; padding: 30px 20px;
+    background: #1f2430; text-align: center; color: #fff;
   }
   .scanner-fallback.show { display: flex; }
-  .scanner-fallback svg {
-    width: 48px; height: 48px; color: var(--gold);
-    margin-bottom: 4px;
-  }
-  .scanner-fallback .msg {
-    font-size: 13px; line-height: 1.55;
-    color: rgba(255,255,255,.85);
-    max-width: 260px;
+  .scanner-fallback svg { width: 48px; height: 48px; color: var(--gold); }
+  .scanner-fallback .msg { font-size: 13px; line-height: 1.55; color: rgba(255,255,255,.85); max-width: 260px; }
+  .scanner-fallback button {
+    padding: 11px 18px; border-radius: 10px;
+    background: var(--gold); color: #fff; border: none;
+    font-size: 13px; font-weight: 700; cursor: pointer;
   }
   .scanner-status {
-    text-align: center;
-    font-size: 12px;
-    color: var(--muted);
-    margin-bottom: 12px;
-    min-height: 18px;
-    line-height: 1.5;
+    text-align: center; font-size: 12px;
+    color: var(--muted); margin-bottom: 12px;
+    min-height: 18px; line-height: 1.5;
   }
   .scanner-status.error { color: var(--red); font-weight: 600; }
   .scanner-status.ok { color: var(--green); font-weight: 600; }
-  .scan-actions {
-    display: flex; gap: 8px; flex-wrap: wrap;
-  }
+  .scan-actions { display: flex; gap: 8px; }
   .scan-actions button {
-    flex: 1; min-width: 100px;
-    padding: 11px 12px; border-radius: 11px;
+    flex: 1; padding: 11px 12px; border-radius: 11px;
     font-size: 13px; font-weight: 700;
     cursor: pointer; font-family: inherit;
     border: none;
     display: flex; align-items: center; justify-content: center;
     gap: 6px;
-    transition: transform .12s, background .15s;
   }
   .scan-actions button svg { width: 14px; height: 14px; }
   .scan-actions .cancel { background: #f5f6fa; color: var(--ink-2); border: 1px solid var(--line) !important; }
-  .scan-actions .cancel:hover { background: #eef1f7; }
   .scan-actions .retry { background: var(--brand); color: #fff; }
-  .scan-actions .retry:hover { background: var(--brand-2); }
 
-  /* ---------- Image preview modal ---------- */
+  /* Image preview */
   .img-modal {
     position: fixed; inset: 0;
     background: rgba(0,0,0,.92);
     display: none; align-items: center; justify-content: center;
     z-index: 200; padding: 20px;
-    animation: fadeIn .18s ease;
   }
   .img-modal.open { display: flex; }
-  .img-modal img {
-    max-width: 100%; max-height: 100%;
-    border-radius: 8px;
-    box-shadow: 0 20px 60px rgba(0,0,0,.5);
-  }
+  .img-modal img { max-width: 100%; max-height: 100%; border-radius: 8px; }
   .img-modal .close {
     position: absolute; top: 16px; right: 16px;
     width: 40px; height: 40px; border-radius: 50%;
@@ -705,7 +473,7 @@
   }
   .img-modal .close svg { width: 18px; height: 18px; }
 
-  /* ---------- Toast ---------- */
+  /* Toast */
   .toast {
     position: fixed; left: 50%; bottom: 24px;
     transform: translateX(-50%) translateY(120px);
@@ -721,26 +489,12 @@
   }
   .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
   .toast svg { width: 15px; height: 15px; color: var(--green); flex-shrink: 0; }
-
   .hidden { display: none !important; }
 
   @media (min-width: 720px) {
-    body {
-      background: #f4ede1;
-      display: flex; align-items: center; justify-content: center;
-      padding: 20px;
-    }
-    .app {
-      height: 90vh; max-height: 780px;
-      border-radius: 22px;
-      box-shadow: 0 20px 60px rgba(16,24,40,.12), 0 6px 20px rgba(16,24,40,.06);
-      border: 1px solid var(--line); overflow: hidden;
-    }
-    .drawer {
-      position: fixed; height: 90vh; max-height: 780px;
-      border-radius: 22px 0 0 22px;
-      top: 50%; transform: translate(-105%, -50%);
-    }
+    body { background: #f4ede1; display: flex; align-items: center; justify-content: center; padding: 20px; }
+    .app { height: 90vh; max-height: 780px; border-radius: 22px; box-shadow: 0 20px 60px rgba(16,24,40,.12); border: 1px solid var(--line); overflow: hidden; }
+    .drawer { position: fixed; height: 90vh; max-height: 780px; border-radius: 22px 0 0 22px; top: 50%; transform: translate(-105%, -50%); }
     .drawer.open { transform: translate(0, -50%); }
   }
 </style>
@@ -748,15 +502,8 @@
 <body>
 
 <div class="app">
-
   <header class="topbar">
-    <button class="menu-btn" id="menuBtn" title="Menu">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
-        <line x1="3" y1="6" x2="21" y2="6"/>
-        <line x1="3" y1="12" x2="21" y2="12"/>
-        <line x1="3" y1="18" x2="21" y2="18"/>
-      </svg>
-    </button>
+    <button class="menu-btn" id="menuBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
     <div class="title">ConvoLink</div>
     <div class="avatar-chip" id="topAvatar">?</div>
   </header>
@@ -770,13 +517,9 @@
 
   <main class="messages" id="messages">
     <div class="empty" id="emptyState">
-      <div class="icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M21 11.5C21 16.1944 16.9706 20 12 20C10.663 20 9.396 19.7444 8.253 19.283L4 21L5.085 17.025C3.774 15.526 3 13.598 3 11.5C3 6.80558 7.02944 3 12 3C16.9706 3 21 6.80558 21 11.5Z"/>
-        </svg>
-      </div>
+      <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5C21 16.1944 16.9706 20 12 20C10.663 20 9.396 19.7444 8.253 19.283L4 21L5.085 17.025C3.774 15.526 3 13.598 3 11.5C3 6.80558 7.02944 3 12 3C16.9706 3 21 6.80558 21 11.5Z"/></svg></div>
       <h3>Start chatting</h3>
-      <p>Open the menu (☰) and tap <b>My QR Code</b> to share, or <b>Scan QR Code</b> to connect with a friend.</p>
+      <p>Open the menu (☰) and tap <b>My QR Code</b> to share, or <b>Scan QR Code</b> to connect.</p>
     </div>
   </main>
 
@@ -787,319 +530,453 @@
         <div class="ap-name" id="apName">photo.jpg</div>
         <div class="ap-size" id="apSize">120 KB · ready to send</div>
       </div>
-      <button class="ap-remove" id="apRemove" title="Remove">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
-          <line x1="18" y1="6" x2="6" y2="18"/>
-          <line x1="6" y1="6" x2="18" y2="18"/>
-        </svg>
-      </button>
+      <button class="ap-remove" id="apRemove"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
     </div>
   </div>
 
   <div class="input-bar">
-    <button class="tool-btn" id="attachBtn" title="Attach a file">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66L9.64 16.2a2 2 0 0 1-2.83-2.83l8.49-8.48"/>
-      </svg>
-    </button>
-
-    <button class="tool-btn" id="cameraBtn" title="Take a photo">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
-        <circle cx="12" cy="13" r="4"/>
-      </svg>
-    </button>
-
-    <div class="msg-wrap">
-      <input type="text" id="msgInput" placeholder="Type a message…" autocomplete="off" />
-    </div>
-
-    <button class="send-btn" id="sendBtn" title="Send">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-        <line x1="22" y1="2" x2="11" y2="13"/>
-        <polygon points="22 2 15 22 11 13 2 9 22 2"/>
-      </svg>
-    </button>
-
+    <button class="tool-btn" id="attachBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66L9.64 16.2a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg></button>
+    <button class="tool-btn" id="cameraBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></button>
+    <div class="msg-wrap"><input type="text" id="msgInput" placeholder="Type a message…" autocomplete="off" /></div>
+    <button class="send-btn" id="sendBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
     <input type="file" id="fileInput" class="hidden-file" accept="*/*" />
     <input type="file" id="cameraInput" class="hidden-file" accept="image/*" capture="environment" />
-    <!-- QR image fallback input -->
     <input type="file" id="qrImageInput" class="hidden-file" accept="image/*" />
   </div>
-
 </div>
 
-<!-- ================= CONNECT MODAL ================= -->
+<!-- Connect Modal -->
 <div class="modal-overlay" id="connectModal">
   <div class="modal" style="max-width:360px;">
-    <button class="m-close" id="connectCancel">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round">
-        <line x1="18" y1="6" x2="6" y2="18"/>
-        <line x1="6" y1="6" x2="18" y2="18"/>
-      </svg>
-    </button>
-    <div style="width:52px;height:52px;border-radius:14px;background:var(--blue-soft);color:var(--brand);display:flex;align-items:center;justify-content:center;margin:0 auto 14px;">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:24px;height:24px;">
-        <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
-        <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
-      </svg>
-    </div>
+    <button class="m-close" id="connectCancel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
     <h3 style="text-align:center;font-size:16px;font-weight:700;color:var(--ink);margin-bottom:6px;">Connect to a friend</h3>
-    <div style="text-align:center;font-size:12.5px;color:var(--muted);line-height:1.55;margin-bottom:18px;">Paste your friend's Chat ID below to start a private chat.</div>
+    <div style="text-align:center;font-size:12.5px;color:var(--muted);line-height:1.55;margin-bottom:18px;">Paste your friend's Chat ID below.</div>
     <input type="text" id="connectInput" placeholder="CL-XXXX-XXXX" autocomplete="off" spellcheck="false"
-      style="width:100%;padding:13px 14px;background:#f5f6fa;border:1.5px solid var(--line);border-radius:12px;color:var(--ink);font-size:14px;outline:none;font-family:'SF Mono','Menlo',monospace;letter-spacing:1px;font-weight:600;text-align:center;text-transform:uppercase;margin-bottom:6px;" />
-    <div style="font-size:11px;color:var(--muted);text-align:center;margin-bottom:16px;">Ask your friend for their Chat ID</div>
+      style="width:100%;padding:13px 14px;background:#f5f6fa;border:1.5px solid var(--line);border-radius:12px;color:var(--ink);font-size:14px;outline:none;font-family:'SF Mono','Menlo',monospace;letter-spacing:1px;font-weight:600;text-align:center;text-transform:uppercase;margin-bottom:16px;" />
     <div style="display:flex;gap:10px;">
-      <button id="connectCancelBtn" style="flex:1;padding:12px 14px;border-radius:12px;font-size:13.5px;font-weight:700;cursor:pointer;font-family:inherit;background:#f5f6fa;color:var(--ink-2);border:1px solid var(--line);">Cancel</button>
-      <button id="connectConfirm" style="flex:1;padding:12px 14px;border-radius:12px;font-size:13.5px;font-weight:700;cursor:pointer;font-family:inherit;background:var(--brand);color:#fff;border:none;display:flex;align-items:center;justify-content:center;gap:6px;">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px;">
-          <polyline points="20 6 9 17 4 12"/>
-        </svg>
-        Connect
-      </button>
+      <button id="connectCancelBtn" style="flex:1;padding:12px;border-radius:12px;font-size:13.5px;font-weight:700;cursor:pointer;background:#f5f6fa;color:var(--ink-2);border:1px solid var(--line);">Cancel</button>
+      <button id="connectConfirm" style="flex:1;padding:12px;border-radius:12px;font-size:13.5px;font-weight:700;cursor:pointer;background:var(--brand);color:#fff;border:none;">Connect</button>
     </div>
   </div>
 </div>
 
-<!-- ================= SHOW MY QR MODAL ================= -->
+<!-- Connection Request Modal -->
+<div class="modal-overlay" id="requestModal">
+  <div class="modal" style="max-width:360px;text-align:center;">
+    <button class="m-close" id="requestClose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    <div style="width:52px;height:52px;border-radius:16px;background:var(--brand-soft);display:grid;place-items:center;margin:4px auto 12px;color:var(--brand);">
+      <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></svg>
+    </div>
+    <h3 id="requestTitle" style="font-size:17px;font-weight:750;color:var(--ink);margin-bottom:6px;">Connection Request</h3>
+    <div id="requestText" style="font-size:13px;color:var(--muted);line-height:1.55;margin-bottom:18px;">Someone wants to connect with you.</div>
+    <div style="display:flex;gap:10px;">
+      <button id="requestReject" style="flex:1;padding:12px;border-radius:12px;font-size:13.5px;font-weight:700;cursor:pointer;background:#f5f6fa;color:var(--ink-2);border:1px solid var(--line);">Decline</button>
+      <button id="requestAccept" style="flex:1;padding:12px;border-radius:12px;font-size:13.5px;font-weight:700;cursor:pointer;background:var(--brand);color:#fff;border:none;">Accept</button>
+    </div>
+  </div>
+</div>
+
+<!-- QR Show Modal -->
 <div class="modal-overlay" id="qrShowModal">
   <div class="modal qr-modal" style="max-width:380px;">
-    <button class="m-close" id="qrShowClose">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round">
-        <line x1="18" y1="6" x2="6" y2="18"/>
-        <line x1="6" y1="6" x2="18" y2="18"/>
-      </svg>
-    </button>
+    <button class="m-close" id="qrShowClose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
     <h3>My QR Code</h3>
-    <div class="qr-sub">Ask your friend to scan this QR code to connect with you instantly.</div>
-
-    <div class="qr-wrap" id="qrWrap">
-      <canvas id="qrCanvas" width="240" height="240"></canvas>
-    </div>
-
+    <div class="qr-sub">Friend can scan this to connect with you.</div>
+    <div class="qr-wrap"><canvas id="qrCanvas" width="240" height="240"></canvas></div>
     <div class="qr-id-box">
       <div class="lbl">Your Chat ID</div>
       <div class="v" id="qrMyId">—</div>
     </div>
-
     <div class="qr-actions">
-      <button class="secondary" id="qrCopyId">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
-          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-        </svg>
-        Copy ID
-      </button>
-      <button class="primary-btn" id="qrDownload">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-          <polyline points="7 10 12 15 17 10"/>
-          <line x1="12" y1="15" x2="12" y2="3"/>
-        </svg>
-        Save
-      </button>
+      <button class="secondary" id="qrCopyId">Copy ID</button>
+      <button class="primary-btn" id="qrDownload">Save QR</button>
     </div>
   </div>
 </div>
 
-<!-- ================= SCAN QR MODAL ================= -->
+<!-- QR Scan Modal -->
 <div class="modal-overlay" id="qrScanModal">
   <div class="modal scan-modal" style="max-width:400px;">
-    <button class="m-close" id="qrScanClose">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round">
-        <line x1="18" y1="6" x2="6" y2="18"/>
-        <line x1="6" y1="6" x2="18" y2="18"/>
-      </svg>
-    </button>
+    <button class="m-close" id="qrScanClose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
     <h3>Scan QR Code</h3>
-    <div class="scan-sub">Point your camera at your friend's QR code to connect.</div>
-
-    <div class="scanner-box" id="scannerBox">
+    <div class="scan-sub">Point camera at friend's QR code.</div>
+    <div class="scanner-box">
       <video id="scanVideo" playsinline muted autoplay></video>
       <div class="scanner-frame"></div>
       <div class="scanner-laser"></div>
-
-      <!-- Fallback UI when live camera can't open -->
       <div class="scanner-fallback" id="scannerFallback">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
-          <circle cx="12" cy="13" r="4"/>
-          <line x1="1" y1="1" x2="23" y2="23" stroke="#ef4444" stroke-width="2"/>
-        </svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/><line x1="1" y1="1" x2="23" y2="23" stroke="#ef4444" stroke-width="2"/></svg>
         <div class="msg" id="fallbackMsg">Camera could not be opened.</div>
-        <button id="fallbackPickBtn" style="padding:11px 18px;border-radius:10px;background:var(--gold);color:#fff;border:none;font-size:13px;font-weight:700;cursor:pointer;">
-          Pick QR image from gallery
-        </button>
+        <button id="fallbackPickBtn">Pick QR image from gallery</button>
       </div>
     </div>
-
     <div class="scanner-status" id="scannerStatus">Opening camera…</div>
-
     <div class="scan-actions">
       <button class="cancel" id="scanCancelBtn">Cancel</button>
-      <button class="retry" id="scanRetryBtn">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="23 4 23 10 17 10"/>
-          <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
-        </svg>
-        Restart
-      </button>
+      <button class="retry" id="scanRetryBtn">Restart</button>
     </div>
   </div>
 </div>
 
-<!-- ================= IMAGE PREVIEW ================= -->
+<!-- Image Preview -->
 <div class="img-modal" id="imgModal">
-  <button class="close" id="imgClose">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
-      <line x1="18" y1="6" x2="6" y2="18"/>
-      <line x1="6" y1="6" x2="18" y2="18"/>
-    </svg>
-  </button>
+  <button class="close" id="imgClose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
   <img id="imgPreview" src="" alt="" />
 </div>
 
-<!-- ================= DRAWER ================= -->
+<!-- Drawer -->
 <div class="drawer-overlay" id="drawerOverlay"></div>
 <aside class="drawer" id="drawer">
   <div class="drawer-head">
-    <button class="close-btn" id="closeDrawer">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round">
-        <line x1="18" y1="6" x2="6" y2="18"/>
-        <line x1="6" y1="6" x2="18" y2="18"/>
-      </svg>
-    </button>
-
+    <button class="close-btn" id="closeDrawer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
     <div class="avatar-row">
       <div class="avatar-lg" id="drawerAvatar">?</div>
-
-      <button class="google-logo-btn no-gsi" id="googleLogoBtn" title="Sign in with Google">
-        <svg viewBox="0 0 48 48">
-          <path fill="#FFC107" d="M43.611 20.083H42V20H24v8h11.303c-1.649 4.657-6.08 8-11.303 8-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 12.955 4 4 12.955 4 24s8.955 20 20 20 20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z"/>
-          <path fill="#FF3D00" d="M6.306 14.691l6.571 4.819C14.655 15.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 16.318 4 9.656 8.337 6.306 14.691z"/>
-          <path fill="#4CAF50" d="M24 44c5.166 0 9.86-1.977 13.409-5.192l-6.19-5.238A11.91 11.91 0 0 1 24 36c-5.202 0-9.619-3.317-11.283-7.946l-6.522 5.025C9.505 39.556 16.227 44 24 44z"/>
-          <path fill="#1976D2" d="M43.611 20.083H42V20H24v8h11.303a12.04 12.04 0 0 1-4.087 5.571l.003-.002 6.19 5.238C36.971 39.205 44 34 44 24c0-1.341-.138-2.65-.389-3.917z"/>
-        </svg>
+      <button class="google-logo-btn no-gsi" id="googleLogoBtn">
+        <svg viewBox="0 0 48 48"><path fill="#FFC107" d="M43.611 20.083H42V20H24v8h11.303c-1.649 4.657-6.08 8-11.303 8-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 12.955 4 4 12.955 4 24s8.955 20 20 20 20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z"/><path fill="#FF3D00" d="M6.306 14.691l6.571 4.819C14.655 15.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 16.318 4 9.656 8.337 6.306 14.691z"/><path fill="#4CAF50" d="M24 44c5.166 0 9.86-1.977 13.409-5.192l-6.19-5.238A11.91 11.91 0 0 1 24 36c-5.202 0-9.619-3.317-11.283-7.946l-6.522 5.025C9.505 39.556 16.227 44 24 44z"/><path fill="#1976D2" d="M43.611 20.083H42V20H24v8h11.303a12.04 12.04 0 0 1-4.087 5.571l.003-.002 6.19 5.238C36.971 39.205 44 34 44 24c0-1.341-.138-2.65-.389-3.917z"/></svg>
         <span class="real-gsi-mount" id="realGsiMount"></span>
       </button>
     </div>
-
     <div class="who">
       <div class="name" id="drawerName">Guest User</div>
       <div class="email" id="drawerEmail">Not signed in</div>
     </div>
-
     <div class="myid-mini">
       <span class="lbl">My ID</span>
       <span class="v" id="drawerMyId">—</span>
-      <button class="cbtn" id="drawerCopyId" title="Copy my ID">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
-          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-        </svg>
-      </button>
+      <button class="cbtn" id="drawerCopyId"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
     </div>
   </div>
 
   <div class="drawer-body">
     <div class="drawer-section-label">Connect</div>
-
     <button class="drawer-item qr" id="menuShowQR">
-      <span class="ic">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="3" y="3" width="7" height="7" rx="1"/>
-          <rect x="14" y="3" width="7" height="7" rx="1"/>
-          <rect x="3" y="14" width="7" height="7" rx="1"/>
-          <line x1="14" y1="14" x2="14" y2="14.01"/>
-          <line x1="18" y1="14" x2="21" y2="14"/>
-          <line x1="14" y1="18" x2="14" y2="21"/>
-          <line x1="18" y1="18" x2="21" y2="18"/>
-          <line x1="18" y1="21" x2="21" y2="21"/>
-          <line x1="14" y1="21" x2="17" y2="21"/>
-          <line x1="21" y1="14" x2="21" y2="17"/>
-        </svg>
-      </span>
+      <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><line x1="14" y1="14" x2="14" y2="14.01"/><line x1="18" y1="14" x2="21" y2="14"/><line x1="14" y1="18" x2="14" y2="21"/><line x1="18" y1="18" x2="21" y2="18"/></svg></span>
       <span class="txt">My QR Code<small>Show to a friend</small></span>
     </button>
-
     <button class="drawer-item qr" id="menuScanQR">
-      <span class="ic">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M3 7V5a2 2 0 0 1 2-2h2"/>
-          <path d="M17 3h2a2 2 0 0 1 2 2v2"/>
-          <path d="M21 17v2a2 2 0 0 1-2 2h-2"/>
-          <path d="M7 21H5a2 2 0 0 1-2-2v-2"/>
-          <line x1="3" y1="12" x2="21" y2="12"/>
-        </svg>
-      </span>
+      <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><line x1="3" y1="12" x2="21" y2="12"/></svg></span>
       <span class="txt">Scan QR Code<small>Connect instantly</small></span>
     </button>
-
     <button class="drawer-item primary" id="menuConnect">
-      <span class="ic">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
-          <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
-        </svg>
-      </span>
+      <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></span>
       <span class="txt">Connect by Chat ID<small>Paste manually</small></span>
     </button>
-
     <div class="drawer-divider"></div>
     <div class="drawer-section-label">Chat</div>
-
     <button class="drawer-item" id="menuCopyId">
-      <span class="ic">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
-          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-        </svg>
-      </span>
+      <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></span>
       <span class="txt">Copy my Chat ID<small>Share with a friend</small></span>
     </button>
-
     <div class="drawer-divider"></div>
     <div class="drawer-section-label">More</div>
-
     <button class="drawer-item danger" id="menuReset">
-      <span class="ic">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-          <polyline points="16 17 21 12 16 7"/>
-          <line x1="21" y1="12" x2="9" y2="12"/>
-        </svg>
-      </span>
-      <span class="txt">Reset session<small>Get a new Chat ID</small></span>
+      <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></span>
+      <span class="txt">Reset session<small>New Chat ID</small></span>
     </button>
   </div>
-
   <div class="drawer-foot">Made with <b>ConvoLink</b> · v1.0</div>
 </aside>
 
 <div class="toast" id="toast">
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-    <polyline points="20 6 9 17 4 12"/>
-  </svg>
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
   <span id="toastMsg">Copied!</span>
 </div>
 
-<!-- Firebase SDK -->
+<!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-database-compat.js"></script>
-<!-- QR code generator -->
-<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
-<!-- QR code scanner (jsQR) -->
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
+<!-- jsQR (for scanner) -->
 <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
 
 <script>
 /* ============================================================
-   ConvoLink — Firebase chat + QR
-   • Robust scanner: live camera + image-upload fallback
-   • Detailed error messages so user knows exactly what's wrong
+   QR GENERATOR — built-in (no external library)
+   This is a compact QR code encoder supporting byte mode, ECC level L.
+   It's adapted from the classic public-domain qrcode.js approach.
+   ============================================================ */
+(function(global){
+  'use strict';
+
+  function QR8bitByte(data) { this.mode = 4; this.data = data; this.parsedData = []; for (var i=0, l=this.data.length; i<l; i++) { this.parsedData.push(this.data.charCodeAt(i)); } }
+  QR8bitByte.prototype = { getLength: function(){ return this.parsedData.length; }, write: function(buffer){ for (var i=0, l=this.parsedData.length; i<l; i++) { buffer.put(this.parsedData[i], 8); } } };
+
+  function QRCodeModel(typeNumber, errorCorrectLevel) {
+    this.typeNumber = typeNumber;
+    this.errorCorrectLevel = errorCorrectLevel;
+    this.modules = null;
+    this.moduleCount = 0;
+    this.dataCache = null;
+    this.dataList = [];
+  }
+  QRCodeModel.prototype = {
+    addData: function(data) { var newData = new QR8bitByte(data); this.dataList.push(newData); this.dataCache = null; },
+    isDark: function(row, col) { if (row<0 || this.moduleCount<=row || col<0 || this.moduleCount<=col) throw new Error(row+','+col); return this.modules[row][col]; },
+    getModuleCount: function() { return this.moduleCount; },
+    make: function() { this.makeImpl(false, this.getBestMaskPattern()); },
+    makeImpl: function(test, maskPattern) {
+      this.moduleCount = this.typeNumber * 4 + 17;
+      this.modules = new Array(this.moduleCount);
+      for (var row=0; row<this.moduleCount; row++) { this.modules[row] = new Array(this.moduleCount); for (var col=0; col<this.moduleCount; col++) this.modules[row][col] = null; }
+      this.setupPositionProbePattern(0, 0);
+      this.setupPositionProbePattern(this.moduleCount - 7, 0);
+      this.setupPositionProbePattern(0, this.moduleCount - 7);
+      this.setupPositionAdjustPattern();
+      this.setupTimingPattern();
+      this.setupTypeInfo(test, maskPattern);
+      if (this.typeNumber >= 7) this.setupTypeNumber(test);
+      if (this.dataCache == null) this.dataCache = QRCodeModel.createData(this.typeNumber, this.errorCorrectLevel, this.dataList);
+      this.mapData(this.dataCache, maskPattern);
+    },
+    setupPositionProbePattern: function(row, col) {
+      for (var r=-1; r<=7; r++) { if (row+r<=-1 || this.moduleCount<=row+r) continue; for (var c=-1; c<=7; c++) { if (col+c<=-1 || this.moduleCount<=col+c) continue; if ((0<=r && r<=6 && (c==0 || c==6)) || (0<=c && c<=6 && (r==0 || r==6)) || (2<=r && r<=4 && 2<=c && c<=4)) { this.modules[row+r][col+c] = true; } else { this.modules[row+r][col+c] = false; } } }
+    },
+    setupTimingPattern: function() { for (var r=8; r<this.moduleCount-8; r++) { if (this.modules[r][6] != null) continue; this.modules[r][6] = (r % 2 == 0); } for (var c=8; c<this.moduleCount-8; c++) { if (this.modules[6][c] != null) continue; this.modules[6][c] = (c % 2 == 0); } },
+    setupPositionAdjustPattern: function() { var pos = QRUtil.getPatternPosition(this.typeNumber); for (var i=0; i<pos.length; i++) { for (var j=0; j<pos.length; j++) { var row=pos[i], col=pos[j]; if (this.modules[row][col] != null) continue; for (var r=-2; r<=2; r++) { for (var c=-2; c<=2; c++) { if (r==-2 || r==2 || c==-2 || c==2 || (r==0 && c==0)) this.modules[row+r][col+c] = true; else this.modules[row+r][col+c] = false; } } } } },
+    setupTypeNumber: function(test) { var bits = QRUtil.getBCHTypeNumber(this.typeNumber); for (var i=0; i<18; i++) { var mod = (!test && ((bits>>i)&1)==1); this.modules[Math.floor(i/3)][i%3 + this.moduleCount - 8 - 3] = mod; } for (var i=0; i<18; i++) { var mod = (!test && ((bits>>i)&1)==1); this.modules[i%3 + this.moduleCount - 8 - 3][Math.floor(i/3)] = mod; } },
+    setupTypeInfo: function(test, maskPattern) {
+      var data = (this.errorCorrectLevel << 3) | maskPattern;
+      var bits = QRUtil.getBCHTypeInfo(data);
+      for (var i=0; i<15; i++) { var mod = (!test && ((bits>>i)&1)==1); if (i<6) this.modules[i][8] = mod; else if (i<8) this.modules[i+1][8] = mod; else this.modules[this.moduleCount - 15 + i][8] = mod; }
+      for (var i=0; i<15; i++) { var mod = (!test && ((bits>>i)&1)==1); if (i<8) this.modules[8][this.moduleCount - i - 1] = mod; else if (i<9) this.modules[8][15 - i - 1 + 1] = mod; else this.modules[8][15 - i - 1] = mod; }
+      this.modules[this.moduleCount - 8][8] = (!test);
+    },
+    mapData: function(data, maskPattern) {
+      var inc = -1, row = this.moduleCount - 1, bitIndex = 7, byteIndex = 0;
+      for (var col = this.moduleCount - 1; col > 0; col -= 2) {
+        if (col == 6) col--;
+        while (true) {
+          for (var c=0; c<2; c++) {
+            if (this.modules[row][col-c] == null) {
+              var dark = false;
+              if (byteIndex < data.length) dark = (((data[byteIndex] >>> bitIndex) & 1) == 1);
+              var mask = QRUtil.getMask(maskPattern, row, col-c);
+              if (mask) dark = !dark;
+              this.modules[row][col-c] = dark;
+              bitIndex--;
+              if (bitIndex == -1) { byteIndex++; bitIndex = 7; }
+            }
+          }
+          row += inc;
+          if (row < 0 || this.moduleCount <= row) { row -= inc; inc = -inc; break; }
+        }
+      }
+    },
+    getBestMaskPattern: function() { var minLostPoint = 0, pattern = 0; for (var i=0; i<8; i++) { this.makeImpl(true, i); var lostPoint = QRUtil.getLostPoint(this); if (i==0 || minLostPoint > lostPoint) { minLostPoint = lostPoint; pattern = i; } } return pattern; }
+  };
+
+  QRCodeModel.createData = function(typeNumber, errorCorrectLevel, dataList) {
+    var rsBlocks = QRRSBlock.getRSBlocks(typeNumber, errorCorrectLevel);
+    var buffer = new QRBitBuffer();
+    for (var i=0; i<dataList.length; i++) { var data = dataList[i]; buffer.put(data.mode, 4); buffer.put(data.getLength(), QRUtil.getLengthInBits(data.mode, typeNumber)); data.write(buffer); }
+    var totalDataCount = 0;
+    for (var i=0; i<rsBlocks.length; i++) totalDataCount += rsBlocks[i].dataCount;
+    if (buffer.getLengthInBits() > totalDataCount * 8) throw new Error('code length overflow. (' + buffer.getLengthInBits() + '>' + totalDataCount * 8 + ')');
+    if (buffer.getLengthInBits() + 4 <= totalDataCount * 8) buffer.put(0, 4);
+    while (buffer.getLengthInBits() % 8 != 0) buffer.putBit(false);
+    while (true) {
+      if (buffer.getLengthInBits() >= totalDataCount * 8) break;
+      buffer.put(0xEC, 8);
+      if (buffer.getLengthInBits() >= totalDataCount * 8) break;
+      buffer.put(0x11, 8);
+    }
+    return QRCodeModel.createBytes(buffer, rsBlocks);
+  };
+
+  QRCodeModel.createBytes = function(buffer, rsBlocks) {
+    var offset = 0, maxDcCount = 0, maxEcCount = 0;
+    var dcdata = new Array(rsBlocks.length), ecdata = new Array(rsBlocks.length);
+    for (var r=0; r<rsBlocks.length; r++) {
+      var dcCount = rsBlocks[r].dataCount, ecCount = rsBlocks[r].totalCount - dcCount;
+      maxDcCount = Math.max(maxDcCount, dcCount);
+      maxEcCount = Math.max(maxEcCount, ecCount);
+      dcdata[r] = new Array(dcCount);
+      for (var i=0; i<dcdata[r].length; i++) dcdata[r][i] = 0xff & buffer.buffer[i + offset];
+      offset += dcCount;
+      var rsPoly = QRUtil.getErrorCorrectPolynomial(ecCount);
+      var rawPoly = new QRPolynomial(dcdata[r], rsPoly.getLength() - 1);
+      var modPoly = rawPoly.mod(rsPoly);
+      ecdata[r] = new Array(rsPoly.getLength() - 1);
+      for (var i=0; i<ecdata[r].length; i++) { var modIndex = i + modPoly.getLength() - ecdata[r].length; ecdata[r][i] = (modIndex >= 0) ? modPoly.get(modIndex) : 0; }
+    }
+    var totalCodeCount = 0;
+    for (var i=0; i<rsBlocks.length; i++) totalCodeCount += rsBlocks[i].totalCount;
+    var data = new Array(totalCodeCount), index = 0;
+    for (var i=0; i<maxDcCount; i++) { for (var r=0; r<rsBlocks.length; r++) { if (i < dcdata[r].length) data[index++] = dcdata[r][i]; } }
+    for (var i=0; i<maxEcCount; i++) { for (var r=0; r<rsBlocks.length; r++) { if (i < ecdata[r].length) data[index++] = ecdata[r][i]; } }
+    return data;
+  };
+
+  var QRMode = { MODE_8BIT_BYTE: 4 };
+  var QRErrorCorrectLevel = { L: 1, M: 0, Q: 3, H: 2 };
+
+  var QRMaskPattern = { PATTERN000:0, PATTERN001:1, PATTERN010:2, PATTERN011:3, PATTERN100:4, PATTERN101:5, PATTERN110:6, PATTERN111:7 };
+
+  var QRUtil = {
+    PATTERN_POSITION_TABLE: [[],[6,18],[6,22],[6,26],[6,30],[6,34],[6,22,38],[6,24,42],[6,26,46],[6,28,50],[6,30,54],[6,32,58],[6,34,62],[6,26,46,66],[6,26,48,70],[6,26,50,74],[6,30,54,78],[6,30,56,82],[6,30,58,86],[6,34,62,90],[6,28,50,72,94],[6,26,50,74,98],[6,30,54,78,102],[6,28,54,80,106],[6,32,58,84,110],[6,30,58,86,114],[6,34,62,90,118],[6,26,50,74,98,122],[6,30,54,78,102,126],[6,26,52,78,104,130],[6,30,56,82,108,134],[6,34,60,86,112,138],[6,30,58,86,114,142],[6,34,62,90,118,146],[6,30,54,78,102,126,150],[6,24,50,76,102,128,154],[6,28,54,80,106,132,158],[6,32,58,84,110,136,162],[6,26,54,82,110,138,166],[6,30,58,86,114,142,170]],
+    G15: (1<<10)|(1<<8)|(1<<5)|(1<<4)|(1<<2)|(1<<1)|(1<<0),
+    G18: (1<<12)|(1<<11)|(1<<10)|(1<<9)|(1<<8)|(1<<5)|(1<<2)|(1<<0),
+    G15_MASK: (1<<14)|(1<<12)|(1<<10)|(1<<4)|(1<<1),
+    getBCHTypeInfo: function(data) { var d = data << 10; while (QRUtil.getBCHDigit(d) - QRUtil.getBCHDigit(QRUtil.G15) >= 0) d ^= (QRUtil.G15 << (QRUtil.getBCHDigit(d) - QRUtil.getBCHDigit(QRUtil.G15))); return ((data << 10) | d) ^ QRUtil.G15_MASK; },
+    getBCHTypeNumber: function(data) { var d = data << 12; while (QRUtil.getBCHDigit(d) - QRUtil.getBCHDigit(QRUtil.G18) >= 0) d ^= (QRUtil.G18 << (QRUtil.getBCHDigit(d) - QRUtil.getBCHDigit(QRUtil.G18))); return (data << 12) | d; },
+    getBCHDigit: function(data) { var digit = 0; while (data != 0) { digit++; data >>>= 1; } return digit; },
+    getPatternPosition: function(typeNumber) { return QRUtil.PATTERN_POSITION_TABLE[typeNumber - 1]; },
+    getMask: function(maskPattern, i, j) { switch (maskPattern) { case QRMaskPattern.PATTERN000: return (i + j) % 2 == 0; case QRMaskPattern.PATTERN001: return i % 2 == 0; case QRMaskPattern.PATTERN010: return j % 3 == 0; case QRMaskPattern.PATTERN011: return (i + j) % 3 == 0; case QRMaskPattern.PATTERN100: return (Math.floor(i / 2) + Math.floor(j / 3)) % 2 == 0; case QRMaskPattern.PATTERN101: return (i * j) % 2 + (i * j) % 3 == 0; case QRMaskPattern.PATTERN110: return ((i * j) % 2 + (i * j) % 3) % 2 == 0; case QRMaskPattern.PATTERN111: return ((i * j) % 3 + (i + j) % 2) % 2 == 0; default: throw new Error('bad maskPattern:' + maskPattern); } },
+    getErrorCorrectPolynomial: function(errorCorrectLength) { var a = new QRPolynomial([1], 0); for (var i=0; i<errorCorrectLength; i++) a = a.multiply(new QRPolynomial([1, QRMath.gexp(i)], 0)); return a; },
+    getLengthInBits: function(mode, type) { if (1 <= type && type < 10) { switch (mode) { case 4: return 8; } } else if (type < 27) { switch (mode) { case 4: return 16; } } else if (type < 41) { switch (mode) { case 4: return 16; } } throw new Error('mode:' + mode + ';type:' + type); },
+    getLostPoint: function(qrCode) {
+      var moduleCount = qrCode.getModuleCount();
+      var lostPoint = 0;
+      for (var row=0; row<moduleCount; row++) { for (var col=0; col<moduleCount; col++) { var sameCount = 0; var dark = qrCode.isDark(row, col); for (var r=-1; r<=1; r++) { if (row+r < 0 || moduleCount <= row+r) continue; for (var c=-1; c<=1; c++) { if (col+c < 0 || moduleCount <= col+c) continue; if (r==0 && c==0) continue; if (dark == qrCode.isDark(row+r, col+c)) sameCount++; } } if (sameCount > 5) lostPoint += (3 + sameCount - 5); } }
+      for (var row=0; row<moduleCount-1; row++) { for (var col=0; col<moduleCount-1; col++) { var count=0; if (qrCode.isDark(row,col)) count++; if (qrCode.isDark(row+1,col)) count++; if (qrCode.isDark(row,col+1)) count++; if (qrCode.isDark(row+1,col+1)) count++; if (count==0 || count==4) lostPoint += 3; } }
+      for (var row=0; row<moduleCount; row++) { for (var col=0; col<moduleCount-6; col++) { if (qrCode.isDark(row,col) && !qrCode.isDark(row,col+1) && qrCode.isDark(row,col+2) && qrCode.isDark(row,col+3) && qrCode.isDark(row,col+4) && !qrCode.isDark(row,col+5) && qrCode.isDark(row,col+6)) lostPoint += 40; } }
+      for (var col=0; col<moduleCount; col++) { for (var row=0; row<moduleCount-6; row++) { if (qrCode.isDark(row,col) && !qrCode.isDark(row+1,col) && qrCode.isDark(row+2,col) && qrCode.isDark(row+3,col) && qrCode.isDark(row+4,col) && !qrCode.isDark(row+5,col) && qrCode.isDark(row+6,col)) lostPoint += 40; } }
+      var darkCount = 0;
+      for (var col=0; col<moduleCount; col++) for (var row=0; row<moduleCount; row++) if (qrCode.isDark(row,col)) darkCount++;
+      var ratio = Math.abs(100 * darkCount / moduleCount / moduleCount - 50) / 5;
+      lostPoint += ratio * 10;
+      return lostPoint;
+    }
+  };
+
+  var QRMath = {
+    glog: function(n) { if (n < 1) throw new Error('glog(' + n + ')'); return QRMath.LOG_TABLE[n]; },
+    gexp: function(n) { while (n < 0) n += 255; while (n >= 256) n -= 255; return QRMath.EXP_TABLE[n]; },
+    EXP_TABLE: new Array(256),
+    LOG_TABLE: new Array(256)
+  };
+  for (var i=0; i<8; i++) QRMath.EXP_TABLE[i] = 1 << i;
+  for (var i=8; i<256; i++) QRMath.EXP_TABLE[i] = QRMath.EXP_TABLE[i-4] ^ QRMath.EXP_TABLE[i-5] ^ QRMath.EXP_TABLE[i-6] ^ QRMath.EXP_TABLE[i-8];
+  for (var i=0; i<255; i++) QRMath.LOG_TABLE[QRMath.EXP_TABLE[i]] = i;
+
+  function QRPolynomial(num, shift) {
+    if (num.length == undefined) throw new Error(num.length + '/' + shift);
+    var offset = 0;
+    while (offset < num.length && num[offset] == 0) offset++;
+    this.num = new Array(num.length - offset + shift);
+    for (var i=0; i<num.length - offset; i++) this.num[i] = num[i + offset];
+  }
+  QRPolynomial.prototype = {
+    get: function(index) { return this.num[index]; },
+    getLength: function() { return this.num.length; },
+    multiply: function(e) { var num = new Array(this.getLength() + e.getLength() - 1); for (var i=0; i<this.getLength(); i++) for (var j=0; j<e.getLength(); j++) num[i+j] ^= QRMath.gexp(QRMath.glog(this.get(i)) + QRMath.glog(e.get(j))); return new QRPolynomial(num, 0); },
+    mod: function(e) { if (this.getLength() - e.getLength() < 0) return this; var ratio = QRMath.glog(this.get(0)) - QRMath.glog(e.get(0)); var num = new Array(this.getLength()); for (var i=0; i<this.getLength(); i++) num[i] = this.get(i); for (var i=0; i<e.getLength(); i++) num[i] ^= QRMath.gexp(QRMath.glog(e.get(i)) + ratio); return new QRPolynomial(num, 0).mod(e); }
+  };
+
+  function QRRSBlock(totalCount, dataCount) { this.totalCount = totalCount; this.dataCount = dataCount; }
+  QRRSBlock.RS_BLOCK_TABLE = [
+    [1,26,19],[1,26,16],[1,26,13],[1,26,9],
+    [1,44,34],[1,44,28],[1,44,22],[1,44,16],
+    [1,70,55],[1,70,44],[2,35,17],[2,35,13],
+    [1,100,80],[2,50,32],[2,50,24],[4,25,9],
+    [1,134,108],[2,67,43],[2,33,15,2,34,16],[2,33,11,2,34,12],
+    [2,86,68],[4,43,27],[4,43,19],[4,43,15],
+    [2,98,78],[4,49,31],[2,32,14,4,33,15],[4,39,13,1,40,14],
+    [2,121,97],[2,60,38,2,61,39],[4,40,18,2,41,19],[4,40,14,2,41,15],
+    [2,146,116],[3,58,36,2,59,37],[4,36,16,4,37,17],[4,36,12,4,37,13],
+    [2,86,68,2,87,69],[4,69,43,1,70,44],[6,43,19,2,44,20],[6,43,15,2,44,16],
+    [4,101,81],[1,80,50,4,81,51],[4,50,22,4,51,23],[3,36,12,8,37,13],
+    [2,116,92,2,117,93],[6,58,36,2,59,37],[4,46,20,6,47,21],[7,42,14,4,43,15],
+    [4,133,107],[8,59,37,1,60,38],[8,44,20,4,45,21],[12,33,11,4,34,12],
+    [3,145,115,1,146,116],[4,64,40,5,65,41],[11,36,16,5,37,17],[11,36,12,5,37,13],
+    [5,109,87,1,110,88],[5,65,41,5,66,42],[5,54,24,7,55,25],[11,36,12,7,37,13],
+    [5,122,98,1,123,99],[7,73,45,3,74,46],[15,43,19,2,44,20],[3,45,15,13,46,16],
+    [1,135,107,5,136,108],[10,74,46,1,75,47],[1,50,22,15,51,23],[2,42,14,17,43,15],
+    [5,150,120,1,151,121],[9,69,43,4,70,44],[17,50,22,1,51,23],[2,42,14,19,43,15],
+    [3,141,113,4,142,114],[3,70,44,11,71,45],[17,47,21,4,48,22],[9,39,13,16,40,14],
+    [3,135,107,5,136,108],[3,67,41,13,68,42],[15,54,24,5,55,25],[15,43,15,10,44,16],
+    [4,144,116,4,145,117],[17,68,42],[17,50,22,6,51,23],[19,46,16,6,47,17],
+    [2,139,111,7,140,112],[17,74,46],[7,54,24,16,55,25],[34,37,13],
+    [4,151,121,5,152,122],[4,75,47,14,76,48],[11,54,24,14,55,25],[16,45,15,14,46,16],
+    [6,147,117,4,148,118],[6,73,45,14,74,46],[11,54,24,16,55,25],[30,46,16,2,47,17],
+    [8,132,106,4,133,107],[8,75,47,13,76,48],[7,54,24,22,55,25],[22,45,15,13,46,16],
+    [10,142,114,2,143,115],[19,74,46,4,75,47],[28,50,22,6,51,23],[33,46,16,4,47,17],
+    [8,152,122,4,153,123],[22,73,45,3,74,46],[8,53,23,26,54,24],[12,45,15,28,46,16],
+    [3,147,117,10,148,118],[3,73,45,23,74,46],[4,54,24,31,55,25],[11,45,15,31,46,16],
+    [7,146,116,7,147,117],[21,73,45,7,74,46],[1,53,23,37,54,24],[19,45,15,26,46,16],
+    [5,145,115,10,146,116],[19,75,47,10,76,48],[15,54,24,25,55,25],[23,45,15,25,46,16],
+    [13,145,115,3,146,116],[2,74,46,29,75,47],[42,54,24,1,55,25],[23,45,15,28,46,16],
+    [17,145,115],[10,74,46,23,75,47],[10,54,24,35,55,25],[19,45,15,35,46,16],
+    [17,145,115,1,146,116],[14,74,46,21,75,47],[29,54,24,19,55,25],[11,45,15,46,46,16],
+    [13,145,115,6,146,116],[14,74,46,23,75,47],[44,54,24,7,55,25],[59,46,16,1,47,17],
+    [12,151,121,7,152,122],[12,75,47,26,76,48],[39,54,24,14,55,25],[22,45,15,41,46,16],
+    [6,151,121,14,152,122],[6,75,47,34,76,48],[46,54,24,10,55,25],[2,45,15,64,46,16],
+    [17,152,122,4,153,123],[29,74,46,14,75,47],[49,54,24,10,55,25],[24,45,15,46,46,16],
+    [4,152,122,18,153,123],[13,74,46,32,75,47],[48,54,24,14,55,25],[42,45,15,32,46,16],
+    [20,147,117,4,148,118],[40,75,47,7,76,48],[43,54,24,22,55,25],[10,45,15,67,46,16],
+    [19,148,118,6,149,119],[18,75,47,31,76,48],[34,54,24,34,55,25],[20,45,15,61,46,16]
+  ];
+  QRRSBlock.getRSBlocks = function(typeNumber, errorCorrectLevel) {
+    var rsBlock = QRRSBlock.getRsBlockTable(typeNumber, errorCorrectLevel);
+    if (rsBlock == undefined) throw new Error('bad rs block @ typeNumber:' + typeNumber + '/errorCorrectLevel:' + errorCorrectLevel);
+    var length = rsBlock.length / 3;
+    var list = [];
+    for (var i=0; i<length; i++) { var count = rsBlock[i*3+0], totalCount = rsBlock[i*3+1], dataCount = rsBlock[i*3+2]; for (var j=0; j<count; j++) list.push(new QRRSBlock(totalCount, dataCount)); }
+    return list;
+  };
+  QRRSBlock.getRsBlockTable = function(typeNumber, errorCorrectLevel) {
+    switch (errorCorrectLevel) {
+      case QRErrorCorrectLevel.L: return QRRSBlock.RS_BLOCK_TABLE[(typeNumber-1)*4 + 0];
+      case QRErrorCorrectLevel.M: return QRRSBlock.RS_BLOCK_TABLE[(typeNumber-1)*4 + 1];
+      case QRErrorCorrectLevel.Q: return QRRSBlock.RS_BLOCK_TABLE[(typeNumber-1)*4 + 2];
+      case QRErrorCorrectLevel.H: return QRRSBlock.RS_BLOCK_TABLE[(typeNumber-1)*4 + 3];
+      default: return undefined;
+    }
+  };
+
+  function QRBitBuffer() { this.buffer = []; this.length = 0; }
+  QRBitBuffer.prototype = {
+    get: function(index) { var bufIndex = Math.floor(index / 8); return ((this.buffer[bufIndex] >>> (7 - index % 8)) & 1) == 1; },
+    put: function(num, length) { for (var i=0; i<length; i++) this.putBit(((num >>> (length - i - 1)) & 1) == 1); },
+    getLengthInBits: function() { return this.length; },
+    putBit: function(bit) { var bufIndex = Math.floor(this.length / 8); if (this.buffer.length <= bufIndex) this.buffer.push(0); if (bit) this.buffer[bufIndex] |= (0x80 >>> (this.length % 8)); this.length++; }
+  };
+
+  // Auto-detect best type number for given data length
+  function getTypeNumberForData(data) {
+    var len = data.length;
+    var limits = [17,32,53,78,106,134,154,192,230,271,321,367,425,458,520,586,644,718,792,858,929,1003,1091,1171,1273,1367,1465,1528,1628,1732,1840,1952,2068,2188,2303,2431,2563,2699,2809,2953]; // approx limits for byte mode, ECC L
+    for (var i=0; i<limits.length; i++) if (len <= limits[i]) return i+1;
+    throw new Error('Data too long for QR');
+  }
+
+  global.QRLite = {
+    toCanvas: function(canvas, text, options) {
+      options = options || {};
+      var size = options.width || 240;
+      var margin = (options.margin != null) ? options.margin : 4;
+      var darkColor = (options.color && options.color.dark) || '#000000';
+      var lightColor = (options.color && options.color.light) || '#ffffff';
+
+      var typeNumber = getTypeNumberForData(text);
+      var qr = new QRCodeModel(typeNumber, QRErrorCorrectLevel.L);
+      qr.addData(text);
+      qr.make();
+
+      var count = qr.getModuleCount();
+      var cellSize = Math.floor((size - margin*2) / count);
+      var actualSize = cellSize * count + margin*2;
+
+      canvas.width = actualSize;
+      canvas.height = actualSize;
+      var ctx = canvas.getContext('2d');
+      ctx.fillStyle = lightColor;
+      ctx.fillRect(0, 0, actualSize, actualSize);
+      ctx.fillStyle = darkColor;
+      for (var r=0; r<count; r++) {
+        for (var c=0; c<count; c++) {
+          if (qr.isDark(r, c)) ctx.fillRect(margin + c*cellSize, margin + r*cellSize, cellSize, cellSize);
+        }
+      }
+      return true;
+    }
+  };
+})(window);
+/* ============================================================
+   END QR GENERATOR
    ============================================================ */
 
 const GOOGLE_CLIENT_ID = "617375562543-iojpcek0skc33nd3tvi1osn4iguivktd.apps.googleusercontent.com";
-
 const firebaseConfig = {
   apiKey: "AIzaSyB664ss54zAPuKsXHoXgc47HgIO-I5945w",
   authDomain: "my-chat-f66d9.firebaseapp.com",
@@ -1110,888 +987,448 @@ const firebaseConfig = {
   appId: "1:362465791785:web:9d56b5335f1185ae2bb138",
   measurementId: "G-D3W0974QLF"
 };
-
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
+const auth = firebase.auth();
+try { auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL); } catch(e) {}
 
 const QR_PREFIX = "CONVOLINK:";
-
-let me = null;
-let partnerId = null;
-let partnerName = 'Friend';
+let me = null, partnerId = null, partnerName = 'Friend';
 let gsiReady = false;
-let presenceRef = null;
-let incomingReqRef = null;
-let messageRef = null;
+let presenceRef = null, incomingReqRef = null, messageRef = null;
 let pendingAttachment = null;
-
-let scanStream = null;
-let scanRAF = null;
-let scanCanvas = null;
-let scanCtx = null;
-let scanActive = false;
+let scanStream = null, scanRAF = null, scanCanvas = null, scanCtx = null, scanActive = false;
 
 const ME_KEY = "convolink_me";
 const PARTNER_KEY = "convolink_partner";
 const MSG_KEY = "convolink_messages";
 const LOCAL_ONLY_KEY = "convolink_local_only";
-
 let LOCAL_ONLY = true;
 
 const $ = id => document.getElementById(id);
+const messagesEl = $('messages'), emptyState = $('emptyState');
+const msgInput = $('msgInput'), sendBtn = $('sendBtn');
+const attachBtn = $('attachBtn'), cameraBtn = $('cameraBtn');
+const fileInput = $('fileInput'), cameraInput = $('cameraInput'), qrImageInput = $('qrImageInput');
+const statusChip = $('statusChip'), statusText = $('statusText');
+const topAvatar = $('topAvatar'), drawerAvatar = $('drawerAvatar');
+const drawerName = $('drawerName'), drawerEmail = $('drawerEmail'), drawerMyId = $('drawerMyId');
+const drawerCopyId = $('drawerCopyId');
+const drawer = $('drawer'), drawerOverlay = $('drawerOverlay');
+const googleLogoBtn = $('googleLogoBtn'), realGsiMount = $('realGsiMount');
+const connectModal = $('connectModal'), connectInput = $('connectInput'), connectConfirm = $('connectConfirm');
+const connectCancel = $('connectCancel'), connectCancelBtn = $('connectCancelBtn');
+const requestModal = $('requestModal'), requestText = $('requestText'), requestAccept = $('requestAccept'), requestReject = $('requestReject'), requestClose = $('requestClose');
+const qrShowModal = $('qrShowModal'), qrShowClose = $('qrShowClose');
+const qrCanvas = $('qrCanvas'), qrMyId = $('qrMyId'), qrCopyId = $('qrCopyId'), qrDownload = $('qrDownload');
+const qrScanModal = $('qrScanModal'), qrScanClose = $('qrScanClose');
+const scanVideo = $('scanVideo'), scannerStatus = $('scannerStatus');
+const scanCancelBtn = $('scanCancelBtn'), scanRetryBtn = $('scanRetryBtn');
+const scannerFallback = $('scannerFallback'), fallbackMsg = $('fallbackMsg'), fallbackPickBtn = $('fallbackPickBtn');
+const imgModal = $('imgModal'), imgPreview = $('imgPreview'), imgClose = $('imgClose');
+const attachPreview = $('attachPreview'), apThumb = $('apThumb'), apName = $('apName'), apSize = $('apSize'), apRemove = $('apRemove');
 
-const messagesEl    = $('messages');
-const emptyState    = $('emptyState');
-const msgInput      = $('msgInput');
-const sendBtn       = $('sendBtn');
-const attachBtn     = $('attachBtn');
-const cameraBtn     = $('cameraBtn');
-const fileInput     = $('fileInput');
-const cameraInput   = $('cameraInput');
-const qrImageInput  = $('qrImageInput');
-const statusChip    = $('statusChip');
-const statusText    = $('statusText');
-const topAvatar     = $('topAvatar');
-const drawerAvatar  = $('drawerAvatar');
-const drawerName    = $('drawerName');
-const drawerEmail   = $('drawerEmail');
-const drawerMyId    = $('drawerMyId');
-const drawerCopyId  = $('drawerCopyId');
-const drawer        = $('drawer');
-const drawerOverlay = $('drawerOverlay');
-const googleLogoBtn = $('googleLogoBtn');
-const realGsiMount  = $('realGsiMount');
+function genId(){ const c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; const p=()=>Array.from({length:4},()=>c[Math.floor(Math.random()*c.length)]).join(''); return `CL-${p()}-${p()}`; }
+function showToast(msg){ const t=$('toast'); $('toastMsg').textContent=msg; t.classList.add('show'); clearTimeout(t._timer); t._timer=setTimeout(()=>t.classList.remove('show'),3000); }
+function timeNow(){ return new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}); }
+function esc(s){ return String(s).replace(/[&<>"']/g, ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch])); }
+function initials(n){ return (n||'?').trim().split(/\s+/).map(w=>w[0]).slice(0,2).join('').toUpperCase(); }
+function chatKey(a,b){ return [a,b].sort().join('__'); }
+function fmtBytes(b){ if(b<1024) return b+' B'; if(b<1024*1024) return (b/1024).toFixed(1)+' KB'; return (b/1024/1024).toFixed(1)+' MB'; }
 
-const connectModal  = $('connectModal');
-const connectInput  = $('connectInput');
-const connectConfirm= $('connectConfirm');
-const connectCancel = $('connectCancel');
-const connectCancelBtn = $('connectCancelBtn');
-
-const qrShowModal   = $('qrShowModal');
-const qrShowClose   = $('qrShowClose');
-const qrCanvas      = $('qrCanvas');
-const qrMyId        = $('qrMyId');
-const qrCopyId      = $('qrCopyId');
-const qrDownload    = $('qrDownload');
-
-const qrScanModal   = $('qrScanModal');
-const qrScanClose   = $('qrScanClose');
-const scanVideo     = $('scanVideo');
-const scannerStatus = $('scannerStatus');
-const scanCancelBtn = $('scanCancelBtn');
-const scanRetryBtn  = $('scanRetryBtn');
-const scannerFallback = $('scannerFallback');
-const fallbackMsg   = $('fallbackMsg');
-const fallbackPickBtn = $('fallbackPickBtn');
-
-const imgModal   = $('imgModal');
-const imgPreview = $('imgPreview');
-const imgClose   = $('imgClose');
-
-const attachPreview = $('attachPreview');
-const apThumb       = $('apThumb');
-const apName        = $('apName');
-const apSize        = $('apSize');
-const apRemove      = $('apRemove');
-
-/* ---------- Utils ---------- */
-function genId() {
-  const c = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-  const p = () => Array.from({length:4}, () => c[Math.floor(Math.random()*c.length)]).join('');
-  return `CL-${p()}-${p()}`;
-}
-function showToast(msg) {
-  const t = $('toast');
-  $('toastMsg').textContent = msg;
-  t.classList.add('show');
-  clearTimeout(t._timer);
-  t._timer = setTimeout(() => t.classList.remove('show'), 3000);
-}
-function timeNow() {
-  return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-}
-function esc(s) {
-  return String(s).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
-}
-function initials(name) {
-  return (name || '?').trim().split(/\s+/).map(w => w[0]).slice(0,2).join('').toUpperCase();
-}
-function chatKey(a, b) { return [a, b].sort().join('__'); }
-function fmtBytes(b) {
-  if (b < 1024) return b + ' B';
-  if (b < 1024*1024) return (b/1024).toFixed(1) + ' KB';
-  return (b/1024/1024).toFixed(1) + ' MB';
-}
-
-/* ---------- Drawer ---------- */
-function openDrawer() { drawer.classList.add('open'); drawerOverlay.classList.add('open'); }
-function closeDrawer() { drawer.classList.remove('open'); drawerOverlay.classList.remove('open'); }
+function openDrawer(){ drawer.classList.add('open'); drawerOverlay.classList.add('open'); }
+function closeDrawer(){ drawer.classList.remove('open'); drawerOverlay.classList.remove('open'); }
 $('menuBtn').addEventListener('click', openDrawer);
 $('closeDrawer').addEventListener('click', closeDrawer);
 drawerOverlay.addEventListener('click', closeDrawer);
 
-/* ---------- Connect modal ---------- */
-function openConnectModal() {
-  closeDrawer();
-  connectModal.classList.add('open');
-  setTimeout(() => connectInput.focus(), 250);
-}
-function closeConnectModal() {
-  connectModal.classList.remove('open');
-  connectInput.value = '';
-}
+function openConnectModal(){ closeDrawer(); connectModal.classList.add('open'); setTimeout(()=>connectInput.focus(),250); }
+function closeConnectModal(){ connectModal.classList.remove('open'); connectInput.value=''; }
 $('menuConnect').addEventListener('click', openConnectModal);
 connectCancel.addEventListener('click', closeConnectModal);
 connectCancelBtn.addEventListener('click', closeConnectModal);
-connectModal.addEventListener('click', (e) => { if (e.target === connectModal) closeConnectModal(); });
+connectModal.addEventListener('click', e=>{ if(e.target===connectModal) closeConnectModal(); });
 
-/* ============================================================
-   Google Sign-In
-   ============================================================ */
-window.handleGoogleResponse = function(response) {
-  try {
-    const payload = JSON.parse(atob(response.credential.split('.')[1]));
-    applyGoogleUser({
-      name: payload.name || 'Google User',
-      email: payload.email || '',
-      picture: payload.picture || null
-    });
-    showToast('Signed in as ' + (payload.name || payload.email));
-  } catch (e) { console.error(e); showToast('Google sign-in failed'); }
+async function stableChatId(uid){
+  try{
+    const bytes=new TextEncoder().encode(uid);
+    const hash=await crypto.subtle.digest('SHA-256',bytes);
+    const a=Array.from(new Uint8Array(hash)).map(b=>b.toString(16).padStart(2,'0')).join('').toUpperCase();
+    return 'CL-'+a.slice(0,8)+'-'+a.slice(8,12);
+  }catch(e){
+    let h=2166136261; for(let i=0;i<uid.length;i++){ h^=uid.charCodeAt(i); h=Math.imul(h,16777619); }
+    return 'CL-'+(h>>>0).toString(16).padStart(8,'0').toUpperCase()+'-'+uid.slice(-4).toUpperCase();
+  }
+}
+
+window.handleGoogleResponse = async function(response){
+  try{
+    if(!response || !response.credential) throw new Error('Missing Google credential');
+    const credential=firebase.auth.GoogleAuthProvider.credential(response.credential);
+    const result=await auth.signInWithCredential(credential);
+    await applyFirebaseUser(result.user);
+    showToast('Signed in as '+(result.user.displayName||result.user.email||'Google User'));
+  }catch(e){ console.error(e); showToast('Google sign-in failed: '+(e.code||'check Firebase settings')); }
 };
 
-function applyGoogleUser(u) {
-  if (presenceRef) presenceRef.remove();
-  const newId = genId();
-  me = { id: newId, name: u.name, email: u.email, picture: u.picture, provider: 'google' };
-  localStorage.setItem(ME_KEY, JSON.stringify(me));
+async function applyFirebaseUser(u){
+  if(!u) return;
+  if(presenceRef){ try{ await presenceRef.remove(); }catch(e){} }
+  const id=await stableChatId(u.uid);
+  me={id,name:u.displayName||'Google User',email:u.email||'',picture:u.photoURL||null,provider:'google',uid:u.uid};
+  localStorage.setItem(ME_KEY,JSON.stringify(me));
   paintMe();
-  closeDrawer();
-  registerPresence();
-  if (qrShowModal.classList.contains('open')) drawMyQR();
-}
-
-function initGoogle() {
-  if (!window.google || !google.accounts || !google.accounts.id) return false;
-  if (gsiReady) return true;
-  google.accounts.id.initialize({
-    client_id: GOOGLE_CLIENT_ID,
-    callback: window.handleGoogleResponse,
-    auto_select: false,
-    cancel_on_tap_outside: true,
-    ux_mode: 'popup'
-  });
-  google.accounts.id.renderButton(realGsiMount, {
-    type: 'icon', theme: 'outline', size: 'large',
-    shape: 'circle', logo_alignment: 'center'
-  });
-  gsiReady = true;
-  googleLogoBtn.classList.remove('no-gsi');
-  return true;
-}
-function tryInitGoogle() {
-  if (initGoogle()) return;
-  let tries = 0;
-  const iv = setInterval(() => {
-    tries++;
-    if (initGoogle() || tries > 20) clearInterval(iv);
-  }, 250);
-}
-tryInitGoogle();
-
-googleLogoBtn.addEventListener('click', () => {
-  if (!gsiReady) {
-    showToast('Connecting to Google…');
-    setTimeout(() => {
-      if (window.google && google.accounts && google.accounts.id) {
-        initGoogle();
-        try { google.accounts.id.prompt(); } catch {}
-      } else {
-        showToast('Could not reach Google — check internet');
-      }
-    }, 400);
+  await registerPresence();
+  const savedPartner=localStorage.getItem(PARTNER_KEY);
+  if(savedPartner && savedPartner!==me.id){
+    const c=await db.ref('connections/'+me.id).once('value');
+    const cv=c.val();
+    if(cv && cv.partnerId===savedPartner){ partnerId=savedPartner; partnerName=cv.partnerName||'Friend'; LOCAL_ONLY=false; setConnected(true,partnerName); listenMessages(); }
   }
+  render();
+}
+
+function initGoogle(){
+  if(!window.google||!google.accounts||!google.accounts.id) return false;
+  if(gsiReady) return true;
+  google.accounts.id.initialize({client_id:GOOGLE_CLIENT_ID,callback:window.handleGoogleResponse,auto_select:false,cancel_on_tap_outside:true,ux_mode:'popup'});
+  google.accounts.id.renderButton(realGsiMount,{type:'icon',theme:'outline',size:'large',shape:'circle',logo_alignment:'center'});
+  gsiReady=true; googleLogoBtn.classList.remove('no-gsi'); return true;
+}
+function tryInitGoogle(){ if(initGoogle()) return; let t=0; const iv=setInterval(()=>{ t++; if(initGoogle()||t>20) clearInterval(iv); },250); }
+tryInitGoogle();
+googleLogoBtn.addEventListener('click', ()=>{
+  if(gsiReady){ try{ google.accounts.id.prompt(); }catch(e){} return; }
+  showToast('Connecting to Google…'); setTimeout(()=>{ if(!initGoogle()) showToast('Could not reach Google — check internet'); else try{google.accounts.id.prompt();}catch(e){} },400);
 });
 
-/* ---------- Paint user ---------- */
-function paintMe() {
-  const ini = initials(me.name);
-  if (me.picture) {
-    topAvatar.innerHTML    = `<img src="${me.picture}" alt="">`;
-    drawerAvatar.innerHTML = `<img src="${me.picture}" alt="">`;
-  } else {
-    topAvatar.textContent    = ini;
-    drawerAvatar.textContent = ini;
-  }
-  drawerName.textContent  = me.name;
-  drawerEmail.textContent = me.email || 'Not signed in';
-  drawerMyId.textContent  = me.id;
-  qrMyId.textContent      = me.id;
-
-  if (me.provider === 'google' && me.email) {
-    googleLogoBtn.classList.add('signed');
-  } else {
-    googleLogoBtn.classList.remove('signed');
-  }
+function paintMe(){
+  const ini=initials(me.name);
+  if(me.picture){ topAvatar.innerHTML=`<img src="${esc(me.picture)}" alt="">`; drawerAvatar.innerHTML=`<img src="${esc(me.picture)}" alt="">`; }
+  else { topAvatar.textContent=ini; drawerAvatar.textContent=ini; }
+  drawerName.textContent=me.name;
+  drawerEmail.textContent=me.email||'Not signed in';
+  drawerMyId.textContent=me.id;
+  qrMyId.textContent=me.id;
+  if(me.provider==='google'&&me.email) googleLogoBtn.classList.add('signed'); else googleLogoBtn.classList.remove('signed');
 }
 
-function initMe() {
-  const saved = localStorage.getItem(ME_KEY);
-  if (saved) { try { me = JSON.parse(saved); return; } catch {} }
-  me = { id: genId(), name: 'Guest User', email: null, picture: null, provider: 'guest' };
-  localStorage.setItem(ME_KEY, JSON.stringify(me));
-}
+async function registerPresence(){
+  if(!me || !auth.currentUser) return;
+  if(presenceRef){ try{presenceRef.off(); await presenceRef.remove();}catch(e){} }
+  presenceRef=db.ref('users/'+me.id);
+  await presenceRef.set({id:me.id,uid:me.uid,name:me.name,picture:me.picture,email:me.email,online:true,lastSeen:firebase.database.ServerValue.TIMESTAMP});
+  presenceRef.onDisconnect().update({online:false,lastSeen:firebase.database.ServerValue.TIMESTAMP});
 
-/* ============================================================
-   Firebase presence
-   ============================================================ */
-function registerPresence() {
-  if (presenceRef) presenceRef.remove();
-
-  presenceRef = db.ref('users/' + me.id);
-  presenceRef.set({
-    id: me.id, name: me.name, picture: me.picture,
-    email: me.email, online: true,
-    lastSeen: firebase.database.ServerValue.TIMESTAMP
-  });
-  presenceRef.onDisconnect().update({
-    online: false,
-    lastSeen: firebase.database.ServerValue.TIMESTAMP
+  if(incomingReqRef) incomingReqRef.off();
+  incomingReqRef=db.ref('requests/'+me.id);
+  incomingReqRef.on('child_added', async snap=>{
+    const data=snap.val(); if(!data||!data.from) return;
+    const requestKey=snap.key;
+    const from=data.from;
+    if(from===me.id) return;
+    requestText.textContent=(data.fromName||'Someone')+' wants to connect with you.';
+    requestModal.dataset.key=requestKey;
+    requestModal.dataset.from=from;
+    requestModal.dataset.fromName=data.fromName||'Friend';
+    requestModal.classList.add('open');
   });
 
-  incomingReqRef = db.ref('incoming/' + me.id);
-  incomingReqRef.on('value', (snap) => {
-    const data = snap.val();
-    if (!data || !data.from) return;
-
-    const { from, fromName } = data;
-    partnerId = from;
-    partnerName = fromName || 'Friend';
-    LOCAL_ONLY = false;
-    localStorage.setItem(PARTNER_KEY, partnerId);
-    localStorage.setItem(LOCAL_ONLY_KEY, 'false');
-
-    db.ref('connections/' + me.id).set({
-      partnerId: from,
-      partnerName: fromName || 'Friend',
-      at: firebase.database.ServerValue.TIMESTAMP
-    });
-    incomingReqRef.remove();
-    db.ref('accepted/' + from).set({
-      partnerId: me.id,
-      partnerName: me.name,
-      at: firebase.database.ServerValue.TIMESTAMP
-    });
-
-    setConnected(true, partnerName);
-    addSystem(`⚡ ${partnerName} connected with you`);
-    render();
-    listenMessages();
-    showToast(`${partnerName} connected!`);
-  });
-
-  db.ref('accepted/' + me.id).on('value', (snap) => {
-    const data = snap.val();
-    if (!data) return;
-    const { partnerId: pId, partnerName: pName } = data;
-    partnerId = pId;
-    partnerName = pName || 'Friend';
-    LOCAL_ONLY = false;
-    localStorage.setItem(PARTNER_KEY, partnerId);
-    localStorage.setItem(LOCAL_ONLY_KEY, 'false');
-    db.ref('accepted/' + me.id).remove();
-    setConnected(true, partnerName);
-    addSystem(`Connected with ${partnerName} 🎉`);
-    render();
-    listenMessages();
-    showToast('Connected! Start chatting');
+  const acceptedRef=db.ref('accepted/'+me.id);
+  acceptedRef.off();
+  acceptedRef.on('child_added', snap=>{
+    const data=snap.val(); if(!data||!data.partnerId) return;
+    partnerId=data.partnerId; partnerName=data.partnerName||'Friend';
+    LOCAL_ONLY=false; localStorage.setItem(PARTNER_KEY,partnerId); localStorage.setItem(LOCAL_ONLY_KEY,'false');
+    setConnected(true,partnerName); render(); listenMessages(); showToast('Connection accepted. Start chatting');
+    snap.ref.remove();
   });
 }
 
-function listenMessages() {
-  if (messageRef) messageRef.off();
-  if (!partnerId) return;
-  const key = chatKey(me.id, partnerId);
-  messageRef = db.ref('messages/' + key).limitToLast(200);
-
-  messageRef.on('child_added', (snap) => {
-    const m = snap.val();
-    if (!m) return;
-    const existing = getMsgs();
-    if (existing.some(x => x._key === snap.key)) return;
-    saveMsg({
-      _key: snap.key,
-      from: m.from, fromName: m.fromName,
-      text: m.text || '', time: m.time || timeNow(),
-      media: m.media || null
-    });
-    render();
-  });
+async function acceptRequest(){
+  const from=requestModal.dataset.from, key=requestModal.dataset.key, fromName=requestModal.dataset.fromName||'Friend';
+  if(!from) return;
+  try{
+    const targetSnap=await db.ref('users/'+from).once('value');
+    const target=targetSnap.val();
+    if(!target){ showToast('User is no longer available'); requestModal.classList.remove('open'); return; }
+    await db.ref('connections/'+me.id).set({partnerId:from,partnerName:fromName,at:firebase.database.ServerValue.TIMESTAMP});
+    await db.ref('connections/'+from).set({partnerId:me.id,partnerName:me.name,at:firebase.database.ServerValue.TIMESTAMP});
+    await db.ref('accepted/'+from+'/'+me.id).set({partnerId:me.id,partnerName:me.name,at:firebase.database.ServerValue.TIMESTAMP});
+    await db.ref('accepted/'+me.id+'/'+from).set({partnerId:from,partnerName:fromName,at:firebase.database.ServerValue.TIMESTAMP});
+    await db.ref('requests/'+me.id+'/'+key).remove();
+    partnerId=from; partnerName=fromName; LOCAL_ONLY=false;
+    localStorage.setItem(PARTNER_KEY,partnerId); localStorage.setItem(LOCAL_ONLY_KEY,'false');
+    requestModal.classList.remove('open'); setConnected(true,partnerName); render(); listenMessages(); showToast('Connected with '+partnerName);
+  }catch(e){ console.error(e); showToast('Could not accept request'); }
 }
-
-/* ============================================================
-   Connect (shared by manual + QR)
-   ============================================================ */
-async function connectToId(id, opts) {
-  opts = opts || {};
-  id = (id || '').trim().toUpperCase();
-
-  if (!id) { showToast('Please enter a Chat ID'); return; }
-  if (id === me.id) { showToast("That's your own ID!"); return; }
-  if (!id.startsWith('CL-')) { showToast('Invalid Chat ID format'); return; }
-  if (id === partnerId) { showToast('Already connected'); return; }
-
-  setStatus('connecting', 'Connecting…');
-
-  try {
-    const snap = await db.ref('users/' + id).once('value');
-    const target = snap.val();
-
-    if (!target) {
-      showToast('User not found — check the ID');
-      setStatus('', 'Ready');
-      return;
-    }
-    if (!target.online) {
-      showToast(`${target.name || 'User'} is offline`);
-      setStatus('', 'Ready');
-      return;
-    }
-
-    await db.ref('incoming/' + id).set({
-      from: me.id, fromName: me.name, fromPicture: me.picture,
-      at: firebase.database.ServerValue.TIMESTAMP
-    });
-
-    partnerId = id;
-    partnerName = target.name || 'Friend';
-    LOCAL_ONLY = false;
-    localStorage.setItem(PARTNER_KEY, partnerId);
-    localStorage.setItem(LOCAL_ONLY_KEY, 'false');
-
-    await db.ref('connections/' + me.id).set({
-      partnerId: id, partnerName: partnerName,
-      at: firebase.database.ServerValue.TIMESTAMP
-    });
-
-    setConnected(true, partnerName);
-    addSystem(`Connected with ${partnerName}`);
-    render();
-    listenMessages();
-    showToast('Connected! Start chatting');
-    if (opts.fromQR) closeScanModal();
-    else closeConnectModal();
-
-  } catch (e) {
-    console.error(e);
-    showToast('Connection failed');
-    setStatus('', 'Ready');
-  }
+async function rejectRequest(){
+  const key=requestModal.dataset.key;
+  if(key && me) try{ await db.ref('requests/'+me.id+'/'+key).remove(); }catch(e){}
+  requestModal.classList.remove('open');
 }
+requestAccept.addEventListener('click',acceptRequest); requestReject.addEventListener('click',rejectRequest); requestClose.addEventListener('click',rejectRequest);
 
-connectConfirm.addEventListener('click', () => connectToId(connectInput.value));
-connectInput.addEventListener('keydown', e => { if (e.key === 'Enter') connectConfirm.click(); });
+async function connectToId(id, opts){
+  opts=opts||{}; id=(id||'').trim().toUpperCase();
+  if(!auth.currentUser || !me || me.provider!=='google'){ showToast('Sign in with Google first'); return; }
+  if(!id){ showToast('Please enter a Chat ID'); return; }
+  if(id===me.id){ showToast("That's your own ID!"); return; }
+  if(!/^CL-[A-Z0-9]{8}-[A-Z0-9]{4}$/.test(id)){ showToast('Invalid Chat ID format'); return; }
+  if(id===partnerId){ showToast('Already connected'); return; }
+  setStatus('connecting','Sending request…');
+  try{
+    const snap=await db.ref('users/'+id).once('value'); const target=snap.val();
+    if(!target){ showToast('User not found — check the ID'); setStatus('','Ready'); return; }
+    if(target.uid===me.uid){ showToast("That's your own ID!"); setStatus('','Ready'); return; }
+    const existing=await db.ref('connections/'+me.id).once('value');
+    if(existing.val() && existing.val().partnerId===id){ showToast('Already connected'); setStatus('online','Connected'); return; }
+    await db.ref('requests/'+id+'/'+me.id).set({from:me.id,fromName:me.name,fromPicture:me.picture,at:firebase.database.ServerValue.TIMESTAMP});
+    if(opts.fromQR) closeScanModal(); else closeConnectModal();
+    setStatus('connecting','Request sent'); showToast('Connection request sent to '+(target.name||'user'));
+  }catch(e){ console.error(e); showToast('Connection request failed'); setStatus('','Ready'); }
+}
+connectConfirm.addEventListener('click', ()=>connectToId(connectInput.value));
+connectInput.addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); connectConfirm.click(); } });
 
-/* ============================================================
-   Connection state
-   ============================================================ */
-function setConnected(on, name) {
-  if (on) {
-    statusChip.classList.remove('connecting');
-    statusChip.classList.add('online');
-    statusText.textContent = 'Connected' + (name ? ' · ' + name : '');
-  } else {
-    statusChip.classList.remove('connecting', 'online');
-    statusText.textContent = 'Ready';
-  }
+function setConnected(on, name){
+  if(on){ statusChip.classList.remove('connecting'); statusChip.classList.add('online'); statusText.textContent='Connected'+(name?' · '+name:''); }
+  else { statusChip.classList.remove('connecting','online'); statusText.textContent='Ready'; }
 }
-function setStatus(kind, text) {
-  statusChip.classList.remove('online', 'connecting');
-  if (kind) statusChip.classList.add(kind);
-  statusText.textContent = text;
-}
+function setStatus(kind, text){ statusChip.classList.remove('online','connecting'); if(kind) statusChip.classList.add(kind); statusText.textContent=text; }
 
-/* ============================================================
-   Messages
-   ============================================================ */
-function getMsgs() {
-  try { const r = localStorage.getItem(MSG_KEY); return r ? JSON.parse(r) : []; }
-  catch { return []; }
-}
-function saveMsg(m) {
-  const a = getMsgs();
-  a.push(m);
-  if (a.length > 500) a.splice(0, a.length - 500);
-  localStorage.setItem(MSG_KEY, JSON.stringify(a));
-}
-function addSystem(text) {
-  const a = getMsgs();
-  a.push({ system: true, text, time: timeNow() });
-  localStorage.setItem(MSG_KEY, JSON.stringify(a));
-}
+function getMsgs(){ try{ const r=localStorage.getItem(MSG_KEY); return r?JSON.parse(r):[]; }catch{ return []; } }
+function saveMsg(m){ const a=getMsgs(); a.push(m); if(a.length>500) a.splice(0,a.length-500); localStorage.setItem(MSG_KEY,JSON.stringify(a)); }
+function addSystem(text){ const a=getMsgs(); a.push({system:true,text,time:timeNow()}); localStorage.setItem(MSG_KEY,JSON.stringify(a)); }
 
-function render() {
-  const all = getMsgs();
-  messagesEl.innerHTML = '';
-  if (!all.length) {
-    messagesEl.appendChild(emptyState);
-    emptyState.style.display = 'block';
-    return;
-  }
-  emptyState.style.display = 'none';
-  all.forEach(m => {
-    const div = document.createElement('div');
-    if (m.system) {
-      div.className = 'msg system';
-      div.textContent = m.text;
-    } else {
-      const mine = m.from === me.id;
-      div.className = 'msg ' + (mine ? 'mine' : 'theirs');
-
-      let inner = '';
-      if (m.media && m.media.type === 'image') {
-        inner += `<img class="msg-media" src="${m.media.data}" alt="" data-full="${m.media.data}" />`;
-      } else if (m.media && m.media.type === 'file') {
-        inner += `<div class="file-chip">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/>
-            <polyline points="13 2 13 9 20 9"/>
-          </svg>
-          <a href="${m.media.data}" download="${esc(m.media.name)}">${esc(m.media.name)}</a>
-        </div>`;
-      }
-      if (m.text) inner += esc(m.text);
-      inner += `<span class="time">${m.time || ''}</span>`;
-      div.innerHTML = inner;
+function render(){
+  const all=getMsgs(); messagesEl.innerHTML='';
+  if(!all.length){ messagesEl.appendChild(emptyState); emptyState.style.display='block'; return; }
+  emptyState.style.display='none';
+  all.forEach(m=>{
+    const div=document.createElement('div');
+    if(m.system){ div.className='msg system'; div.textContent=m.text; }
+    else {
+      const mine=m.from===me.id;
+      div.className='msg '+(mine?'mine':'theirs');
+      let inner='';
+      if(m.media&&m.media.type==='image') inner+=`<img class="msg-media" src="${m.media.data}" data-full="${m.media.data}" />`;
+      else if(m.media&&m.media.type==='file') inner+=`<div class="file-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg><a href="${m.media.data}" download="${esc(m.media.name)}">${esc(m.media.name)}</a></div>`;
+      if(m.text) inner+=esc(m.text);
+      inner+=`<span class="time">${m.time||''}</span>`;
+      div.innerHTML=inner;
     }
     messagesEl.appendChild(div);
   });
-  messagesEl.scrollTop = messagesEl.scrollHeight;
+  messagesEl.scrollTop=messagesEl.scrollHeight;
 }
-
 sendBtn.addEventListener('click', send);
-msgInput.addEventListener('keydown', e => {
-  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); }
-});
-
-async function send() {
-  const text = msgInput.value.trim();
-
-  if (pendingAttachment) {
-    const att = pendingAttachment;
-    pendingAttachment = null;
-    clearAttachmentPreview();
-    msgInput.value = '';
-
-    const m = {
-      from: me.id, fromName: me.name,
-      text: text || '',
-      time: timeNow(),
-      at: firebase.database.ServerValue.TIMESTAMP,
-      media: { type: att.kind, name: att.name, data: att.dataUrl }
-    };
-    const tempKey = 'local_' + Date.now() + '_' + Math.random();
-    saveMsg({ _key: tempKey, ...m });
-    render();
-
-    if (!LOCAL_ONLY && partnerId) {
-      try {
-        const key = chatKey(me.id, partnerId);
-        await db.ref('messages/' + key).push(m);
-        showToast(att.kind === 'image' ? 'Photo sent' : 'File sent');
-      } catch (e) { console.error(e); showToast('Upload failed'); }
-    } else {
-      showToast(att.kind === 'image' ? 'Photo added' : 'File added');
-    }
+msgInput.addEventListener('keydown', e=>{ if(e.key==='Enter'&&!e.shiftKey){ e.preventDefault(); send(); } });
+async function send(){
+  const text=msgInput.value.trim();
+  if(pendingAttachment){
+    const att=pendingAttachment; pendingAttachment=null; clearAttachmentPreview(); msgInput.value='';
+    const m={ from:me.id, fromName:me.name, text:text||'', time:timeNow(), at:firebase.database.ServerValue.TIMESTAMP, media:{ type:att.kind, name:att.name, data:att.dataUrl } };
+    const tk='local_'+Date.now()+'_'+Math.random();
+    saveMsg({_key:tk, ...m}); render();
+    if(!LOCAL_ONLY && partnerId){ try{ const key=chatKey(me.id,partnerId); await db.ref('messages/'+key).push(m); showToast(att.kind==='image'?'Photo sent':'File sent'); }catch(e){ console.error(e); showToast('Upload failed'); } }
+    else showToast(att.kind==='image'?'Photo added':'File added');
     return;
   }
-
-  if (!text) return;
-  const m = {
-    from: me.id, fromName: me.name, text, time: timeNow(),
-    at: firebase.database.ServerValue.TIMESTAMP
-  };
-  const tempKey = 'local_' + Date.now() + '_' + Math.random();
-  saveMsg({ _key: tempKey, ...m });
-  render();
-  msgInput.value = '';
-
-  if (!LOCAL_ONLY && partnerId) {
-    try {
-      const key = chatKey(me.id, partnerId);
-      await db.ref('messages/' + key).push(m);
-    } catch (e) { console.error(e); showToast('Message failed to send'); }
-  }
+  if(!text) return;
+  const m={ from:me.id, fromName:me.name, text, time:timeNow(), at:firebase.database.ServerValue.TIMESTAMP };
+  const tk='local_'+Date.now()+'_'+Math.random();
+  saveMsg({_key:tk, ...m}); render(); msgInput.value='';
+  if(!LOCAL_ONLY && partnerId){ try{ const key=chatKey(me.id,partnerId); await db.ref('messages/'+key).push(m); }catch(e){ console.error(e); showToast('Message failed'); } }
 }
-
-/* ---------- File / Camera ---------- */
-attachBtn.addEventListener('click', () => fileInput.click());
-cameraBtn.addEventListener('click', () => cameraInput.click());
-
-fileInput.addEventListener('change', (e) => {
-  const f = e.target.files && e.target.files[0];
-  if (f) stageAttachment(f, f.type.startsWith('image/') ? 'image' : 'file');
-  fileInput.value = '';
-});
-cameraInput.addEventListener('change', (e) => {
-  const f = e.target.files && e.target.files[0];
-  if (f) stageAttachment(f, 'image');
-  cameraInput.value = '';
-});
-
-function stageAttachment(file, kind) {
-  const MAX = 500 * 1024;
-  if (file.size > MAX) { showToast('File too large (max 500 KB)'); return; }
-  const reader = new FileReader();
-  reader.onload = () => {
-    pendingAttachment = {
-      file, kind,
-      dataUrl: reader.result,
-      name: file.name || (kind === 'image' ? 'photo.jpg' : 'file'),
-      size: file.size
-    };
-    showAttachmentPreview();
-    msgInput.focus();
-    showToast('Ready to send — tap Send');
-  };
-  reader.readAsDataURL(file);
+attachBtn.addEventListener('click', ()=>fileInput.click());
+cameraBtn.addEventListener('click', ()=>cameraInput.click());
+fileInput.addEventListener('change', e=>{ const f=e.target.files&&e.target.files[0]; if(f) stageAttachment(f, f.type.startsWith('image/')?'image':'file'); fileInput.value=''; });
+cameraInput.addEventListener('change', e=>{ const f=e.target.files&&e.target.files[0]; if(f) stageAttachment(f,'image'); cameraInput.value=''; });
+function stageAttachment(file, kind){
+  const MAX=500*1024;
+  if(file.size>MAX){ showToast('File too large (max 500 KB)'); return; }
+  const rd=new FileReader();
+  rd.onload=()=>{ pendingAttachment={ file, kind, dataUrl:rd.result, name:file.name||(kind==='image'?'photo.jpg':'file'), size:file.size }; showAttachmentPreview(); msgInput.focus(); showToast('Ready to send — tap Send'); };
+  rd.readAsDataURL(file);
 }
-
-function showAttachmentPreview() {
-  const att = pendingAttachment;
-  if (!att) return;
+function showAttachmentPreview(){
+  const att=pendingAttachment; if(!att) return;
   attachPreview.classList.add('show');
-  apName.textContent = att.name;
-  apSize.textContent = fmtBytes(att.size) + ' · ready to send';
-  if (att.kind === 'image') {
-    apThumb.innerHTML = `<img src="${att.dataUrl}" alt="">`;
-  } else {
-    apThumb.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>`;
-  }
+  apName.textContent=att.name;
+  apSize.textContent=fmtBytes(att.size)+' · ready to send';
+  if(att.kind==='image') apThumb.innerHTML=`<img src="${att.dataUrl}" alt="">`;
+  else apThumb.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>`;
   sendBtn.classList.add('has-attach');
 }
-function clearAttachmentPreview() {
-  attachPreview.classList.remove('show');
-  apThumb.innerHTML = '';
-  sendBtn.classList.remove('has-attach');
-}
-apRemove.addEventListener('click', () => {
-  pendingAttachment = null;
-  clearAttachmentPreview();
-  showToast('Attachment removed');
-});
+function clearAttachmentPreview(){ attachPreview.classList.remove('show'); apThumb.innerHTML=''; sendBtn.classList.remove('has-attach'); }
+apRemove.addEventListener('click', ()=>{ pendingAttachment=null; clearAttachmentPreview(); showToast('Attachment removed'); });
+messagesEl.addEventListener('click', e=>{ const img=e.target.closest('img.msg-media'); if(!img) return; imgPreview.src=img.dataset.full||img.src; imgModal.classList.add('open'); });
+imgClose.addEventListener('click', ()=>imgModal.classList.remove('open'));
+imgModal.addEventListener('click', e=>{ if(e.target===imgModal) imgModal.classList.remove('open'); });
 
-/* ---------- Image preview ---------- */
-messagesEl.addEventListener('click', (e) => {
-  const img = e.target.closest('img.msg-media');
-  if (!img) return;
-  imgPreview.src = img.dataset.full || img.src;
-  imgModal.classList.add('open');
-});
-imgClose.addEventListener('click', () => imgModal.classList.remove('open'));
-imgModal.addEventListener('click', (e) => { if (e.target === imgModal) imgModal.classList.remove('open'); });
-
-/* ============================================================
-   QR CODE — SHOW MY QR
-   ============================================================ */
-function drawMyQR() {
-  if (typeof QRCode === 'undefined') {
-    showToast('QR generator not loaded');
-    return;
+/* ---------- QR SHOW ---------- */
+function drawMyQR(){
+  try {
+    const payload = QR_PREFIX + me.id;
+    const ok = QRLite.toCanvas(qrCanvas, payload, { width: 240, margin: 4, color: { dark: '#1f2430', light: '#ffffff' } });
+    if (!ok) showToast('QR generation failed');
+  } catch(e) {
+    console.error('QR error:', e);
+    showToast('QR generation failed');
   }
-  qrMyId.textContent = me.id;
-  const payload = QR_PREFIX + me.id;
-
-  QRCode.toCanvas(qrCanvas, payload, {
-    width: 240,
-    margin: 1,
-    color: { dark: '#1f2430', light: '#ffffff' },
-    errorCorrectionLevel: 'M'
-  }, (err) => { if (err) console.error('QR error:', err); });
 }
-
-$('menuShowQR').addEventListener('click', () => {
-  closeDrawer();
-  qrShowModal.classList.add('open');
-  setTimeout(drawMyQR, 80);
-});
-
-qrShowClose.addEventListener('click', () => qrShowModal.classList.remove('open'));
-qrShowModal.addEventListener('click', (e) => { if (e.target === qrShowModal) qrShowModal.classList.remove('open'); });
-
-qrCopyId.addEventListener('click', async () => {
-  try { await navigator.clipboard.writeText(me.id); }
-  catch {
-    const ta = document.createElement('textarea');
-    ta.value = me.id; document.body.appendChild(ta);
-    ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
-  }
+$('menuShowQR').addEventListener('click', ()=>{ closeDrawer(); qrShowModal.classList.add('open'); setTimeout(drawMyQR, 60); });
+qrShowClose.addEventListener('click', ()=>qrShowModal.classList.remove('open'));
+qrShowModal.addEventListener('click', e=>{ if(e.target===qrShowModal) qrShowModal.classList.remove('open'); });
+qrCopyId.addEventListener('click', async ()=>{
+  try { await navigator.clipboard.writeText(me.id); } catch { const ta=document.createElement('textarea'); ta.value=me.id; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); }
   showToast('Chat ID copied');
 });
-
-qrDownload.addEventListener('click', () => {
+qrDownload.addEventListener('click', ()=>{
   try {
-    const url = qrCanvas.toDataURL('image/png');
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'convolink-' + me.id + '.png';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
+    const url=qrCanvas.toDataURL('image/png');
+    const a=document.createElement('a'); a.href=url; a.download='convolink-'+me.id+'.png';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
     showToast('QR saved');
-  } catch (e) {
-    showToast('Could not save QR');
-  }
+  } catch(e){ showToast('Could not save QR'); }
 });
 
-/* ============================================================
-   QR CODE — SCANNER (robust)
-   ============================================================ */
-async function startScanner() {
-  stopScanner(); // reset
+/* ---------- QR SCAN ---------- */
+async function startScanner(){
+  stopScanner();
   scannerFallback.classList.remove('show');
-  scannerStatus.className = 'scanner-status';
-  scannerStatus.textContent = 'Opening camera…';
+  scannerStatus.className='scanner-status';
+  scannerStatus.textContent='Opening camera…';
 
-  // === Pre-flight checks ===
-  if (!window.isSecureContext) {
-    scannerStatus.textContent = 'Camera needs HTTPS — open site via https://';
-    scannerStatus.classList.add('error');
-    showFallback('Camera requires a secure (https) connection.');
-    return;
-  }
+  if(!window.isSecureContext){ scannerStatus.textContent='Camera needs HTTPS'; scannerStatus.classList.add('error'); showFallback('Camera requires a secure (https) connection.'); return; }
+  if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){ scannerStatus.textContent='Camera not supported'; scannerStatus.classList.add('error'); showFallback('This browser does not support camera.'); return; }
 
-  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-    scannerStatus.textContent = 'This browser does not support camera.';
-    scannerStatus.classList.add('error');
-    showFallback('This browser does not support camera. Try Chrome or Safari.');
-    return;
-  }
-
-  // === Try to open camera ===
   try {
-    scanStream = await navigator.mediaDevices.getUserMedia({
-      video: { facingMode: { ideal: 'environment' } },
-      audio: false
-    });
-  } catch (err) {
+    scanStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: 'environment' } }, audio: false });
+  } catch(err){
     console.error('getUserMedia error:', err);
-    let msg = 'Could not open camera.';
-    if (err && err.name === 'NotAllowedError') msg = 'Camera permission was denied. Please allow camera access.';
-    else if (err && err.name === 'NotFoundError') msg = 'No camera found on this device.';
-    else if (err && err.name === 'NotReadableError') msg = 'Camera is being used by another app.';
-    else if (err && err.name === 'OverconstrainedError') msg = 'Camera not compatible with this device.';
-    scannerStatus.textContent = msg;
+    let msg='Could not open camera.';
+    if(err && err.name==='NotAllowedError') msg='Camera permission was denied. Please allow camera access.';
+    else if(err && err.name==='NotFoundError') msg='No camera found on this device.';
+    else if(err && err.name==='NotReadableError') msg='Camera is being used by another app.';
+    else if(err && err.name==='OverconstrainedError') msg='Camera not compatible with this device.';
+    scannerStatus.textContent=msg;
     scannerStatus.classList.add('error');
     showFallback(msg);
     return;
   }
 
-  // === Attach to video element ===
   try {
     scanVideo.srcObject = scanStream;
-    scanVideo.setAttribute('playsinline', 'true');
-    scanVideo.setAttribute('muted', 'true');
+    scanVideo.setAttribute('playsinline','true');
+    scanVideo.setAttribute('muted','true');
     await scanVideo.play();
-  } catch (err) {
+  } catch(err){
     console.error('video.play error:', err);
-    scannerStatus.textContent = 'Camera opened, but preview failed.';
+    scannerStatus.textContent='Camera preview failed.';
     scannerStatus.classList.add('error');
-    showFallback('Camera preview failed. Try reloading or using gallery picker.');
+    showFallback('Camera preview failed. Try reload or use gallery picker.');
     return;
   }
 
-  // === Setup canvas for scanning ===
-  if (!scanCanvas) {
-    scanCanvas = document.createElement('canvas');
-    scanCtx = scanCanvas.getContext('2d', { willReadFrequently: true });
-  }
-
-  // Wait a moment for camera to warm up
-  setTimeout(() => {
-    scannerStatus.textContent = 'Point camera at the QR code…';
-    scanActive = true;
-    scanLoop();
-  }, 300);
+  if(!scanCanvas){ scanCanvas=document.createElement('canvas'); scanCtx=scanCanvas.getContext('2d', { willReadFrequently: true }); }
+  setTimeout(()=>{ scannerStatus.textContent='Point camera at the QR code…'; scanActive=true; scanLoop(); }, 300);
 }
-
-function scanLoop() {
-  if (!scanActive || !scanStream) return;
-
-  if (scanVideo.readyState === scanVideo.HAVE_ENOUGH_DATA) {
-    const w = scanVideo.videoWidth;
-    const h = scanVideo.videoHeight;
-    if (w && h) {
-      scanCanvas.width = w;
-      scanCanvas.height = h;
+function scanLoop(){
+  if(!scanActive || !scanStream) return;
+  if(scanVideo.readyState === scanVideo.HAVE_ENOUGH_DATA){
+    const w=scanVideo.videoWidth, h=scanVideo.videoHeight;
+    if(w && h){
+      scanCanvas.width=w; scanCanvas.height=h;
       scanCtx.drawImage(scanVideo, 0, 0, w, h);
       try {
-        const imgData = scanCtx.getImageData(0, 0, w, h);
-        if (typeof jsQR !== 'undefined') {
-          const code = jsQR(imgData.data, w, h, { inversionAttempts: 'attemptBoth' });
-          if (code && code.data) {
-            handleScanned(code.data);
-            return;
-          }
+        const imgData=scanCtx.getImageData(0, 0, w, h);
+        if(typeof jsQR !== 'undefined'){
+          const code=jsQR(imgData.data, w, h, { inversionAttempts: 'attemptBoth' });
+          if(code && code.data){ handleScanned(code.data); return; }
         }
-      } catch (e) { /* ignore per-frame errors */ }
+      } catch(e){}
     }
   }
-  scanRAF = requestAnimationFrame(scanLoop);
+  scanRAF=requestAnimationFrame(scanLoop);
 }
-
-function handleScanned(text) {
-  let id = text.trim();
-  if (id.startsWith(QR_PREFIX)) id = id.slice(QR_PREFIX.length);
-  id = id.trim().toUpperCase();
-
-  if (!id.startsWith('CL-')) {
-    // Not our QR — silently continue
-    return;
-  }
-
-  scannerStatus.textContent = 'QR found: ' + id;
-  scannerStatus.className = 'scanner-status ok';
-  if (navigator.vibrate) navigator.vibrate(60);
-
-  scanActive = false;
+function handleScanned(text){
+  let id=text.trim();
+  if(id.startsWith(QR_PREFIX)) id=id.slice(QR_PREFIX.length);
+  id=id.trim().toUpperCase();
+  if(!id.startsWith('CL-')) return;
+  scannerStatus.textContent='QR found: '+id;
+  scannerStatus.className='scanner-status ok';
+  if(navigator.vibrate) navigator.vibrate(60);
+  scanActive=false;
   stopScanner();
-
-  setTimeout(() => {
-    connectToId(id, { fromQR: true });
-  }, 350);
+  setTimeout(()=>{ connectToId(id, { fromQR: true }); }, 350);
 }
-
-function stopScanner() {
-  scanActive = false;
-  if (scanRAF) { cancelAnimationFrame(scanRAF); scanRAF = null; }
-  if (scanStream) {
-    scanStream.getTracks().forEach(t => t.stop());
-    scanStream = null;
-  }
-  if (scanVideo) {
-    try { scanVideo.srcObject = null; } catch {}
-  }
+function stopScanner(){
+  scanActive=false;
+  if(scanRAF){ cancelAnimationFrame(scanRAF); scanRAF=null; }
+  if(scanStream){ scanStream.getTracks().forEach(t=>t.stop()); scanStream=null; }
+  if(scanVideo){ try{ scanVideo.srcObject=null; }catch{} }
 }
-
-function showFallback(msg) {
-  fallbackMsg.textContent = msg;
-  scannerFallback.classList.add('show');
-}
-
-function openScanModal() {
-  closeDrawer();
-  qrScanModal.classList.add('open');
-  // Small delay so modal is fully visible before requesting camera
-  setTimeout(startScanner, 300);
-}
-function closeScanModal() {
-  stopScanner();
-  qrScanModal.classList.remove('open');
-  scannerStatus.textContent = 'Opening camera…';
-  scannerStatus.className = 'scanner-status';
-  scannerFallback.classList.remove('show');
-}
-
+function showFallback(msg){ fallbackMsg.textContent=msg; scannerFallback.classList.add('show'); }
+function openScanModal(){ closeDrawer(); qrScanModal.classList.add('open'); setTimeout(startScanner, 300); }
+function closeScanModal(){ stopScanner(); qrScanModal.classList.remove('open'); scannerStatus.textContent='Opening camera…'; scannerStatus.className='scanner-status'; scannerFallback.classList.remove('show'); }
 $('menuScanQR').addEventListener('click', openScanModal);
 qrScanClose.addEventListener('click', closeScanModal);
 scanCancelBtn.addEventListener('click', closeScanModal);
-scanRetryBtn.addEventListener('click', () => {
-  stopScanner();
-  setTimeout(startScanner, 250);
-});
-qrScanModal.addEventListener('click', (e) => { if (e.target === qrScanModal) closeScanModal(); });
-
-/* ---------- Fallback: scan from gallery image ---------- */
-fallbackPickBtn.addEventListener('click', () => qrImageInput.click());
-qrImageInput.addEventListener('change', (e) => {
-  const f = e.target.files && e.target.files[0];
-  qrImageInput.value = '';
-  if (!f) return;
-  scannerStatus.textContent = 'Reading image…';
-  scannerStatus.className = 'scanner-status';
-
-  const reader = new FileReader();
-  reader.onload = () => {
-    const img = new Image();
-    img.onload = () => {
-      const c = document.createElement('canvas');
-      c.width = img.naturalWidth;
-      c.height = img.naturalHeight;
-      const ctx = c.getContext('2d', { willReadFrequently: true });
+scanRetryBtn.addEventListener('click', ()=>{ stopScanner(); setTimeout(startScanner, 250); });
+qrScanModal.addEventListener('click', e=>{ if(e.target===qrScanModal) closeScanModal(); });
+fallbackPickBtn.addEventListener('click', ()=>qrImageInput.click());
+qrImageInput.addEventListener('change', e=>{
+  const f=e.target.files&&e.target.files[0]; qrImageInput.value=''; if(!f) return;
+  scannerStatus.textContent='Reading image…'; scannerStatus.className='scanner-status';
+  const rd=new FileReader();
+  rd.onload=()=>{
+    const img=new Image();
+    img.onload=()=>{
+      const c=document.createElement('canvas'); c.width=img.naturalWidth; c.height=img.naturalHeight;
+      const ctx=c.getContext('2d', { willReadFrequently: true });
       ctx.drawImage(img, 0, 0);
-      const data = ctx.getImageData(0, 0, c.width, c.height);
-      if (typeof jsQR === 'undefined') {
-        scannerStatus.textContent = 'QR reader not loaded';
-        scannerStatus.className = 'scanner-status error';
-        return;
-      }
-      const code = jsQR(data.data, c.width, c.height, { inversionAttempts: 'attemptBoth' });
-      if (code && code.data) {
-        handleScanned(code.data);
-      } else {
-        scannerStatus.textContent = 'No QR code found in that image.';
-        scannerStatus.className = 'scanner-status error';
-      }
+      const data=ctx.getImageData(0, 0, c.width, c.height);
+      if(typeof jsQR === 'undefined'){ scannerStatus.textContent='QR reader not loaded'; scannerStatus.classList.add('error'); return; }
+      const code=jsQR(data.data, c.width, c.height, { inversionAttempts: 'attemptBoth' });
+      if(code && code.data) handleScanned(code.data);
+      else { scannerStatus.textContent='No QR code found in that image.'; scannerStatus.classList.add('error'); }
     };
-    img.onerror = () => {
-      scannerStatus.textContent = 'Could not read the image.';
-      scannerStatus.className = 'scanner-status error';
-    };
-    img.src = reader.result;
+    img.onerror=()=>{ scannerStatus.textContent='Could not read the image.'; scannerStatus.classList.add('error'); };
+    img.src=rd.result;
   };
-  reader.readAsDataURL(f);
+  rd.readAsDataURL(f);
 });
 
-/* ---------- Copy ID (drawer mini) ---------- */
-async function copyMyId() {
-  try { await navigator.clipboard.writeText(me.id); }
-  catch {
-    const ta = document.createElement('textarea');
-    ta.value = me.id; document.body.appendChild(ta);
-    ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
-  }
+async function copyMyId(){
+  try { await navigator.clipboard.writeText(me.id); } catch { const ta=document.createElement('textarea'); ta.value=me.id; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); }
   showToast('Chat ID copied');
 }
-
-drawerCopyId.addEventListener('click', async (e) => {
-  e.stopPropagation();
-  await copyMyId();
-  drawerCopyId.classList.add('done');
-  setTimeout(() => drawerCopyId.classList.remove('done'), 1500);
-});
-
-$('menuCopyId').addEventListener('click', async () => { await copyMyId(); closeDrawer(); });
-$('menuReset').addEventListener('click', () => {
-  if (!confirm('Reset session? Your Chat ID will change.')) return;
-  if (presenceRef) presenceRef.remove();
-  if (incomingReqRef) incomingReqRef.off();
-  if (messageRef) messageRef.off();
+drawerCopyId.addEventListener('click', async e=>{ e.stopPropagation(); await copyMyId(); drawerCopyId.classList.add('done'); setTimeout(()=>drawerCopyId.classList.remove('done'), 1500); });
+$('menuCopyId').addEventListener('click', async ()=>{ await copyMyId(); closeDrawer(); });
+$('menuReset').addEventListener('click', ()=>{
+  if(!confirm('Reset session? Your Chat ID will change.')) return;
+  if(presenceRef) presenceRef.remove();
+  if(incomingReqRef) incomingReqRef.off();
+  if(messageRef) messageRef.off();
   stopScanner();
-  [ME_KEY, PARTNER_KEY, MSG_KEY, LOCAL_ONLY_KEY].forEach(k => localStorage.removeItem(k));
+  try{ auth.signOut(); }catch(e){}
+  [ME_KEY, PARTNER_KEY, MSG_KEY, LOCAL_ONLY_KEY].forEach(k=>localStorage.removeItem(k));
   location.reload();
 });
 
-/* ---------- Boot ---------- */
-window.addEventListener('load', () => {
-  initMe();
-  paintMe();
-  tryInitGoogle();
-  registerPresence();
-
-  const savedPartner = localStorage.getItem(PARTNER_KEY);
-  const savedLocalOnly = localStorage.getItem(LOCAL_ONLY_KEY);
-  if (savedPartner && savedPartner !== me.id && savedLocalOnly === 'false') {
-    partnerId = savedPartner;
-    LOCAL_ONLY = false;
-    setConnected(true, 'Friend');
-    listenMessages();
-  } else {
-    LOCAL_ONLY = true;
-    setConnected(false);
-  }
-  render();
+window.addEventListener('load',()=>{
+  initMe(); tryInitGoogle(); render(); setConnected(false);
+  auth.onAuthStateChanged(async user=>{
+    if(user){
+      try{ await applyFirebaseUser(user); }catch(e){ console.error(e); showToast('Account setup failed'); }
+    }else{
+      me={id:'CL-LOGIN-REQUIRED',name:'Guest User',email:null,picture:null,provider:'guest'};
+      partnerId=null; partnerName='Friend'; LOCAL_ONLY=true; paintMe(); setConnected(false); render();
+    }
+  });
 });
 </script>
 </body>
