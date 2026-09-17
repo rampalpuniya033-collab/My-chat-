@@ -57,7 +57,7 @@
   }
   .topbar .avatar-chip img { width: 100%; height: 100%; object-fit: cover; }
   
-  /* ===== NEW CALL ICONS CSS ===== */
+  /* ===== CALL ICONS CSS ===== */
   .topbar .call-actions {
     display: flex;
     gap: 8px;
@@ -104,6 +104,9 @@
   .status-chip .dot {
     width: 7px; height: 7px; border-radius: 50%;
     background: var(--green); box-shadow: 0 0 0 3px rgba(34,197,94,.15);
+  }
+  .status-chip.offline .dot {
+    background: var(--red); box-shadow: 0 0 0 3px rgba(239,68,68,.15);
   }
   .status-chip.connecting .dot {
     background: var(--gold); box-shadow: 0 0 0 3px rgba(224,177,0,.18);
@@ -626,7 +629,7 @@
     <button class="menu-btn" id="menuBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
     <div class="title">ConvoLink</div>
     
-    <!-- NEW: Call Actions -->
+    <!-- Call Actions -->
     <div class="call-actions">
       <button class="call-btn" id="voiceCallBtn" title="Voice Call">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
@@ -1142,8 +1145,9 @@ let pendingAttachment = null, LOCAL_ONLY = true;
 let scanStream = null, scanRAF = null, scanCanvas = null, scanCtx = null, scanActive = false;
 let requestQueue = [], requestModalEl = null;
 
-/* ===== TYPING ===== */
+/* ===== PRESENCE & TYPING ===== */
 let typingRef = null, partnerTypingRef = null, typingTimeout = null, isPartnerTyping = false;
+let partnerOnline = false, partnerPresenceRef = null;
 
 /* ===== VOICE RECORDING ===== */
 let mediaRecorder = null, recChunks = [], recStream = null, recTimerInterval = null, recStartTime = 0, recSeconds = 0, recCancelled = false;
@@ -1243,12 +1247,41 @@ function paintMe(){
   if(mainSignInBtn) mainSignInBtn.classList.toggle('signed', signedIn());
 }
 function setConnected(on, name){
-  if(on){ statusChip.classList.remove('connecting','typing'); statusChip.classList.add('online'); statusText.textContent='Connected'+(name?' · '+name:''); }
-  else { statusChip.classList.remove('connecting','online','typing'); statusText.textContent=signedIn()?'Ready':'Sign in to connect'; }
+  if(on){ statusChip.className = 'status-chip online'; statusText.textContent='Online'+(name?' · '+name:''); }
+  else { statusChip.className = 'status-chip'; statusText.textContent=signedIn()?'Ready':'Sign in to connect'; }
 }
-function setStatus(kind,text){ statusChip.classList.remove('online','connecting','typing'); if(kind) statusChip.classList.add(kind); statusText.textContent=text; }
+function setStatus(kind,text){ statusChip.className = 'status-chip ' + (kind || ''); statusText.textContent=text; }
 
-/* ===== TYPING INDICATOR ===== */
+/* ===== PRESENCE & TYPING LOGIC ===== */
+function updateStatusDisplay() {
+  if (!partnerUid) {
+    setConnected(false);
+    return;
+  }
+  if (isPartnerTyping) {
+    statusChip.className = 'status-chip typing';
+    statusText.textContent = 'typing…';
+    return;
+  }
+  if (partnerOnline) {
+    statusChip.className = 'status-chip online';
+    statusText.textContent = 'Online · ' + partnerName;
+  } else {
+    statusChip.className = 'status-chip offline';
+    statusText.textContent = 'Offline · ' + partnerName;
+  }
+}
+
+function listenPartnerPresence() {
+  if (partnerPresenceRef) { try { partnerPresenceRef.off(); } catch {} partnerPresenceRef = null; }
+  if (!signedIn() || !partnerUid) return;
+  partnerPresenceRef = db.ref('users/' + partnerUid + '/online');
+  partnerPresenceRef.on('value', snap => {
+    partnerOnline = snap.val() === true;
+    updateStatusDisplay();
+  });
+}
+
 function setupTypingListeners(){
   if(typingRef){ try{ typingRef.remove(); }catch{} typingRef=null; }
   if(partnerTypingRef){ try{ partnerTypingRef.off(); }catch{} partnerTypingRef=null; }
@@ -1261,15 +1294,7 @@ function setupTypingListeners(){
     const v=snap.val();
     const fresh = v && v.typing && (Date.now()-(v.at||0) < 8000);
     isPartnerTyping=!!fresh;
-    if(isPartnerTyping){
-      statusChip.classList.remove('connecting','online');
-      statusChip.classList.add('typing');
-      statusText.textContent='typing…';
-    } else if(partnerUid){
-      statusChip.classList.remove('connecting','typing');
-      statusChip.classList.add('online');
-      statusText.textContent='Connected · '+partnerName;
-    }
+    updateStatusDisplay();
   });
 }
 function emitTyping(){
@@ -1588,6 +1613,8 @@ async function acceptRequest(r){
     await db.ref().update(updates);
     await db.ref(`requests/${me.uid}/${r.requestId}`).remove();
     await selectPartner(other);
+    addSystem(`Connected with ${other.name || 'Friend'}`);
+    render();
     showToast('Connection accepted. Chat is ready.');
   }catch(e){ console.error(e); showToast(friendlyFirebaseError(e)); }
   closeRequestModal();
@@ -1602,8 +1629,9 @@ async function selectPartner(p){
   stopCurrentAudio();
   partnerId=p.id; partnerUid=p.uid; partnerName=p.name||'Friend'; LOCAL_ONLY=false;
   localStorage.setItem(PARTNER_KEY,partnerId); localStorage.setItem(LOCAL_ONLY_KEY,'false');
-  setConnected(true,partnerName); addSystem(`Connected with ${partnerName}`); render(); listenMessages();
+  setConnected(true,partnerName); render(); listenMessages();
   setupTypingListeners();
+  listenPartnerPresence();
 }
 async function restoreConnection(){
   if(!signedIn()) return;
@@ -1643,7 +1671,24 @@ connectConfirm.addEventListener('click',()=>connectToId(connectInput.value));
 connectInput.addEventListener('keydown',e=>{if(e.key==='Enter')connectConfirm.click();});
 
 function messageCacheKey(){ return partnerUid ? MSG_KEY+'_'+chatKey(me.uid,partnerUid) : MSG_KEY+'_none'; }
-function getMsgs(){ try{const r=localStorage.getItem(messageCacheKey());return r?JSON.parse(r):[];}catch{return [];} }
+function getMsgs(){
+  try {
+    const r = localStorage.getItem(messageCacheKey());
+    let arr = r ? JSON.parse(r) : [];
+    // Clean up consecutive duplicate system messages
+    let cleanArr = [];
+    for (let i = 0; i < arr.length; i++) {
+      if (i > 0 && arr[i].system && arr[i-1].system && arr[i].text === arr[i-1].text) {
+        continue;
+      }
+      cleanArr.push(arr[i]);
+    }
+    if (cleanArr.length !== arr.length) {
+      localStorage.setItem(messageCacheKey(), JSON.stringify(cleanArr));
+    }
+    return cleanArr;
+  } catch { return []; }
+}
 function saveMsg(m){
   const a=getMsgs();
   if(m._key && a.some(x=>x._key===m._key)){
@@ -1839,6 +1884,7 @@ $('menuReset').addEventListener('click',async()=>{
   if(messageRef)messageRef.off();
   if(typingRef){try{typingRef.remove();}catch{} typingRef=null;}
   if(partnerTypingRef){try{partnerTypingRef.off();}catch{} partnerTypingRef=null;}
+  if(partnerPresenceRef){try{partnerPresenceRef.off();}catch{} partnerPresenceRef=null;}
   if(presenceRef){try{await presenceRef.update({online:false,lastSeen:firebase.database.ServerValue.TIMESTAMP});}catch{}}
   partnerId=null;partnerUid=null;partnerName='Friend';LOCAL_ONLY=true;
   localStorage.removeItem(PARTNER_KEY);localStorage.setItem(LOCAL_ONLY_KEY,'true');render();setConnected(false);showToast('Chat selection reset. Your Firebase account and UID are kept.');closeDrawer();
@@ -1859,6 +1905,7 @@ if(firebaseReady && auth){
         if(messageRef)messageRef.off();
         if(typingRef){try{typingRef.remove();}catch{} typingRef=null;}
         if(partnerTypingRef){try{partnerTypingRef.off();}catch{} partnerTypingRef=null;}
+        if(partnerPresenceRef){try{partnerPresenceRef.off();}catch{} partnerPresenceRef=null;}
         localStorage.removeItem(ME_KEY);localStorage.removeItem(PARTNER_KEY);localStorage.setItem(LOCAL_ONLY_KEY,'true');
         drawerName.textContent='Guest User';drawerEmail.textContent='Not signed in';drawerMyId.textContent='—';qrMyId.textContent='—';googleLogoBtn.classList.remove('signed'); if(mainSignInBtn) mainSignInBtn.classList.remove('signed');
         topAvatar.textContent='?';drawerAvatar.textContent='?';setConnected(false);render();
@@ -1885,14 +1932,12 @@ $('voiceCallBtn').addEventListener('click', () => {
   if (!signedIn()) { showToast('Please sign in with Google first'); return; }
   if (!partnerUid) { showToast('Connect with a friend first'); return; }
   showToast(`Calling ${partnerName}... (Voice call feature requires WebRTC setup)`);
-  // Future integration: initiate WebRTC voice call
 });
 
 $('videoCallBtn').addEventListener('click', () => {
   if (!signedIn()) { showToast('Please sign in with Google first'); return; }
   if (!partnerUid) { showToast('Connect with a friend first'); return; }
   showToast(`Calling ${partnerName}... (Video call feature requires WebRTC setup)`);
-  // Future integration: initiate WebRTC video call
 });
 
 window.addEventListener('error',e=>{console.error('ConvoLink error',e.error||e.message);});
