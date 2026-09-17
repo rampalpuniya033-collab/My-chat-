@@ -645,8 +645,93 @@
   .incoming-call-card{width:min(390px,100%);background:var(--card);border-radius:24px;padding:24px;box-shadow:0 30px 80px rgba(0,0,0,.35);text-align:center}
   .incoming-call-avatar{width:76px;height:76px;border-radius:50%;background:var(--brand);color:#fff;display:grid;place-items:center;margin:0 auto 14px;font-size:25px;font-weight:800;overflow:hidden}
   .incoming-call-avatar img{width:100%;height:100%;object-fit:cover}.incoming-call-card h3{font-size:19px;margin-bottom:5px}.incoming-call-card p{font-size:12.5px;color:var(--muted);margin-bottom:20px}
-  .incoming-actions{display:flex;justify-content:space-around;gap:26px;margin-top:18px}.incoming-swipe{position:relative;width:108px;height:118px;border:0;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none}.incoming-swipe .swipe-track{position:absolute;left:50%;top:4px;transform:translateX(-50%);width:54px;height:76px;border-radius:28px;background:rgba(0,0,0,.06);border:1px solid var(--line);opacity:.9}.incoming-swipe .swipe-arrow{position:absolute;top:13px;left:50%;transform:translateX(-50%);font-size:18px;line-height:1;opacity:.7;transition:transform .18s ease,opacity .18s ease}.incoming-swipe .swipe-knob{position:absolute;left:50%;top:38px;transform:translate(-50%,0);width:48px;height:48px;border-radius:50%;display:grid;place-items:center;color:#fff;box-shadow:0 8px 22px rgba(0,0,0,.18);transition:transform .12s ease}.incoming-swipe .swipe-knob svg{width:22px;height:22px}.incoming-swipe .swipe-label{font-size:11px;font-weight:800;margin-top:2px}.incoming-reject .swipe-knob{background:#ef4444}.incoming-accept .swipe-knob{background:#20b26b}.incoming-reject .swipe-label{color:#ef4444}.incoming-accept .swipe-label{color:#20a965}.incoming-swipe.swiping .swipe-arrow{transform:translate(-50%,-5px);opacity:1}.incoming-swipe.swiping .swipe-knob{transition:none}.incoming-swipe.completed .swipe-knob{transform:translate(-50%,-52px)}
-  @media(max-width:600px){.incoming-call-card{padding:22px 18px}.incoming-actions{gap:34px}}
+
+  /* ===== REAL DIALER STYLE INCOMING CALL BUTTONS ===== */
+  .incoming-actions{
+    display:flex;
+    justify-content:center;
+    align-items:flex-start;
+    gap:56px;
+    margin-top:24px;
+    padding:0 8px;
+  }
+  .call-action-wrap{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:10px;
+  }
+  .call-action-btn{
+    position:relative;
+    width:72px;
+    height:72px;
+    border-radius:50%;
+    border:none;
+    display:grid;
+    place-items:center;
+    cursor:pointer;
+    color:#fff;
+    isolation:isolate;
+    transition:transform .15s ease, box-shadow .2s ease, filter .2s ease;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .call-action-btn svg{
+    width:30px;
+    height:30px;
+    position:relative;
+    z-index:3;
+    pointer-events:none;
+  }
+  .call-action-btn.accept{
+    background:linear-gradient(180deg,#2ecc71 0%,#22b85e 100%);
+    box-shadow:0 10px 24px rgba(34,184,94,.42), 0 4px 8px rgba(0,0,0,.12);
+  }
+  .call-action-btn.decline{
+    background:linear-gradient(180deg,#f5554f 0%,#e63b35 100%);
+    box-shadow:0 10px 24px rgba(230,59,53,.42), 0 4px 8px rgba(0,0,0,.12);
+  }
+  .call-action-btn.decline svg{ transform:rotate(135deg); }
+  .call-action-btn:hover{ filter:brightness(1.06); }
+  .call-action-btn:active{ transform:scale(.9); }
+
+  /* Pulsing rings */
+  .call-action-btn::before,
+  .call-action-btn::after{
+    content:'';
+    position:absolute;
+    inset:0;
+    border-radius:50%;
+    z-index:-1;
+    animation:callRingPulse 2s ease-out infinite;
+    pointer-events:none;
+  }
+  .call-action-btn::after{ animation-delay:1s; }
+  .call-action-btn.accept::before,
+  .call-action-btn.accept::after{ background:rgba(46,204,113,.55); }
+  .call-action-btn.decline::before,
+  .call-action-btn.decline::after{ background:rgba(245,85,79,.55); }
+
+  @keyframes callRingPulse{
+    0%   { transform:scale(1);   opacity:.75; }
+    70%  { transform:scale(1.9); opacity:0;   }
+    100% { transform:scale(1.9); opacity:0;   }
+  }
+
+  .call-action-label{
+    font-size:11.5px;
+    font-weight:800;
+    letter-spacing:.2px;
+    user-select:none;
+  }
+  .accept-label{ color:#16a34a; }
+  .decline-label{ color:#dc2626; }
+
+  @media(max-width:600px){
+    .incoming-call-card{padding:22px 18px}
+    .incoming-actions{ gap:48px; margin-top:22px; }
+    .call-action-btn{ width:66px; height:66px; }
+    .call-action-btn svg{ width:27px; height:27px; }
+  }
   @media(max-width:600px){.call-overlay{padding:0}.call-shell{width:100%;height:100%;border-radius:0}.call-head{height:60px}.call-controls{padding-bottom:calc(16px + env(safe-area-inset-bottom,0px))}#localVideo{width:125px;max-width:38%;right:10px;bottom:10px}.call-stage.swap-local #remoteVideo{width:125px;max-width:38%;right:10px;bottom:10px}.call-stage.swap-local #localVideo{width:100%;max-width:none;height:100%}}
 
   /* ===== CALL CAMERA SWITCH + DRAGGABLE PREVIEW ===== */
@@ -801,16 +886,22 @@
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5V2l4 4-4 4V7a5 5 0 1 0 4.9 6"/><path d="M12 19v3l-4-4 4-4v3a5 5 0 1 0-4.9-6"/></svg>
     </button>
     <div class="incoming-actions" aria-label="Answer or decline call">
-      <button class="incoming-swipe incoming-reject" id="incomingReject" type="button" aria-label="Swipe up to decline">
-        <span class="swipe-track"></span><span class="swipe-arrow" aria-hidden="true">↑</span>
-        <span class="swipe-knob"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></span>
-        <span class="swipe-label">Swipe up to decline</span>
-      </button>
-      <button class="incoming-swipe incoming-accept" id="incomingAccept" type="button" aria-label="Swipe up to answer">
-        <span class="swipe-track"></span><span class="swipe-arrow" aria-hidden="true">↑</span>
-        <span class="swipe-knob"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg></span>
-        <span class="swipe-label">Swipe up to answer</span>
-      </button>
+      <div class="call-action-wrap">
+        <button class="call-action-btn decline" id="incomingReject" type="button" aria-label="Decline call">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56-.35-.12-.74-.03-1.01.24l-1.57 1.97c-2.83-1.35-5.48-3.9-6.89-6.83l1.95-1.66c.27-.28.35-.67.24-1.02-.37-1.11-.56-2.3-.56-3.53 0-.54-.45-.99-.99-.99H4.19C3.65 3 3 3.24 3 3.99 3 13.28 10.73 21 20.01 21c.71 0 .99-.63.99-1.18v-3.45c0-.54-.45-.99-.99-.99z"/>
+          </svg>
+        </button>
+        <span class="call-action-label decline-label">Decline</span>
+      </div>
+      <div class="call-action-wrap">
+        <button class="call-action-btn accept" id="incomingAccept" type="button" aria-label="Accept call">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56-.35-.12-.74-.03-1.01.24l-1.57 1.97c-2.83-1.35-5.48-3.9-6.89-6.83l1.95-1.66c.27-.28.35-.67.24-1.02-.37-1.11-.56-2.3-.56-3.53 0-.54-.45-.99-.99-.99H4.19C3.65 3 3 3.24 3 3.99 3 13.28 10.73 21 20.01 21c.71 0 .99-.63.99-1.18v-3.45c0-.54-.45-.99-.99-.99z"/>
+          </svg>
+        </button>
+        <span class="call-action-label accept-label">Accept</span>
+      </div>
     </div>
   </div>
 </div>
@@ -2686,44 +2777,20 @@ callCameraBtn.addEventListener('click',()=>{
   if(!localStream||currentCallType!=='video')return;const track=localStream.getVideoTracks()[0];if(!track)return;track.enabled=!track.enabled;const off=!track.enabled;callCameraBtn.classList.toggle('active',off);callCameraBtn.innerHTML=callIcon('camera',off);callCameraBtn.title=off?'Turn camera on':'Turn camera off';
 });
 callEndBtn.addEventListener('click',()=>endWebRTCCall('ended'));
-// Incoming call controls: swipe upward on the green/red control to answer/decline.
-function setupIncomingSwipe(button, action){
-  if(!button)return;
-  let startY=0, active=false, triggered=false;
-  const threshold=42;
-  button.addEventListener('pointerdown',e=>{
-    if(triggered)return;
-    active=true; startY=e.clientY;
-    button.setPointerCapture?.(e.pointerId);
-    button.classList.add('swiping');
-  });
-  button.addEventListener('pointermove',e=>{
-    if(!active||triggered)return;
-    const dy=startY-e.clientY;
-    const lift=Math.max(0,Math.min(52,dy));
-    const knob=button.querySelector('.swipe-knob');
-    if(knob)knob.style.transform=`translate(-50%, ${-lift}px)`;
-    if(dy>=threshold){
-      triggered=true; active=false; button.classList.add('completed');
-      setTimeout(()=>action(),90);
-    }
-  });
-  const cancel=()=>{
-    if(!active)return; active=false; button.classList.remove('swiping');
-    const knob=button.querySelector('.swipe-knob');
-    if(knob)knob.style.transform='translate(-50%,0)';
-  };
-  button.addEventListener('pointerup',cancel);
-  button.addEventListener('pointercancel',cancel);
-  button.addEventListener('lostpointercapture',cancel);
-  // Tap remains available as an accessibility/fallback action.
-  button.addEventListener('click',()=>{
-    if(triggered){triggered=false;return;}
-    action();
-  });
+
+/* ===== INCOMING CALL: REAL DIALER BUTTONS (tap to accept / decline) ===== */
+function callActionHaptic(){
+  if(navigator.vibrate) navigator.vibrate(15);
 }
-setupIncomingSwipe(incomingAccept,acceptIncomingCall);
-setupIncomingSwipe(incomingReject,rejectIncomingCall);
+if(incomingAccept){
+  incomingAccept.addEventListener('pointerdown', callActionHaptic);
+  incomingAccept.addEventListener('click', acceptIncomingCall);
+}
+if(incomingReject){
+  incomingReject.addEventListener('pointerdown', callActionHaptic);
+  incomingReject.addEventListener('click', rejectIncomingCall);
+}
+
 if(callStage){
   localVideo.addEventListener('click',e=>{e.stopPropagation();if(localVideo.dataset.dragged==='1')return;swapCallVideos();});
   remoteVideo.addEventListener('click',e=>{e.stopPropagation();if(remoteVideo.dataset.dragged==='1')return;swapCallVideos();});
