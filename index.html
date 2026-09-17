@@ -1039,7 +1039,8 @@ function esc(s){ return String(s).replace(/[&<>"']/g, ch=>({'&':'&amp;','<':'&lt
 function initials(n){ return (n||'?').trim().split(/\s+/).map(w=>w[0]).slice(0,2).join('').toUpperCase(); }
 function chatKey(a,b){ return [a,b].sort().join('__'); }
 function fmtBytes(b){ if(b<1024) return b+' B'; if(b<1024*1024) return (b/1024).toFixed(1)+' KB'; return (b/1024/1024).toFixed(1)+' MB'; }
-function signedIn(){ return !!(auth && auth.currentUser && me && me.uid===auth.currentUser.uid); }
+function signedIn(){ return !!(auth && auth.currentUser && me && me.uid===auth.currentUser.uid && me.id); }
+function firebaseAuthenticated(){ return !!(auth && auth.currentUser && me && me.uid===auth.currentUser.uid); }
 function friendlyFirebaseError(e){
   const code=e && e.code ? e.code : '';
   if(code.includes('permission-denied')) return 'Firebase permission denied. Check Realtime Database Rules.';
@@ -1099,11 +1100,17 @@ async function ensureUserProfile(user){
   const cachedRaw=localStorage.getItem(ME_KEY);
   let cached=null;
   try{ cached=cachedRaw?JSON.parse(cachedRaw):null; }catch{}
+  // Firebase Authentication is the source of identity. Generate the Chat ID
+  // immediately and deterministically from the Firebase UID, before any
+  // Realtime Database read/write. This prevents the UI from falling back to
+  // Guest User when Database Rules/setup temporarily blocks a write.
+  const firebaseId=firebaseChatId(user.uid);
   if(cached && cached.uid===user.uid){
-    me={...cached,uid:user.uid,name:user.displayName||cached.name||'Google User',email:user.email||cached.email||'',picture:user.photoURL||cached.picture||null,provider:'google'};
+    me={...cached,uid:user.uid,id:firebaseId,name:user.displayName||cached.name||'Google User',email:user.email||cached.email||'',picture:user.photoURL||cached.picture||null,provider:'google'};
   }else{
-    me={uid:user.uid,name:user.displayName||'Google User',email:user.email||'',picture:user.photoURL||null,provider:'google',id:null};
+    me={uid:user.uid,id:firebaseId,name:user.displayName||'Google User',email:user.email||'',picture:user.photoURL||null,provider:'google'};
   }
+  localStorage.setItem(ME_KEY,JSON.stringify(me));
   paintMe();
 
   const userRef=db.ref('users/'+user.uid);
@@ -1378,14 +1385,16 @@ if(firebaseReady && auth){
       }
     }catch(e){
       console.error('auth state',e);
-      // Keep the real Firebase-authenticated Google profile visible even if
-      // the database rules/setup still need attention.
+      // Authentication succeeded even if Realtime Database is not configured
+      // correctly. Keep the Firebase UID, permanent Chat ID and profile active.
       if(user){
-        me={uid:user.uid,id:me?.id||null,name:user.displayName||me?.name||'Google User',email:user.email||me?.email||'',picture:user.photoURL||me?.picture||null,provider:'google'};
+        const id=firebaseChatId(user.uid);
+        me={uid:user.uid,id,name:user.displayName||'Google User',email:user.email||'',picture:user.photoURL||null,provider:'google'};
         localStorage.setItem(ME_KEY,JSON.stringify(me));
         paintMe();
-        setStatus('',me.id?'Ready':'Database setup required');
-        showToast('Google signed in, but Firebase Database setup failed: '+friendlyFirebaseError(e));
+        setConnected(false);
+        setStatus('', 'Ready');
+        showToast('Google signed in. Database sync needs setup: '+friendlyFirebaseError(e));
       }else{
         setStatus('','Sign in to connect');
       }
