@@ -56,44 +56,19 @@
     overflow: hidden; flex-shrink: 0;
   }
   .topbar .avatar-chip img { width: 100%; height: 100%; object-fit: cover; }
-  
-  /* ===== CALL ICONS CSS ===== */
-  .topbar .call-actions {
-    display: flex;
-    gap: 8px;
-    margin-right: 4px;
-  }
+  .topbar .call-actions { display: flex; gap: 8px; margin-right: 4px; }
   .topbar .call-btn {
-    width: 34px;
-    height: 34px;
-    border-radius: 50%;
+    width: 34px; height: 34px; border-radius: 50%;
     background: rgba(255, 255, 255, 0.12);
     border: 1px solid rgba(255, 255, 255, 0.2);
-    color: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.25s ease;
-    backdrop-filter: blur(4px);
+    color: #fff; display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: all 0.25s ease; backdrop-filter: blur(4px);
   }
-  .topbar .call-btn:hover {
-    background: rgba(255, 255, 255, 0.3);
-    transform: translateY(-2px) scale(1.05);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-  }
-  .topbar .call-btn:active {
-    transform: translateY(0) scale(0.95);
-  }
-  .topbar .call-btn svg {
-    width: 16px;
-    height: 16px;
-  }
+  .topbar .call-btn:hover { background: rgba(255, 255, 255, 0.3); transform: translateY(-2px) scale(1.05); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+  .topbar .call-btn:active { transform: translateY(0) scale(0.95); }
+  .topbar .call-btn svg { width: 16px; height: 16px; }
 
-  .status-row {
-    display: flex; align-items: center; justify-content: center;
-    gap: 6px; padding: 10px 14px 8px;
-  }
+  .status-row { display: flex; align-items: center; justify-content: center; gap: 6px; padding: 10px 14px 8px; }
   .status-chip {
     display: inline-flex; align-items: center; gap: 7px;
     background: var(--card); border: 1px solid var(--line);
@@ -101,335 +76,120 @@
     font-size: 11.5px; font-weight: 600; color: var(--ink-2);
     box-shadow: var(--shadow-sm);
   }
-  .status-chip .dot {
-    width: 7px; height: 7px; border-radius: 50%;
-    background: var(--green); box-shadow: 0 0 0 3px rgba(34,197,94,.15);
-  }
-  .status-chip.offline .dot {
-    background: var(--red); box-shadow: 0 0 0 3px rgba(239,68,68,.15);
-  }
-  .status-chip.connecting .dot {
-    background: var(--gold); box-shadow: 0 0 0 3px rgba(224,177,0,.18);
-    animation: pulseDot 1s ease-in-out infinite;
-  }
-  .status-chip.typing .dot {
-    background: var(--gold); box-shadow: 0 0 0 3px rgba(224,177,0,.18);
-    animation: pulseDot .8s ease-in-out infinite;
-  }
+  .status-chip .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); box-shadow: 0 0 0 3px rgba(34,197,94,.15); }
+  .status-chip.offline .dot { background: var(--red); box-shadow: 0 0 0 3px rgba(239,68,68,.15); }
+  .status-chip.connecting .dot { background: var(--gold); box-shadow: 0 0 0 3px rgba(224,177,0,.18); animation: pulseDot 1s ease-in-out infinite; }
+  .status-chip.typing .dot { background: var(--gold); box-shadow: 0 0 0 3px rgba(224,177,0,.18); animation: pulseDot .8s ease-in-out infinite; }
   @keyframes pulseDot { 0%,100%{opacity:1} 50%{opacity:.3} }
-  .messages {
-    flex: 1; overflow-y: auto;
-    padding: 6px 14px 14px;
-    display: flex; flex-direction: column; gap: 8px;
-    scroll-behavior: smooth;
-  }
+
+  .messages { flex: 1; overflow-y: auto; padding: 6px 14px 14px; display: flex; flex-direction: column; gap: 8px; scroll-behavior: smooth; }
   .messages::-webkit-scrollbar { width: 5px; }
   .messages::-webkit-scrollbar-thumb { background: #d6d9e3; border-radius: 8px; }
-  .empty {
-    margin: auto; text-align: center;
-    max-width: 260px; color: var(--muted); padding: 20px 10px;
-  }
-  .empty .icon {
-    width: 56px; height: 56px; border-radius: 50%;
-    background: var(--blue-soft);
-    display: flex; align-items: center; justify-content: center;
-    margin: 0 auto 14px; color: var(--brand);
-  }
+  .empty { margin: auto; text-align: center; max-width: 260px; color: var(--muted); padding: 20px 10px; }
+  .empty .icon { width: 56px; height: 56px; border-radius: 50%; background: var(--blue-soft); display: flex; align-items: center; justify-content: center; margin: 0 auto 14px; color: var(--brand); }
   .empty .icon svg { width: 26px; height: 26px; }
   .empty h3 { font-size: 14px; color: var(--ink); font-weight: 700; margin-bottom: 6px; }
   .empty p { font-size: 12.5px; line-height: 1.55; }
-  .msg {
-    max-width: 78%; padding: 9px 13px;
-    border-radius: 14px; font-size: 13.5px; line-height: 1.45;
-    word-wrap: break-word; animation: pop .22s ease;
-    box-shadow: var(--shadow-sm);
-  }
+  .msg { max-width: 78%; padding: 9px 13px; border-radius: 14px; font-size: 13.5px; line-height: 1.45; word-wrap: break-word; animation: pop .22s ease; box-shadow: var(--shadow-sm); }
   @keyframes pop { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
-  .msg .time {
-    font-size: 10px; opacity: .65; margin-top: 4px;
-    display: block; text-align: right; font-weight: 500;
-  }
+  .msg .time { font-size: 10px; opacity: .65; margin-top: 4px; display: block; text-align: right; font-weight: 500; }
   .msg.mine { align-self: flex-end; background: var(--brand); color: #fff; border-bottom-right-radius: 4px; }
   .msg.mine .time { color: rgba(255,255,255,.75); display: inline-flex; align-items: center; gap: 3px; justify-content: flex-end; width: 100%; }
   .msg.theirs { align-self: flex-start; background: var(--card); color: var(--ink); border: 1px solid var(--line); border-bottom-left-radius: 4px; }
-  .msg.system {
-    align-self: center; background: #eef1f7; color: var(--ink-2);
-    font-size: 11.5px; font-weight: 500;
-    padding: 6px 14px; border-radius: 20px;
-    max-width: 88%; text-align: center;
-  }
-  .msg img.msg-media {
-    max-width: 100%; max-height: 260px;
-    border-radius: 10px; margin: 4px 0;
-    display: block; cursor: pointer; object-fit: cover;
-  }
-  .msg .file-chip {
-    display: flex; align-items: center; gap: 8px;
-    background: rgba(0,0,0,.08); padding: 8px 10px;
-    border-radius: 10px; margin: 4px 0;
-    font-size: 12.5px; word-break: break-all;
-  }
+  .msg.system { align-self: center; background: #eef1f7; color: var(--ink-2); font-size: 11.5px; font-weight: 500; padding: 6px 14px; border-radius: 20px; max-width: 88%; text-align: center; }
+  .msg img.msg-media { max-width: 100%; max-height: 260px; border-radius: 10px; margin: 4px 0; display: block; cursor: pointer; object-fit: cover; }
+  .msg .file-chip { display: flex; align-items: center; gap: 8px; background: rgba(0,0,0,.08); padding: 8px 10px; border-radius: 10px; margin: 4px 0; font-size: 12.5px; word-break: break-all; }
   .msg.mine .file-chip { background: rgba(255,255,255,.18); }
   .msg .file-chip svg { width: 16px; height: 16px; flex-shrink: 0; }
   .msg .file-chip a { color: inherit; text-decoration: underline; }
-  /* Tick marks */
   .msg .tick { font-size: 11px; font-weight: 700; letter-spacing: -1px; margin-left: 3px; color: rgba(255,255,255,.65); }
   .msg .tick.read { color: #7dd3fc; }
 
-  /* ===== VOICE MESSAGE PLAYER ===== */
-  .voice-player {
-    display: flex; align-items: center; gap: 10px;
-    padding: 4px 2px; min-width: 180px; margin-bottom: 2px;
-  }
-  .voice-play-btn {
-    width: 34px; height: 34px; border-radius: 50%;
-    background: rgba(255,255,255,.22); border: none;
-    color: #fff; display: flex; align-items: center; justify-content: center;
-    cursor: pointer; flex-shrink: 0; padding: 0;
-    transition: background .15s, transform .1s;
-  }
+  .voice-player { display: flex; align-items: center; gap: 10px; padding: 4px 2px; min-width: 180px; margin-bottom: 2px; }
+  .voice-play-btn { width: 34px; height: 34px; border-radius: 50%; background: rgba(255,255,255,.22); border: none; color: #fff; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; padding: 0; transition: background .15s, transform .1s; }
   .voice-play-btn:active { transform: scale(.94); }
   .voice-play-btn svg { width: 16px; height: 16px; }
   .msg.theirs .voice-play-btn { background: var(--brand); color: #fff; }
-  .voice-bar {
-    flex: 1; height: 4px; background: rgba(255,255,255,.3);
-    border-radius: 3px; position: relative; overflow: hidden; min-width: 80px;
-  }
+  .voice-bar { flex: 1; height: 4px; background: rgba(255,255,255,.3); border-radius: 3px; position: relative; overflow: hidden; min-width: 80px; }
   .msg.theirs .voice-bar { background: rgba(0,0,0,.12); }
-  .voice-bar-fill {
-    position: absolute; left: 0; top: 0; bottom: 0; width: 0%;
-    background: #fff; border-radius: 3px;
-    transition: width .08s linear;
-  }
+  .voice-bar-fill { position: absolute; left: 0; top: 0; bottom: 0; width: 0%; background: #fff; border-radius: 3px; transition: width .08s linear; }
   .msg.theirs .voice-bar-fill { background: var(--brand); }
-  .voice-duration {
-    font-size: 11px; font-weight: 700; opacity: .85;
-    flex-shrink: 0; font-family: 'SF Mono','Menlo',monospace;
-  }
+  .voice-duration { font-size: 11px; font-weight: 700; opacity: .85; flex-shrink: 0; font-family: 'SF Mono','Menlo',monospace; }
 
-  .attach-preview {
-    display: none; padding: 10px 14px 0;
-    background: var(--card); border-top: 1px solid var(--line);
-  }
+  .attach-preview { display: none; padding: 10px 14px 0; background: var(--card); border-top: 1px solid var(--line); }
   .attach-preview.show { display: block; }
-  .attach-preview .ap-inner {
-    display: flex; align-items: center; gap: 10px;
-    background: #f5f6fa; border: 1px solid var(--line);
-    border-radius: 12px; padding: 8px 10px;
-  }
-  .attach-preview .ap-thumb {
-    width: 46px; height: 46px; border-radius: 8px;
-    background: var(--blue-soft);
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0; overflow: hidden; color: var(--brand);
-  }
+  .attach-preview .ap-inner { display: flex; align-items: center; gap: 10px; background: #f5f6fa; border: 1px solid var(--line); border-radius: 12px; padding: 8px 10px; }
+  .attach-preview .ap-thumb { width: 46px; height: 46px; border-radius: 8px; background: var(--blue-soft); display: flex; align-items: center; justify-content: center; flex-shrink: 0; overflow: hidden; color: var(--brand); }
   .attach-preview .ap-thumb img { width: 100%; height: 100%; object-fit: cover; }
   .attach-preview .ap-thumb svg { width: 22px; height: 22px; }
   .attach-preview .ap-info { flex: 1; min-width: 0; }
-  .attach-preview .ap-info .ap-name {
-    font-size: 12.5px; font-weight: 600; color: var(--ink);
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-  }
+  .attach-preview .ap-info .ap-name { font-size: 12.5px; font-weight: 600; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .attach-preview .ap-info .ap-size { font-size: 11px; color: var(--muted); margin-top: 2px; }
-  .attach-preview .ap-remove {
-    width: 32px; height: 32px; border-radius: 8px;
-    background: #fff; border: 1px solid var(--line);
-    color: var(--red);
-    display: flex; align-items: center; justify-content: center;
-    cursor: pointer; flex-shrink: 0;
-  }
+  .attach-preview .ap-remove { width: 32px; height: 32px; border-radius: 8px; background: #fff; border: 1px solid var(--line); color: var(--red); display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; }
   .attach-preview .ap-remove svg { width: 15px; height: 15px; }
 
-  .input-bar {
-    padding: 10px 12px calc(10px + env(safe-area-inset-bottom, 0px));
-    background: var(--card); border-top: 1px solid var(--line);
-    display: flex; align-items: flex-end; gap: 8px; flex-shrink: 0;
-  }
+  .input-bar { padding: 10px 12px calc(10px + env(safe-area-inset-bottom, 0px)); background: var(--card); border-top: 1px solid var(--line); display: flex; align-items: flex-end; gap: 8px; flex-shrink: 0; }
   .input-bar.hide { display: none; }
-  .input-bar .tool-btn {
-    width: 40px; height: 40px; border-radius: 50%;
-    background: #f5f6fa; border: 1px solid var(--line);
-    color: var(--ink-2);
-    display: flex; align-items: center; justify-content: center;
-    cursor: pointer; flex-shrink: 0;
-  }
+  .input-bar .tool-btn { width: 40px; height: 40px; border-radius: 50%; background: #f5f6fa; border: 1px solid var(--line); color: var(--ink-2); display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; }
   .input-bar .tool-btn svg { width: 18px; height: 18px; }
   .input-bar .tool-btn.mic { color: var(--brand); background: var(--blue-soft); border-color: #cdd9f5; }
-  .input-bar .msg-wrap {
-    flex: 1; min-width: 0;
-    display: flex; align-items: center;
-    background: #f5f6fa; border: 1px solid var(--line);
-    border-radius: 22px; padding: 0 4px 0 14px;
-  }
-  .input-bar .msg-wrap input {
-    flex: 1; min-width: 0; padding: 12px 0;
-    background: transparent; border: none; outline: none;
-    color: var(--ink); font-size: 13.5px;
-  }
+  .input-bar .msg-wrap { flex: 1; min-width: 0; display: flex; align-items: center; background: #f5f6fa; border: 1px solid var(--line); border-radius: 22px; padding: 0 4px 0 14px; }
+  .input-bar .msg-wrap input { flex: 1; min-width: 0; padding: 12px 0; background: transparent; border: none; outline: none; color: var(--ink); font-size: 13.5px; }
   .input-bar .msg-wrap input::placeholder { color: var(--muted); }
-  .input-bar .send-btn {
-    width: 44px; height: 44px; border-radius: 50%;
-    background: var(--brand); border: none; color: #fff;
-    display: flex; align-items: center; justify-content: center;
-    cursor: pointer; flex-shrink: 0; position: relative;
-  }
+  .input-bar .send-btn { width: 44px; height: 44px; border-radius: 50%; background: var(--brand); border: none; color: #fff; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; position: relative; }
   .input-bar .send-btn svg { width: 18px; height: 18px; }
   .input-bar .send-btn.has-attach { background: var(--green); }
   .hidden-file { display: none; }
 
-  /* ===== RECORDING BAR ===== */
-  .recording-bar {
-    display: none;
-    padding: 10px 12px calc(10px + env(safe-area-inset-bottom, 0px));
-    background: var(--card); border-top: 1px solid var(--line);
-    align-items: center; gap: 10px; flex-shrink: 0;
-  }
+  .recording-bar { display: none; padding: 10px 12px calc(10px + env(safe-area-inset-bottom, 0px)); background: var(--card); border-top: 1px solid var(--line); align-items: center; gap: 10px; flex-shrink: 0; }
   .recording-bar.show { display: flex; }
-  .rec-info {
-    flex: 1; display: flex; align-items: center; gap: 9px;
-    font-size: 13px; font-weight: 600; color: var(--ink); min-width: 0;
-  }
-  .rec-dot {
-    width: 10px; height: 10px; border-radius: 50%; background: var(--red);
-    box-shadow: 0 0 0 3px rgba(239,68,68,.18);
-    animation: recPulse 1s infinite; flex-shrink: 0;
-  }
+  .rec-info { flex: 1; display: flex; align-items: center; gap: 9px; font-size: 13px; font-weight: 600; color: var(--ink); min-width: 0; }
+  .rec-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--red); box-shadow: 0 0 0 3px rgba(239,68,68,.18); animation: recPulse 1s infinite; flex-shrink: 0; }
   @keyframes recPulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.55;transform:scale(.85)} }
   .rec-label { color: var(--red); font-weight: 700; }
-  .rec-timer {
-    font-family: 'SF Mono','Menlo',monospace; font-size: 14px; font-weight: 700;
-    color: var(--ink); min-width: 46px;
-  }
-  .rec-hint {
-    font-size: 11px; color: var(--muted); font-weight: 500;
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-  }
-  .rec-btn {
-    width: 44px; height: 44px; border-radius: 50%;
-    border: none; display: flex; align-items: center; justify-content: center;
-    cursor: pointer; flex-shrink: 0; padding: 0;
-    transition: transform .1s, background .15s;
-  }
+  .rec-timer { font-family: 'SF Mono','Menlo',monospace; font-size: 14px; font-weight: 700; color: var(--ink); min-width: 46px; }
+  .rec-hint { font-size: 11px; color: var(--muted); font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .rec-btn { width: 44px; height: 44px; border-radius: 50%; border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; padding: 0; transition: transform .1s, background .15s; }
   .rec-btn:active { transform: scale(.94); }
   .rec-btn svg { width: 18px; height: 18px; }
-  .rec-btn.cancel {
-    background: #f5f6fa; color: var(--red); border: 1px solid var(--line);
-    width: 40px; height: 40px;
-  }
+  .rec-btn.cancel { background: #f5f6fa; color: var(--red); border: 1px solid var(--line); width: 40px; height: 40px; }
   .rec-btn.cancel svg { width: 16px; height: 16px; }
   .rec-btn.send { background: var(--green); color: #fff; }
 
-  /* Drawer */
-  .drawer-overlay {
-    position: fixed; inset: 0;
-    background: rgba(15,20,35,.45); backdrop-filter: blur(2px);
-    opacity: 0; visibility: hidden;
-    transition: opacity .25s ease, visibility .25s;
-    z-index: 40;
-  }
+  .drawer-overlay { position: fixed; inset: 0; background: rgba(15,20,35,.45); backdrop-filter: blur(2px); opacity: 0; visibility: hidden; transition: opacity .25s ease, visibility .25s; z-index: 40; }
   .drawer-overlay.open { opacity: 1; visibility: visible; }
-  .drawer {
-    position: fixed; top: 0; left: 0;
-    height: 100%; width: 82%; max-width: 320px;
-    background: var(--card); box-shadow: var(--shadow-lg);
-    transform: translateX(-105%);
-    transition: transform .3s cubic-bezier(.2,.8,.2,1);
-    z-index: 50; display: flex; flex-direction: column; overflow: hidden;
-  }
+  .drawer { position: fixed; top: 0; left: 0; height: 100%; width: 82%; max-width: 320px; background: var(--card); box-shadow: var(--shadow-lg); transform: translateX(-105%); transition: transform .3s cubic-bezier(.2,.8,.2,1); z-index: 50; display: flex; flex-direction: column; overflow: hidden; }
   .drawer.open { transform: translateX(0); }
-  .drawer-head {
-    background: var(--brand); color: #fff;
-    padding: 22px 18px 20px;
-    display: flex; flex-direction: column; gap: 12px;
-    position: relative;
-  }
-  .drawer-head .close-btn {
-    position: absolute; top: 12px; right: 12px;
-    width: 32px; height: 32px; border-radius: 50%;
-    background: rgba(255,255,255,.14); border: none; color: #fff;
-    display: flex; align-items: center; justify-content: center;
-    cursor: pointer;
-  }
+  .drawer-head { background: var(--brand); color: #fff; padding: 22px 18px 20px; display: flex; flex-direction: column; gap: 12px; position: relative; }
+  .drawer-head .close-btn { position: absolute; top: 12px; right: 12px; width: 32px; height: 32px; border-radius: 50%; background: rgba(255,255,255,.14); border: none; color: #fff; display: flex; align-items: center; justify-content: center; cursor: pointer; }
   .drawer-head .close-btn svg { width: 15px; height: 15px; }
   .drawer-head .avatar-row { display: flex; align-items: center; gap: 12px; }
-  .drawer-head .avatar-lg {
-    width: 56px; height: 56px; border-radius: 50%;
-    background: rgba(255,255,255,.18);
-    border: 2px solid rgba(255,255,255,.4);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 20px; font-weight: 700; color: #fff; overflow: hidden;
-    flex-shrink: 0;
-  }
+  .drawer-head .avatar-lg { width: 56px; height: 56px; border-radius: 50%; background: rgba(255,255,255,.18); border: 2px solid rgba(255,255,255,.4); display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 700; color: #fff; overflow: hidden; flex-shrink: 0; }
   .drawer-head .avatar-lg img { width: 100%; height: 100%; object-fit: cover; }
-  .google-logo-btn {
-    min-height: 42px; padding: 0 12px; border-radius: 22px;
-    background: #fff; border: 1.5px solid rgba(255,255,255,.6);
-    display: flex; align-items: center; justify-content: center; gap: 7px;
-    cursor: pointer; flex-shrink: 0; position: relative; overflow: hidden;
-    box-shadow: 0 4px 12px rgba(0,0,0,.18); color: #202124; font-size: 12px; font-weight: 700;
-  }
+  .google-logo-btn { min-height: 42px; padding: 0 12px; border-radius: 22px; background: #fff; border: 1.5px solid rgba(255,255,255,.6); display: flex; align-items: center; justify-content: center; gap: 7px; cursor: pointer; flex-shrink: 0; position: relative; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,.18); color: #202124; font-size: 12px; font-weight: 700; }
   .google-logo-btn > svg { width: 20px; height: 20px; pointer-events: none; flex-shrink: 0; }
   .google-logo-btn .g-text { white-space: nowrap; pointer-events: none; }
   .google-logo-btn.signed { background: rgba(255,255,255,.14); color: #fff; border-color: rgba(255,255,255,.25); }
   .google-logo-btn.signed .g-text::after { content: 'Signed in'; }
   .google-logo-btn.signed .g-text { font-size: 0; }
   .google-logo-btn.signed .g-text::after { font-size: 12px; }
-  .google-logo-btn.signed::after {
-    content: ''; position: absolute; bottom: -1px; right: -1px;
-    width: 12px; height: 12px; border-radius: 50%;
-    background: var(--green); border: 2px solid var(--brand); z-index: 3;
-  }
+  .google-logo-btn.signed::after { content: ''; position: absolute; bottom: -1px; right: -1px; width: 12px; height: 12px; border-radius: 50%; background: var(--green); border: 2px solid var(--brand); z-index: 3; }
   .drawer-head .who { flex: 1; min-width: 0; }
   .drawer-head .who .name { font-size: 16px; font-weight: 700; color: #fff; }
   .drawer-head .who .email { font-size: 12px; color: rgba(255,255,255,.78); margin-top: 3px; word-break: break-all; }
-  .drawer-head .myid-mini {
-    display: flex; align-items: center; gap: 8px;
-    background: rgba(0,0,0,.22); border: 1px solid rgba(255,255,255,.14);
-    border-radius: 10px; padding: 8px 10px; margin-top: 4px;
-  }
-  .drawer-head .myid-mini .lbl {
-    font-size: 9.5px; font-weight: 700; letter-spacing: .8px;
-    color: rgba(255,255,255,.6); text-transform: uppercase;
-  }
-  .drawer-head .myid-mini .v {
-    flex: 1; min-width: 0;
-    font-family: 'SF Mono', 'Menlo', monospace;
-    font-size: 12px; font-weight: 600; color: #fff;
-    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-  }
-  .drawer-head .myid-mini .cbtn {
-    width: 26px; height: 26px; border-radius: 7px;
-    background: var(--gold); border: none; color: #fff;
-    display: flex; align-items: center; justify-content: center;
-    cursor: pointer;
-  }
+  .drawer-head .myid-mini { display: flex; align-items: center; gap: 8px; background: rgba(0,0,0,.22); border: 1px solid rgba(255,255,255,.14); border-radius: 10px; padding: 8px 10px; margin-top: 4px; }
+  .drawer-head .myid-mini .lbl { font-size: 9.5px; font-weight: 700; letter-spacing: .8px; color: rgba(255,255,255,.6); text-transform: uppercase; }
+  .drawer-head .myid-mini .v { flex: 1; min-width: 0; font-family: 'SF Mono', 'Menlo', monospace; font-size: 12px; font-weight: 600; color: #fff; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .drawer-head .myid-mini .cbtn { width: 26px; height: 26px; border-radius: 7px; background: var(--gold); border: none; color: #fff; display: flex; align-items: center; justify-content: center; cursor: pointer; }
   .drawer-head .myid-mini .cbtn svg { width: 13px; height: 13px; }
   .drawer-body { flex: 1; overflow-y: auto; padding: 14px 12px 20px; }
-  .drawer-section-label {
-    font-size: 10.5px; font-weight: 700; letter-spacing: 1px;
-    text-transform: uppercase; color: var(--muted);
-    padding: 12px 10px 8px;
-  }
-  .drawer-item {
-    display: flex; align-items: center; gap: 12px;
-    padding: 11px 12px; border-radius: 10px;
-    font-size: 14px; color: var(--ink);
-    cursor: pointer;
-    border: none; background: transparent; width: 100%;
-    text-align: left; font-family: inherit; font-weight: 500;
-  }
+  .drawer-section-label { font-size: 10.5px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); padding: 12px 10px 8px; }
+  .drawer-item { display: flex; align-items: center; gap: 12px; padding: 11px 12px; border-radius: 10px; font-size: 14px; color: var(--ink); cursor: pointer; border: none; background: transparent; width: 100%; text-align: left; font-family: inherit; font-weight: 500; }
   .drawer-item:hover { background: #f5f6fa; }
-  .drawer-item .ic {
-    width: 34px; height: 34px; border-radius: 9px;
-    background: var(--blue-soft); color: var(--brand);
-    display: flex; align-items: center; justify-content: center;
-  }
+  .drawer-item .ic { width: 34px; height: 34px; border-radius: 9px; background: var(--blue-soft); color: var(--brand); display: flex; align-items: center; justify-content: center; }
   .drawer-item .ic svg { width: 17px; height: 17px; }
   .drawer-item .txt { flex: 1; min-width: 0; }
-  .drawer-item .txt small {
-    display: block; font-size: 11.5px; color: var(--muted);
-    font-weight: 500; margin-top: 1px;
-  }
+  .drawer-item .txt small { display: block; font-size: 11.5px; color: var(--muted); font-weight: 500; margin-top: 1px; }
   .drawer-item.primary .ic { background: var(--brand); color: #fff; }
   .drawer-item.primary { color: var(--brand); font-weight: 600; }
   .drawer-item.qr .ic { background: var(--gold); color: #fff; }
@@ -438,174 +198,60 @@
   .drawer-item.danger { color: var(--red); }
   .drawer-item.warn .ic { background: #fff4d6; color: #b07a00; }
   .drawer-item.warn { color: #b07a00; }
+  .drawer-item.logout .ic { background: #ffe9e9; color: #c62828; }
+  .drawer-item.logout { color: #c62828; font-weight: 600; }
   .drawer-divider { height: 1px; background: var(--line); margin: 8px 10px; }
-  .drawer-foot {
-    padding: 12px 18px 16px;
-    border-top: 1px solid var(--line);
-    font-size: 10.5px; color: var(--muted);
-    text-align: center; background: #fafbfd;
-  }
+  .drawer-foot { padding: 12px 18px 16px; border-top: 1px solid var(--line); font-size: 10.5px; color: var(--muted); text-align: center; background: #fafbfd; }
   .drawer-foot b { color: var(--ink-2); font-weight: 700; }
 
-  /* Modal */
-  .modal-overlay {
-    position: fixed; inset: 0;
-    background: rgba(15,20,35,.55); backdrop-filter: blur(3px);
-    display: none; align-items: center; justify-content: center;
-    padding: 20px; z-index: 100;
-  }
+  .modal-overlay { position: fixed; inset: 0; background: rgba(15,20,35,.55); backdrop-filter: blur(3px); display: none; align-items: center; justify-content: center; padding: 20px; z-index: 100; }
   .modal-overlay.open { display: flex; }
-  .modal {
-    background: var(--card); border-radius: 20px;
-    width: 100%; max-width: 380px;
-    max-height: 92vh; overflow-y: auto;
-    padding: 22px 20px 18px;
-    box-shadow: 0 24px 60px rgba(16,24,40,.28);
-    position: relative;
-  }
-  .modal .m-close {
-    position: absolute; top: 12px; right: 12px;
-    width: 34px; height: 34px; border-radius: 50%;
-    background: #f5f6fa; border: 1px solid var(--line);
-    color: var(--ink-2);
-    display: flex; align-items: center; justify-content: center;
-    cursor: pointer;
-  }
+  .modal { background: var(--card); border-radius: 20px; width: 100%; max-width: 380px; max-height: 92vh; overflow-y: auto; padding: 22px 20px 18px; box-shadow: 0 24px 60px rgba(16,24,40,.28); position: relative; }
+  .modal .m-close { position: absolute; top: 12px; right: 12px; width: 34px; height: 34px; border-radius: 50%; background: #f5f6fa; border: 1px solid var(--line); color: var(--ink-2); display: flex; align-items: center; justify-content: center; cursor: pointer; }
   .modal .m-close svg { width: 15px; height: 15px; }
 
-  /* QR display */
   .qr-modal h3 { text-align: center; font-size: 17px; font-weight: 700; color: var(--ink); margin-bottom: 4px; }
   .qr-modal .qr-sub { text-align: center; font-size: 12px; color: var(--muted); margin-bottom: 16px; }
-  .qr-wrap {
-    background: #fff; border: 2px solid var(--line);
-    border-radius: 16px; padding: 18px;
-    display: flex; align-items: center; justify-content: center;
-    margin: 0 auto 14px;
-    width: fit-content; max-width: 100%;
-  }
+  .qr-wrap { background: #fff; border: 2px solid var(--line); border-radius: 16px; padding: 18px; display: flex; align-items: center; justify-content: center; margin: 0 auto 14px; width: fit-content; max-width: 100%; }
   .qr-wrap canvas, .qr-wrap img { display: block; max-width: 100%; height: auto; }
-  .qr-id-box {
-    background: var(--blue-soft); border: 1px solid #cdd9f5;
-    border-radius: 12px; padding: 12px 14px;
-    text-align: center; margin-bottom: 12px;
-  }
-  .qr-id-box .lbl {
-    font-size: 10px; font-weight: 700; letter-spacing: .8px;
-    color: var(--muted); text-transform: uppercase; margin-bottom: 4px;
-  }
-  .qr-id-box .v {
-    font-family: 'SF Mono', 'Menlo', monospace;
-    font-size: 15px; font-weight: 700; color: var(--brand);
-    letter-spacing: 1px;
-  }
+  .qr-id-box { background: var(--blue-soft); border: 1px solid #cdd9f5; border-radius: 12px; padding: 12px 14px; text-align: center; margin-bottom: 12px; }
+  .qr-id-box .lbl { font-size: 10px; font-weight: 700; letter-spacing: .8px; color: var(--muted); text-transform: uppercase; margin-bottom: 4px; }
+  .qr-id-box .v { font-family: 'SF Mono', 'Menlo', monospace; font-size: 15px; font-weight: 700; color: var(--brand); letter-spacing: 1px; }
   .qr-actions { display: flex; gap: 8px; }
-  .qr-actions button {
-    flex: 1; padding: 11px 12px; border-radius: 11px;
-    font-size: 13px; font-weight: 700;
-    cursor: pointer; font-family: inherit;
-    display: flex; align-items: center; justify-content: center;
-    gap: 6px; border: none;
-  }
+  .qr-actions button { flex: 1; padding: 11px 12px; border-radius: 11px; font-size: 13px; font-weight: 700; cursor: pointer; font-family: inherit; display: flex; align-items: center; justify-content: center; gap: 6px; border: none; }
   .qr-actions button svg { width: 15px; height: 15px; }
   .qr-actions .secondary { background: #f5f6fa; color: var(--ink-2); border: 1px solid var(--line) !important; }
   .qr-actions .primary-btn { background: var(--brand); color: #fff; }
 
-  /* Scanner */
   .scan-modal h3 { text-align: center; font-size: 17px; font-weight: 700; color: var(--ink); margin-bottom: 4px; }
   .scan-modal .scan-sub { text-align: center; font-size: 12px; color: var(--muted); margin-bottom: 14px; }
-  .scanner-box {
-    width: 100%; aspect-ratio: 1;
-    max-height: 60vh; background: #000;
-    border-radius: 16px; overflow: hidden;
-    position: relative; margin-bottom: 14px;
-  }
-  .scanner-box video {
-    width: 100%; height: 100%; object-fit: cover; display: block;
-  }
-  .scanner-frame {
-    position: absolute; inset: 0; pointer-events: none;
-    display: flex; align-items: center; justify-content: center;
-  }
-  .scanner-frame::before {
-    content: ''; width: 62%; aspect-ratio: 1;
-    border: 3px solid #fff; border-radius: 16px;
-    box-shadow: 0 0 0 9999px rgba(0,0,0,.45);
-  }
-  .scanner-laser {
-    position: absolute; left: 19%; right: 19%;
-    top: 25%; height: 2px;
-    background: linear-gradient(90deg, transparent, #22c55e, transparent);
-    box-shadow: 0 0 8px #22c55e;
-    animation: laserMove 2s ease-in-out infinite;
-  }
+  .scanner-box { width: 100%; aspect-ratio: 1; max-height: 60vh; background: #000; border-radius: 16px; overflow: hidden; position: relative; margin-bottom: 14px; }
+  .scanner-box video { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .scanner-frame { position: absolute; inset: 0; pointer-events: none; display: flex; align-items: center; justify-content: center; }
+  .scanner-frame::before { content: ''; width: 62%; aspect-ratio: 1; border: 3px solid #fff; border-radius: 16px; box-shadow: 0 0 0 9999px rgba(0,0,0,.45); }
+  .scanner-laser { position: absolute; left: 19%; right: 19%; top: 25%; height: 2px; background: linear-gradient(90deg, transparent, #22c55e, transparent); box-shadow: 0 0 8px #22c55e; animation: laserMove 2s ease-in-out infinite; }
   @keyframes laserMove { 0%,100%{top:25%} 50%{top:75%} }
-  .scanner-fallback {
-    position: absolute; inset: 0;
-    display: none; flex-direction: column;
-    align-items: center; justify-content: center;
-    gap: 12px; padding: 30px 20px;
-    background: #1f2430; text-align: center; color: #fff;
-  }
+  .scanner-fallback { position: absolute; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 30px 20px; background: #1f2430; text-align: center; color: #fff; }
   .scanner-fallback.show { display: flex; }
   .scanner-fallback svg { width: 48px; height: 48px; color: var(--gold); }
   .scanner-fallback .msg { font-size: 13px; line-height: 1.55; color: rgba(255,255,255,.85); max-width: 260px; }
-  .scanner-fallback button {
-    padding: 11px 18px; border-radius: 10px;
-    background: var(--gold); color: #fff; border: none;
-    font-size: 13px; font-weight: 700; cursor: pointer;
-  }
-  .scanner-status {
-    text-align: center; font-size: 12px;
-    color: var(--muted); margin-bottom: 12px;
-    min-height: 18px; line-height: 1.5;
-  }
+  .scanner-fallback button { padding: 11px 18px; border-radius: 10px; background: var(--gold); color: #fff; border: none; font-size: 13px; font-weight: 700; cursor: pointer; }
+  .scanner-status { text-align: center; font-size: 12px; color: var(--muted); margin-bottom: 12px; min-height: 18px; line-height: 1.5; }
   .scanner-status.error { color: var(--red); font-weight: 600; }
   .scanner-status.ok { color: var(--green); font-weight: 600; }
   .scan-actions { display: flex; gap: 8px; }
-  .scan-actions button {
-    flex: 1; padding: 11px 12px; border-radius: 11px;
-    font-size: 13px; font-weight: 700;
-    cursor: pointer; font-family: inherit;
-    border: none;
-    display: flex; align-items: center; justify-content: center;
-    gap: 6px;
-  }
+  .scan-actions button { flex: 1; padding: 11px 12px; border-radius: 11px; font-size: 13px; font-weight: 700; cursor: pointer; font-family: inherit; border: none; display: flex; align-items: center; justify-content: center; gap: 6px; }
   .scan-actions button svg { width: 14px; height: 14px; }
   .scan-actions .cancel { background: #f5f6fa; color: var(--ink-2); border: 1px solid var(--line) !important; }
   .scan-actions .retry { background: var(--brand); color: #fff; }
 
-  /* Image preview */
-  .img-modal {
-    position: fixed; inset: 0;
-    background: rgba(0,0,0,.92);
-    display: none; align-items: center; justify-content: center;
-    z-index: 200; padding: 20px;
-  }
+  .img-modal { position: fixed; inset: 0; background: rgba(0,0,0,.92); display: none; align-items: center; justify-content: center; z-index: 200; padding: 20px; }
   .img-modal.open { display: flex; }
   .img-modal img { max-width: 100%; max-height: 100%; border-radius: 8px; }
-  .img-modal .close {
-    position: absolute; top: 16px; right: 16px;
-    width: 40px; height: 40px; border-radius: 50%;
-    background: rgba(255,255,255,.15); border: none; color: #fff;
-    display: flex; align-items: center; justify-content: center;
-    cursor: pointer;
-  }
+  .img-modal .close { position: absolute; top: 16px; right: 16px; width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,.15); border: none; color: #fff; display: flex; align-items: center; justify-content: center; cursor: pointer; }
   .img-modal .close svg { width: 18px; height: 18px; }
 
-  /* Toast */
-  .toast {
-    position: fixed; left: 50%; bottom: 24px;
-    transform: translateX(-50%) translateY(120px);
-    background: #1f2430; color: #fff;
-    padding: 10px 18px; border-radius: 10px;
-    font-size: 12.5px; font-weight: 600;
-    box-shadow: 0 10px 30px rgba(0,0,0,.25);
-    display: flex; align-items: center; gap: 8px;
-    opacity: 0;
-    transition: transform .3s cubic-bezier(.2,.8,.2,1), opacity .3s;
-    z-index: 999; pointer-events: none; max-width: 90vw;
-    text-align: center;
-  }
+  .toast { position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%) translateY(120px); background: #1f2430; color: #fff; padding: 10px 18px; border-radius: 10px; font-size: 12.5px; font-weight: 600; box-shadow: 0 10px 30px rgba(0,0,0,.25); display: flex; align-items: center; gap: 8px; opacity: 0; transition: transform .3s cubic-bezier(.2,.8,.2,1), opacity .3s; z-index: 999; pointer-events: none; max-width: 90vw; text-align: center; }
   .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
   .toast svg { width: 15px; height: 15px; color: var(--green); flex-shrink: 0; }
   .hidden { display: none !important; }
@@ -647,94 +293,26 @@
   .incoming-call-avatar img{width:100%;height:100%;object-fit:cover}.incoming-call-card h3{font-size:19px;margin-bottom:5px}.incoming-call-card p{font-size:12.5px;color:var(--muted);margin-bottom:20px}
 
   /* ===== REAL DIALER STYLE INCOMING CALL BUTTONS ===== */
-  .incoming-actions{
-    display:flex;
-    justify-content:center;
-    align-items:flex-start;
-    gap:56px;
-    margin-top:24px;
-    padding:0 8px;
-  }
-  .call-action-wrap{
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    gap:10px;
-  }
-  .call-action-btn{
-    position:relative;
-    width:72px;
-    height:72px;
-    border-radius:50%;
-    border:none;
-    display:grid;
-    place-items:center;
-    cursor:pointer;
-    color:#fff;
-    isolation:isolate;
-    transition:transform .15s ease, box-shadow .2s ease, filter .2s ease;
-    -webkit-tap-highlight-color:transparent;
-  }
-  .call-action-btn svg{
-    width:30px;
-    height:30px;
-    position:relative;
-    z-index:3;
-    pointer-events:none;
-  }
-  .call-action-btn.accept{
-    background:linear-gradient(180deg,#2ecc71 0%,#22b85e 100%);
-    box-shadow:0 10px 24px rgba(34,184,94,.42), 0 4px 8px rgba(0,0,0,.12);
-  }
-  .call-action-btn.decline{
-    background:linear-gradient(180deg,#f5554f 0%,#e63b35 100%);
-    box-shadow:0 10px 24px rgba(230,59,53,.42), 0 4px 8px rgba(0,0,0,.12);
-  }
+  .incoming-actions{ display:flex; justify-content:center; align-items:flex-start; gap:56px; margin-top:24px; padding:0 8px; }
+  .call-action-wrap{ display:flex; flex-direction:column; align-items:center; gap:10px; }
+  .call-action-btn{ position:relative; width:72px; height:72px; border-radius:50%; border:none; display:grid; place-items:center; cursor:pointer; color:#fff; isolation:isolate; transition:transform .15s ease, box-shadow .2s ease, filter .2s ease; -webkit-tap-highlight-color:transparent; }
+  .call-action-btn svg{ width:30px; height:30px; position:relative; z-index:3; pointer-events:none; }
+  .call-action-btn.accept{ background:linear-gradient(180deg,#2ecc71 0%,#22b85e 100%); box-shadow:0 10px 24px rgba(34,184,94,.42), 0 4px 8px rgba(0,0,0,.12); }
+  .call-action-btn.decline{ background:linear-gradient(180deg,#f5554f 0%,#e63b35 100%); box-shadow:0 10px 24px rgba(230,59,53,.42), 0 4px 8px rgba(0,0,0,.12); }
   .call-action-btn.decline svg{ transform:rotate(135deg); }
   .call-action-btn:hover{ filter:brightness(1.06); }
   .call-action-btn:active{ transform:scale(.9); }
-
-  /* Pulsing rings */
-  .call-action-btn::before,
-  .call-action-btn::after{
-    content:'';
-    position:absolute;
-    inset:0;
-    border-radius:50%;
-    z-index:-1;
-    animation:callRingPulse 2s ease-out infinite;
-    pointer-events:none;
-  }
+  .call-action-btn::before, .call-action-btn::after{ content:''; position:absolute; inset:0; border-radius:50%; z-index:-1; animation:callRingPulse 2s ease-out infinite; pointer-events:none; }
   .call-action-btn::after{ animation-delay:1s; }
-  .call-action-btn.accept::before,
-  .call-action-btn.accept::after{ background:rgba(46,204,113,.55); }
-  .call-action-btn.decline::before,
-  .call-action-btn.decline::after{ background:rgba(245,85,79,.55); }
-
-  @keyframes callRingPulse{
-    0%   { transform:scale(1);   opacity:.75; }
-    70%  { transform:scale(1.9); opacity:0;   }
-    100% { transform:scale(1.9); opacity:0;   }
-  }
-
-  .call-action-label{
-    font-size:11.5px;
-    font-weight:800;
-    letter-spacing:.2px;
-    user-select:none;
-  }
+  .call-action-btn.accept::before, .call-action-btn.accept::after{ background:rgba(46,204,113,.55); }
+  .call-action-btn.decline::before, .call-action-btn.decline::after{ background:rgba(245,85,79,.55); }
+  @keyframes callRingPulse{ 0%{transform:scale(1);opacity:.75} 70%{transform:scale(1.9);opacity:0} 100%{transform:scale(1.9);opacity:0} }
+  .call-action-label{ font-size:11.5px; font-weight:800; letter-spacing:.2px; user-select:none; }
   .accept-label{ color:#16a34a; }
   .decline-label{ color:#dc2626; }
-
-  @media(max-width:600px){
-    .incoming-call-card{padding:22px 18px}
-    .incoming-actions{ gap:48px; margin-top:22px; }
-    .call-action-btn{ width:66px; height:66px; }
-    .call-action-btn svg{ width:27px; height:27px; }
-  }
+  @media(max-width:600px){ .incoming-call-card{padding:22px 18px} .incoming-actions{ gap:48px; margin-top:22px; } .call-action-btn{ width:66px; height:66px; } .call-action-btn svg{ width:27px; height:27px; } }
   @media(max-width:600px){.call-overlay{padding:0}.call-shell{width:100%;height:100%;border-radius:0}.call-head{height:60px}.call-controls{padding-bottom:calc(16px + env(safe-area-inset-bottom,0px))}#localVideo{width:120px;max-width:42%;right:10px;bottom:10px;aspect-ratio:9/16}.call-stage.swap-local #remoteVideo{width:120px;max-width:42%;right:10px;bottom:10px;aspect-ratio:9/16}.call-stage.swap-local #localVideo{width:100%;max-width:none;height:100%}}
 
-  /* ===== CALL CAMERA SWITCH + DRAGGABLE PREVIEW ===== */
   .call-control.switch-camera{display:none;position:relative}
   .call-control.switch-camera svg{width:21px;height:21px}
   .incoming-camera-switch{margin:0 auto 14px;width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:#f5f6fa;color:var(--brand);display:grid;place-items:center;cursor:pointer}
@@ -747,7 +325,6 @@
   }
   @media(min-width:601px){#localVideo,.call-stage.swap-local #remoteVideo{width:150px}}
 
-  /* ===== DESKTOP FULL WIDTH FIX ===== */
   @media (min-width: 720px) {
     body { background: var(--bg); display: block; padding: 0; }
     .app { height: 100vh; max-height: 100vh; max-width: 100%; border-radius: 0; box-shadow: none; border: none; }
@@ -765,8 +342,6 @@
   <header class="topbar">
     <button class="menu-btn" id="menuBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
     <div class="title">ConvoLink</div>
-    
-    <!-- Call Actions -->
     <div class="call-actions">
       <button class="call-btn" id="voiceCallBtn" title="Voice Call">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
@@ -780,7 +355,6 @@
         </svg>
       </button>
     </div>
-
     <div class="avatar-chip" id="topAvatar">?</div>
   </header>
 
@@ -826,7 +400,6 @@
     <input type="file" id="qrImageInput" class="hidden-file" accept="image/*" />
   </div>
 
-  <!-- Recording bar (shown while recording) -->
   <div class="recording-bar" id="recordingBar">
     <div class="rec-info">
       <span class="rec-dot"></span>
@@ -1016,7 +589,11 @@
       <span class="txt">Clear all chats<small>Delete all messages</small></span>
     </button>
     <div class="drawer-divider"></div>
-    <div class="drawer-section-label">More</div>
+    <div class="drawer-section-label">Account</div>
+    <button class="drawer-item logout" id="menuLogout">
+      <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></span>
+      <span class="txt">Sign out<small>Log out from Google</small></span>
+    </button>
     <button class="drawer-item danger" id="menuReset">
       <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></span>
       <span class="txt">Reset chat<small>Keep your Firebase account</small></span>
@@ -1030,31 +607,20 @@
   <span id="toastMsg">Copied!</span>
 </div>
 
-<!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-database-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
-<!-- jsQR (for scanner) -->
 <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
 
 <script>
 /* ============================================================
-   QR GENERATOR — built-in (no external library)
+   QR GENERATOR
    ============================================================ */
 (function(global){
   'use strict';
-
   function QR8bitByte(data) { this.mode = 4; this.data = data; this.parsedData = []; for (var i=0, l=this.data.length; i<l; i++) { this.parsedData.push(this.data.charCodeAt(i)); } }
   QR8bitByte.prototype = { getLength: function(){ return this.parsedData.length; }, write: function(buffer){ for (var i=0, l=this.parsedData.length; i<l; i++) { buffer.put(this.parsedData[i], 8); } } };
-
-  function QRCodeModel(typeNumber, errorCorrectLevel) {
-    this.typeNumber = typeNumber;
-    this.errorCorrectLevel = errorCorrectLevel;
-    this.modules = null;
-    this.moduleCount = 0;
-    this.dataCache = null;
-    this.dataList = [];
-  }
+  function QRCodeModel(typeNumber, errorCorrectLevel) { this.typeNumber = typeNumber; this.errorCorrectLevel = errorCorrectLevel; this.modules = null; this.moduleCount = 0; this.dataCache = null; this.dataList = []; }
   QRCodeModel.prototype = {
     addData: function(data) { var newData = new QR8bitByte(data); this.dataList.push(newData); this.dataCache = null; },
     isDark: function(row, col) { if (row<0 || this.moduleCount<=row || col<0 || this.moduleCount<=col) throw new Error(row+','+col); return this.modules[row][col]; },
@@ -1064,12 +630,8 @@
       this.moduleCount = this.typeNumber * 4 + 17;
       this.modules = new Array(this.moduleCount);
       for (var row=0; row<this.moduleCount; row++) { this.modules[row] = new Array(this.moduleCount); for (var col=0; col<this.moduleCount; col++) this.modules[row][col] = null; }
-      this.setupPositionProbePattern(0, 0);
-      this.setupPositionProbePattern(this.moduleCount - 7, 0);
-      this.setupPositionProbePattern(0, this.moduleCount - 7);
-      this.setupPositionAdjustPattern();
-      this.setupTimingPattern();
-      this.setupTypeInfo(test, maskPattern);
+      this.setupPositionProbePattern(0, 0); this.setupPositionProbePattern(this.moduleCount - 7, 0); this.setupPositionProbePattern(0, this.moduleCount - 7);
+      this.setupPositionAdjustPattern(); this.setupTimingPattern(); this.setupTypeInfo(test, maskPattern);
       if (this.typeNumber >= 7) this.setupTypeNumber(test);
       if (this.dataCache == null) this.dataCache = QRCodeModel.createData(this.typeNumber, this.errorCorrectLevel, this.dataList);
       this.mapData(this.dataCache, maskPattern);
@@ -1080,82 +642,14 @@
     setupTimingPattern: function() { for (var r=8; r<this.moduleCount-8; r++) { if (this.modules[r][6] != null) continue; this.modules[r][6] = (r % 2 == 0); } for (var c=8; c<this.moduleCount-8; c++) { if (this.modules[6][c] != null) continue; this.modules[6][c] = (c % 2 == 0); } },
     setupPositionAdjustPattern: function() { var pos = QRUtil.getPatternPosition(this.typeNumber); for (var i=0; i<pos.length; i++) { for (var j=0; j<pos.length; j++) { var row=pos[i], col=pos[j]; if (this.modules[row][col] != null) continue; for (var r=-2; r<=2; r++) { for (var c=-2; c<=2; c++) { if (r==-2 || r==2 || c==-2 || c==2 || (r==0 && c==0)) this.modules[row+r][col+c] = true; else this.modules[row+r][col+c] = false; } } } } },
     setupTypeNumber: function(test) { var bits = QRUtil.getBCHTypeNumber(this.typeNumber); for (var i=0; i<18; i++) { var mod = (!test && ((bits>>i)&1)==1); this.modules[Math.floor(i/3)][i%3 + this.moduleCount - 8 - 3] = mod; } for (var i=0; i<18; i++) { var mod = (!test && ((bits>>i)&1)==1); this.modules[i%3 + this.moduleCount - 8 - 3][Math.floor(i/3)] = mod; } },
-    setupTypeInfo: function(test, maskPattern) {
-      var data = (this.errorCorrectLevel << 3) | maskPattern;
-      var bits = QRUtil.getBCHTypeInfo(data);
-      for (var i=0; i<15; i++) { var mod = (!test && ((bits>>i)&1)==1); if (i<6) this.modules[i][8] = mod; else if (i<8) this.modules[i+1][8] = mod; else this.modules[this.moduleCount - 15 + i][8] = mod; }
-      for (var i=0; i<15; i++) { var mod = (!test && ((bits>>i)&1)==1); if (i<8) this.modules[8][this.moduleCount - i - 1] = mod; else if (i<9) this.modules[8][15 - i - 1 + 1] = mod; else this.modules[8][15 - i - 1] = mod; }
-      this.modules[this.moduleCount - 8][8] = (!test);
-    },
-    mapData: function(data, maskPattern) {
-      var inc = -1, row = this.moduleCount - 1, bitIndex = 7, byteIndex = 0;
-      for (var col = this.moduleCount - 1; col > 0; col -= 2) {
-        if (col == 6) col--;
-        while (true) {
-          for (var c=0; c<2; c++) {
-            if (this.modules[row][col-c] == null) {
-              var dark = false;
-              if (byteIndex < data.length) dark = (((data[byteIndex] >>> bitIndex) & 1) == 1);
-              var mask = QRUtil.getMask(maskPattern, row, col-c);
-              if (mask) dark = !dark;
-              this.modules[row][col-c] = dark;
-              bitIndex--;
-              if (bitIndex == -1) { byteIndex++; bitIndex = 7; }
-            }
-          }
-          row += inc;
-          if (row < 0 || this.moduleCount <= row) { row -= inc; inc = -inc; break; }
-        }
-      }
-    },
+    setupTypeInfo: function(test, maskPattern) { var data = (this.errorCorrectLevel << 3) | maskPattern; var bits = QRUtil.getBCHTypeInfo(data); for (var i=0; i<15; i++) { var mod = (!test && ((bits>>i)&1)==1); if (i<6) this.modules[i][8] = mod; else if (i<8) this.modules[i+1][8] = mod; else this.modules[this.moduleCount - 15 + i][8] = mod; } for (var i=0; i<15; i++) { var mod = (!test && ((bits>>i)&1)==1); if (i<8) this.modules[8][this.moduleCount - i - 1] = mod; else if (i<9) this.modules[8][15 - i - 1 + 1] = mod; else this.modules[8][15 - i - 1] = mod; } this.modules[this.moduleCount - 8][8] = (!test); },
+    mapData: function(data, maskPattern) { var inc = -1, row = this.moduleCount - 1, bitIndex = 7, byteIndex = 0; for (var col = this.moduleCount - 1; col > 0; col -= 2) { if (col == 6) col--; while (true) { for (var c=0; c<2; c++) { if (this.modules[row][col-c] == null) { var dark = false; if (byteIndex < data.length) dark = (((data[byteIndex] >>> bitIndex) & 1) == 1); var mask = QRUtil.getMask(maskPattern, row, col-c); if (mask) dark = !dark; this.modules[row][col-c] = dark; bitIndex--; if (bitIndex == -1) { byteIndex++; bitIndex = 7; } } } row += inc; if (row < 0 || this.moduleCount <= row) { row -= inc; inc = -inc; break; } } } },
     getBestMaskPattern: function() { var minLostPoint = 0, pattern = 0; for (var i=0; i<8; i++) { this.makeImpl(true, i); var lostPoint = QRUtil.getLostPoint(this); if (i==0 || minLostPoint > lostPoint) { minLostPoint = lostPoint; pattern = i; } } return pattern; }
   };
-
-  QRCodeModel.createData = function(typeNumber, errorCorrectLevel, dataList) {
-    var rsBlocks = QRRSBlock.getRSBlocks(typeNumber, errorCorrectLevel);
-    var buffer = new QRBitBuffer();
-    for (var i=0; i<dataList.length; i++) { var data = dataList[i]; buffer.put(data.mode, 4); buffer.put(data.getLength(), QRUtil.getLengthInBits(data.mode, typeNumber)); data.write(buffer); }
-    var totalDataCount = 0;
-    for (var i=0; i<rsBlocks.length; i++) totalDataCount += rsBlocks[i].dataCount;
-    if (buffer.getLengthInBits() > totalDataCount * 8) throw new Error('code length overflow. (' + buffer.getLengthInBits() + '>' + totalDataCount * 8 + ')');
-    if (buffer.getLengthInBits() + 4 <= totalDataCount * 8) buffer.put(0, 4);
-    while (buffer.getLengthInBits() % 8 != 0) buffer.putBit(false);
-    while (true) {
-      if (buffer.getLengthInBits() >= totalDataCount * 8) break;
-      buffer.put(0xEC, 8);
-      if (buffer.getLengthInBits() >= totalDataCount * 8) break;
-      buffer.put(0x11, 8);
-    }
-    return QRCodeModel.createBytes(buffer, rsBlocks);
-  };
-
-  QRCodeModel.createBytes = function(buffer, rsBlocks) {
-    var offset = 0, maxDcCount = 0, maxEcCount = 0;
-    var dcdata = new Array(rsBlocks.length), ecdata = new Array(rsBlocks.length);
-    for (var r=0; r<rsBlocks.length; r++) {
-      var dcCount = rsBlocks[r].dataCount, ecCount = rsBlocks[r].totalCount - dcCount;
-      maxDcCount = Math.max(maxDcCount, dcCount);
-      maxEcCount = Math.max(maxEcCount, ecCount);
-      dcdata[r] = new Array(dcCount);
-      for (var i=0; i<dcdata[r].length; i++) dcdata[r][i] = 0xff & buffer.buffer[i + offset];
-      offset += dcCount;
-      var rsPoly = QRUtil.getErrorCorrectPolynomial(ecCount);
-      var rawPoly = new QRPolynomial(dcdata[r], rsPoly.getLength() - 1);
-      var modPoly = rawPoly.mod(rsPoly);
-      ecdata[r] = new Array(rsPoly.getLength() - 1);
-      for (var i=0; i<ecdata[r].length; i++) { var modIndex = i + modPoly.getLength() - ecdata[r].length; ecdata[r][i] = (modIndex >= 0) ? modPoly.get(modIndex) : 0; }
-    }
-    var totalCodeCount = 0;
-    for (var i=0; i<rsBlocks.length; i++) totalCodeCount += rsBlocks[i].totalCount;
-    var data = new Array(totalCodeCount), index = 0;
-    for (var i=0; i<maxDcCount; i++) { for (var r=0; r<rsBlocks.length; r++) { if (i < dcdata[r].length) data[index++] = dcdata[r][i]; } }
-    for (var i=0; i<maxEcCount; i++) { for (var r=0; r<rsBlocks.length; r++) { if (i < ecdata[r].length) data[index++] = ecdata[r][i]; } }
-    return data;
-  };
-
+  QRCodeModel.createData = function(typeNumber, errorCorrectLevel, dataList) { var rsBlocks = QRRSBlock.getRSBlocks(typeNumber, errorCorrectLevel); var buffer = new QRBitBuffer(); for (var i=0; i<dataList.length; i++) { var data = dataList[i]; buffer.put(data.mode, 4); buffer.put(data.getLength(), QRUtil.getLengthInBits(data.mode, typeNumber)); data.write(buffer); } var totalDataCount = 0; for (var i=0; i<rsBlocks.length; i++) totalDataCount += rsBlocks[i].dataCount; if (buffer.getLengthInBits() > totalDataCount * 8) throw new Error('code length overflow'); if (buffer.getLengthInBits() + 4 <= totalDataCount * 8) buffer.put(0, 4); while (buffer.getLengthInBits() % 8 != 0) buffer.putBit(false); while (true) { if (buffer.getLengthInBits() >= totalDataCount * 8) break; buffer.put(0xEC, 8); if (buffer.getLengthInBits() >= totalDataCount * 8) break; buffer.put(0x11, 8); } return QRCodeModel.createBytes(buffer, rsBlocks); };
+  QRCodeModel.createBytes = function(buffer, rsBlocks) { var offset = 0, maxDcCount = 0, maxEcCount = 0; var dcdata = new Array(rsBlocks.length), ecdata = new Array(rsBlocks.length); for (var r=0; r<rsBlocks.length; r++) { var dcCount = rsBlocks[r].dataCount, ecCount = rsBlocks[r].totalCount - dcCount; maxDcCount = Math.max(maxDcCount, dcCount); maxEcCount = Math.max(maxEcCount, ecCount); dcdata[r] = new Array(dcCount); for (var i=0; i<dcdata[r].length; i++) dcdata[r][i] = 0xff & buffer.buffer[i + offset]; offset += dcCount; var rsPoly = QRUtil.getErrorCorrectPolynomial(ecCount); var rawPoly = new QRPolynomial(dcdata[r], rsPoly.getLength() - 1); var modPoly = rawPoly.mod(rsPoly); ecdata[r] = new Array(rsPoly.getLength() - 1); for (var i=0; i<ecdata[r].length; i++) { var modIndex = i + modPoly.getLength() - ecdata[r].length; ecdata[r][i] = (modIndex >= 0) ? modPoly.get(modIndex) : 0; } } var totalCodeCount = 0; for (var i=0; i<rsBlocks.length; i++) totalCodeCount += rsBlocks[i].totalCount; var data = new Array(totalCodeCount), index = 0; for (var i=0; i<maxDcCount; i++) { for (var r=0; r<rsBlocks.length; r++) { if (i < dcdata[r].length) data[index++] = dcdata[r][i]; } } for (var i=0; i<maxEcCount; i++) { for (var r=0; r<rsBlocks.length; r++) { if (i < ecdata[r].length) data[index++] = ecdata[r][i]; } } return data; };
   var QRErrorCorrectLevel = { L: 1, M: 0, Q: 3, H: 2 };
   var QRMaskPattern = { PATTERN000:0, PATTERN001:1, PATTERN010:2, PATTERN011:3, PATTERN100:4, PATTERN101:5, PATTERN110:6, PATTERN111:7 };
-
   var QRUtil = {
     PATTERN_POSITION_TABLE: [[],[6,18],[6,22],[6,26],[6,30],[6,34],[6,22,38],[6,24,42],[6,26,46],[6,28,50],[6,30,54],[6,32,58],[6,34,62],[6,26,46,66],[6,26,48,70],[6,26,50,74],[6,30,54,78],[6,30,56,82],[6,30,58,86],[6,34,62,90],[6,28,50,72,94],[6,26,50,74,98],[6,30,54,78,102],[6,28,54,80,106],[6,32,58,84,110],[6,30,58,86,114],[6,34,62,90,118],[6,26,50,74,98,122],[6,30,54,78,102,126],[6,26,52,78,104,130],[6,30,56,82,108,134],[6,34,60,86,112,138],[6,30,58,86,114,142],[6,34,62,90,118,146],[6,30,54,78,102,126,150],[6,24,50,76,102,128,154],[6,28,54,80,106,132,158],[6,32,58,84,110,136,162],[6,26,54,82,110,138,166],[6,30,58,86,114,142,170]],
     G15: (1<<10)|(1<<8)|(1<<5)|(1<<4)|(1<<2)|(1<<1)|(1<<0),
@@ -1165,124 +659,29 @@
     getBCHTypeNumber: function(data) { var d = data << 12; while (QRUtil.getBCHDigit(d) - QRUtil.getBCHDigit(QRUtil.G18) >= 0) d ^= (QRUtil.G18 << (QRUtil.getBCHDigit(d) - QRUtil.getBCHDigit(QRUtil.G18))); return (data << 12) | d; },
     getBCHDigit: function(data) { var digit = 0; while (data != 0) { digit++; data >>>= 1; } return digit; },
     getPatternPosition: function(typeNumber) { return QRUtil.PATTERN_POSITION_TABLE[typeNumber - 1]; },
-    getMask: function(maskPattern, i, j) { switch (maskPattern) { case QRMaskPattern.PATTERN000: return (i + j) % 2 == 0; case QRMaskPattern.PATTERN001: return i % 2 == 0; case QRMaskPattern.PATTERN010: return j % 3 == 0; case QRMaskPattern.PATTERN011: return (i + j) % 3 == 0; case QRMaskPattern.PATTERN100: return (Math.floor(i / 2) + Math.floor(j / 3)) % 2 == 0; case QRMaskPattern.PATTERN101: return (i * j) % 2 + (i * j) % 3 == 0; case QRMaskPattern.PATTERN110: return ((i * j) % 2 + (i * j) % 3) % 2 == 0; case QRMaskPattern.PATTERN111: return ((i * j) % 3 + (i + j) % 2) % 2 == 0; default: throw new Error('bad maskPattern:' + maskPattern); } },
+    getMask: function(maskPattern, i, j) { switch (maskPattern) { case QRMaskPattern.PATTERN000: return (i + j) % 2 == 0; case QRMaskPattern.PATTERN001: return i % 2 == 0; case QRMaskPattern.PATTERN010: return j % 3 == 0; case QRMaskPattern.PATTERN011: return (i + j) % 3 == 0; case QRMaskPattern.PATTERN100: return (Math.floor(i / 2) + Math.floor(j / 3)) % 2 == 0; case QRMaskPattern.PATTERN101: return (i * j) % 2 + (i * j) % 3 == 0; case QRMaskPattern.PATTERN110: return ((i * j) % 2 + (i * j) % 3) % 2 == 0; case QRMaskPattern.PATTERN111: return ((i * j) % 3 + (i + j) % 2) % 2 == 0; default: throw new Error('bad maskPattern'); } },
     getErrorCorrectPolynomial: function(errorCorrectLength) { var a = new QRPolynomial([1], 0); for (var i=0; i<errorCorrectLength; i++) a = a.multiply(new QRPolynomial([1, QRMath.gexp(i)], 0)); return a; },
-    getLengthInBits: function(mode, type) { if (1 <= type && type < 10) { switch (mode) { case 4: return 8; } } else if (type < 27) { switch (mode) { case 4: return 16; } } else if (type < 41) { switch (mode) { case 4: return 16; } } throw new Error('mode:' + mode + ';type:' + type); },
-    getLostPoint: function(qrCode) {
-      var moduleCount = qrCode.getModuleCount();
-      var lostPoint = 0;
-      for (var row=0; row<moduleCount; row++) { for (var col=0; col<moduleCount; col++) { var sameCount = 0; var dark = qrCode.isDark(row, col); for (var r=-1; r<=1; r++) { if (row+r < 0 || moduleCount <= row+r) continue; for (var c=-1; c<=1; c++) { if (col+c < 0 || moduleCount <= col+c) continue; if (r==0 && c==0) continue; if (dark == qrCode.isDark(row+r, col+c)) sameCount++; } } if (sameCount > 5) lostPoint += (3 + sameCount - 5); } }
-      for (var row=0; row<moduleCount-1; row++) { for (var col=0; col<moduleCount-1; col++) { var count=0; if (qrCode.isDark(row,col)) count++; if (qrCode.isDark(row+1,col)) count++; if (qrCode.isDark(row,col+1)) count++; if (qrCode.isDark(row+1,col+1)) count++; if (count==0 || count==4) lostPoint += 3; } }
-      for (var row=0; row<moduleCount; row++) { for (var col=0; col<moduleCount-6; col++) { if (qrCode.isDark(row,col) && !qrCode.isDark(row,col+1) && qrCode.isDark(row,col+2) && qrCode.isDark(row,col+3) && qrCode.isDark(row,col+4) && !qrCode.isDark(row,col+5) && qrCode.isDark(row,col+6)) lostPoint += 40; } }
-      for (var col=0; col<moduleCount; col++) { for (var row=0; row<moduleCount-6; row++) { if (qrCode.isDark(row,col) && !qrCode.isDark(row+1,col) && qrCode.isDark(row+2,col) && qrCode.isDark(row+3,col) && qrCode.isDark(row+4,col) && !qrCode.isDark(row+5,col) && qrCode.isDark(row+6,col)) lostPoint += 40; } }
-      var darkCount = 0;
-      for (var col=0; col<moduleCount; col++) for (var row=0; row<moduleCount; row++) if (qrCode.isDark(row,col)) darkCount++;
-      var ratio = Math.abs(100 * darkCount / moduleCount / moduleCount - 50) / 5;
-      lostPoint += ratio * 10;
-      return lostPoint;
-    }
+    getLengthInBits: function(mode, type) { if (1 <= type && type < 10) { switch (mode) { case 4: return 8; } } else if (type < 27) { switch (mode) { case 4: return 16; } } else if (type < 41) { switch (mode) { case 4: return 16; } } throw new Error('mode:' + mode); },
+    getLostPoint: function(qrCode) { var moduleCount = qrCode.getModuleCount(); var lostPoint = 0; for (var row=0; row<moduleCount; row++) { for (var col=0; col<moduleCount; col++) { var sameCount = 0; var dark = qrCode.isDark(row, col); for (var r=-1; r<=1; r++) { if (row+r < 0 || moduleCount <= row+r) continue; for (var c=-1; c<=1; c++) { if (col+c < 0 || moduleCount <= col+c) continue; if (r==0 && c==0) continue; if (dark == qrCode.isDark(row+r, col+c)) sameCount++; } } if (sameCount > 5) lostPoint += (3 + sameCount - 5); } } return lostPoint; }
   };
-
-  var QRMath = {
-    glog: function(n) { if (n < 1) throw new Error('glog(' + n + ')'); return QRMath.LOG_TABLE[n]; },
-    gexp: function(n) { while (n < 0) n += 255; while (n >= 256) n -= 255; return QRMath.EXP_TABLE[n]; },
-    EXP_TABLE: new Array(256),
-    LOG_TABLE: new Array(256)
-  };
+  var QRMath = { glog: function(n) { if (n < 1) throw new Error('glog'); return QRMath.LOG_TABLE[n]; }, gexp: function(n) { while (n < 0) n += 255; while (n >= 256) n -= 255; return QRMath.EXP_TABLE[n]; }, EXP_TABLE: new Array(256), LOG_TABLE: new Array(256) };
   for (var i=0; i<8; i++) QRMath.EXP_TABLE[i] = 1 << i;
   for (var i=8; i<256; i++) QRMath.EXP_TABLE[i] = QRMath.EXP_TABLE[i-4] ^ QRMath.EXP_TABLE[i-5] ^ QRMath.EXP_TABLE[i-6] ^ QRMath.EXP_TABLE[i-8];
   for (var i=0; i<255; i++) QRMath.LOG_TABLE[QRMath.EXP_TABLE[i]] = i;
-
-  function QRPolynomial(num, shift) {
-    if (num.length == undefined) throw new Error(num.length + '/' + shift);
-    var offset = 0;
-    while (offset < num.length && num[offset] == 0) offset++;
-    this.num = new Array(num.length - offset + shift);
-    for (var i=0; i<num.length - offset; i++) this.num[i] = num[i + offset];
-  }
+  function QRPolynomial(num, shift) { if (num.length == undefined) throw new Error('bad polynomial'); var offset = 0; while (offset < num.length && num[offset] == 0) offset++; this.num = new Array(num.length - offset + shift); for (var i=0; i<num.length - offset; i++) this.num[i] = num[i + offset]; }
   QRPolynomial.prototype = {
     get: function(index) { return this.num[index]; },
     getLength: function() { return this.num.length; },
     multiply: function(e) { var num = new Array(this.getLength() + e.getLength() - 1); for (var i=0; i<this.getLength(); i++) for (var j=0; j<e.getLength(); j++) num[i+j] ^= QRMath.gexp(QRMath.glog(this.get(i)) + QRMath.glog(e.get(j))); return new QRPolynomial(num, 0); },
     mod: function(e) { if (this.getLength() - e.getLength() < 0) return this; var ratio = QRMath.glog(this.get(0)) - QRMath.glog(e.get(0)); var num = new Array(this.getLength()); for (var i=0; i<this.getLength(); i++) num[i] = this.get(i); for (var i=0; i<e.getLength(); i++) num[i] ^= QRMath.gexp(QRMath.glog(e.get(i)) + ratio); return new QRPolynomial(num, 0).mod(e); }
   };
-
   function QRRSBlock(totalCount, dataCount) { this.totalCount = totalCount; this.dataCount = dataCount; }
-  QRRSBlock.RS_BLOCK_TABLE = [
-    [1,26,19],[1,26,16],[1,26,13],[1,26,9],
-    [1,44,34],[1,44,28],[1,44,22],[1,44,16],
-    [1,70,55],[1,70,44],[2,35,17],[2,35,13],
-    [1,100,80],[2,50,32],[2,50,24],[4,25,9],
-    [1,134,108],[2,67,43],[2,33,15,2,34,16],[2,33,11,2,34,12],
-    [2,86,68],[4,43,27],[4,43,19],[4,43,15],
-    [2,98,78],[4,49,31],[2,32,14,4,33,15],[4,39,13,1,40,14],
-    [2,121,97],[2,60,38,2,61,39],[4,40,18,2,41,19],[4,40,14,2,41,15],
-    [2,146,116],[3,58,36,2,59,37],[4,36,16,4,37,17],[4,36,12,4,37,13],
-    [2,86,68,2,87,69],[4,69,43,1,70,44],[6,43,19,2,44,20],[6,43,15,2,44,16],
-    [4,101,81],[1,80,50,4,81,51],[4,50,22,4,51,23],[3,36,12,8,37,13],
-    [2,116,92,2,117,93],[6,58,36,2,59,37],[4,46,20,6,47,21],[7,42,14,4,43,15],
-    [4,133,107],[8,59,37,1,60,38],[8,44,20,4,45,21],[12,33,11,4,34,12],
-    [3,145,115,1,146,116],[4,64,40,5,65,41],[11,36,16,5,37,17],[11,36,12,5,37,13],
-    [5,109,87,1,110,88],[5,65,41,5,66,42],[5,54,24,7,55,25],[11,36,12,7,37,13],
-    [5,122,98,1,123,99],[7,73,45,3,74,46],[15,43,19,2,44,20],[3,45,15,13,46,16],
-    [1,135,107,5,136,108],[10,74,46,1,75,47],[1,50,22,15,51,23],[2,42,14,17,43,15],
-    [5,150,120,1,151,121],[9,69,43,4,70,44],[17,50,22,1,51,23],[2,42,14,19,43,15],
-    [3,141,113,4,142,114],[3,70,44,11,71,45],[17,47,21,4,48,22],[9,39,13,16,40,14],
-    [3,135,107,5,136,108],[3,67,41,13,68,42],[15,54,24,5,55,25],[15,43,15,10,44,16],
-    [4,144,116,4,145,117],[17,68,42],[17,50,22,6,51,23],[19,46,16,6,47,17],
-    [2,139,111,7,140,112],[17,74,46],[7,54,24,16,55,25],[34,37,13],
-    [4,151,121,5,152,122],[4,75,47,14,76,48],[11,54,24,14,55,25],[16,45,15,14,46,16],
-    [6,147,117,4,148,118],[6,73,45,14,74,46],[11,54,24,16,55,25],[30,46,16,2,47,17],
-    [8,132,106,4,133,107],[8,75,47,13,76,48],[7,54,24,22,55,25],[22,45,15,13,46,16],
-    [10,142,114,2,143,115],[19,74,46,4,75,47],[28,50,22,6,51,23],[33,46,16,4,47,17],
-    [8,152,122,4,153,123],[22,73,45,3,74,46],[8,53,23,26,54,24],[12,45,15,28,46,16],
-    [3,147,117,10,148,118],[3,73,45,23,74,46],[4,54,24,31,55,25],[11,45,15,31,46,16],
-    [7,146,116,7,147,117],[21,73,45,7,74,46],[1,53,23,37,54,24],[19,45,15,26,46,16],
-    [5,145,115,10,146,116],[19,75,47,10,76,48],[15,54,24,25,55,25],[23,45,15,25,46,16],
-    [13,145,115,3,146,116],[2,74,46,29,75,47],[42,54,24,1,55,25],[23,45,15,28,46,16],
-    [17,145,115],[10,74,46,23,75,47],[10,54,24,35,55,25],[19,45,15,35,46,16],
-    [17,145,115,1,146,116],[14,74,46,21,75,47],[29,54,24,19,55,25],[11,45,15,46,46,16],
-    [13,145,115,6,146,116],[14,74,46,23,75,47],[44,54,24,7,55,25],[59,46,16,1,47,17],
-    [12,151,121,7,152,122],[12,75,47,26,76,48],[39,54,24,14,55,25],[22,45,15,41,46,16],
-    [6,151,121,14,152,122],[6,75,47,34,76,48],[46,54,24,10,55,25],[2,45,15,64,46,16],
-    [17,152,122,4,153,123],[29,74,46,14,75,47],[49,54,24,10,55,25],[24,45,15,46,46,16],
-    [4,152,122,18,153,123],[13,74,46,32,75,47],[48,54,24,14,55,25],[42,45,15,32,46,16],
-    [20,147,117,4,148,118],[40,75,47,7,76,48],[43,54,24,22,55,25],[10,45,15,67,46,16],
-    [19,148,118,6,149,119],[18,75,47,31,76,48],[34,54,24,34,55,25],[20,45,15,61,46,16]
-  ];
-  QRRSBlock.getRSBlocks = function(typeNumber, errorCorrectLevel) {
-    var rsBlock = QRRSBlock.getRsBlockTable(typeNumber, errorCorrectLevel);
-    if (rsBlock == undefined) throw new Error('bad rs block @ typeNumber:' + typeNumber + '/errorCorrectLevel:' + errorCorrectLevel);
-    var length = rsBlock.length / 3;
-    var list = [];
-    for (var i=0; i<length; i++) { var count = rsBlock[i*3+0], totalCount = rsBlock[i*3+1], dataCount = rsBlock[i*3+2]; for (var j=0; j<count; j++) list.push(new QRRSBlock(totalCount, dataCount)); }
-    return list;
-  };
-  QRRSBlock.getRsBlockTable = function(typeNumber, errorCorrectLevel) {
-    switch (errorCorrectLevel) {
-      case QRErrorCorrectLevel.L: return QRRSBlock.RS_BLOCK_TABLE[(typeNumber-1)*4 + 0];
-      case QRErrorCorrectLevel.M: return QRRSBlock.RS_BLOCK_TABLE[(typeNumber-1)*4 + 1];
-      case QRErrorCorrectLevel.Q: return QRRSBlock.RS_BLOCK_TABLE[(typeNumber-1)*4 + 2];
-      case QRErrorCorrectLevel.H: return QRRSBlock.RS_BLOCK_TABLE[(typeNumber-1)*4 + 3];
-      default: return undefined;
-    }
-  };
-
+  QRRSBlock.RS_BLOCK_TABLE = [[1,26,19],[1,26,16],[1,26,13],[1,26,9],[1,44,34],[1,44,28],[1,44,22],[1,44,16],[1,70,55],[1,70,44],[2,35,17],[2,35,13],[1,100,80],[2,50,32],[2,50,24],[4,25,9],[1,134,108],[2,67,43],[2,33,15,2,34,16],[2,33,11,2,34,12],[2,86,68],[4,43,27],[4,43,19],[4,43,15],[2,98,78],[4,49,31],[2,32,14,4,33,15],[4,39,13,1,40,14],[2,121,97],[2,60,38,2,61,39],[4,40,18,2,41,19],[4,40,14,2,41,15],[2,146,116],[3,58,36,2,59,37],[4,36,16,4,37,17],[4,36,12,4,37,13],[2,86,68,2,87,69],[4,69,43,1,70,44],[6,43,19,2,44,20],[6,43,15,2,44,16],[4,101,81],[1,80,50,4,81,51],[4,50,22,4,51,23],[3,36,12,8,37,13],[2,116,92,2,117,93],[6,58,36,2,59,37],[4,46,20,6,47,21],[7,42,14,4,43,15],[4,133,107],[8,59,37,1,60,38],[8,44,20,4,45,21],[12,33,11,4,34,12],[3,145,115,1,146,116],[4,64,40,5,65,41],[11,36,16,5,37,17],[11,36,12,5,37,13],[5,109,87,1,110,88],[5,65,41,5,66,42],[5,54,24,7,55,25],[11,36,12,7,37,13],[5,122,98,1,123,99],[7,73,45,3,74,46],[15,43,19,2,44,20],[3,45,15,13,46,16],[1,135,107,5,136,108],[10,74,46,1,75,47],[1,50,22,15,51,23],[2,42,14,17,43,15],[5,150,120,1,151,121],[9,69,43,4,70,44],[17,50,22,1,51,23],[2,42,14,19,43,15],[3,141,113,4,142,114],[3,70,44,11,71,45],[17,47,21,4,48,22],[9,39,13,16,40,14],[3,135,107,5,136,108],[3,67,41,13,68,42],[15,54,24,5,55,25],[15,43,15,10,44,16],[4,144,116,4,145,117],[17,68,42],[17,50,22,6,51,23],[19,46,16,6,47,17],[2,139,111,7,140,112],[17,74,46],[7,54,24,16,55,25],[34,37,13],[4,151,121,5,152,122],[4,75,47,14,76,48],[11,54,24,14,55,25],[16,45,15,14,46,16],[6,147,117,4,148,118],[6,73,45,14,74,46],[11,54,24,16,55,25],[30,46,16,2,47,17],[8,132,106,4,133,107],[8,75,47,13,76,48],[7,54,24,22,55,25],[22,45,15,13,46,16],[10,142,114,2,143,115],[19,74,46,4,75,47],[28,50,22,6,51,23],[33,46,16,4,47,17],[8,152,122,4,153,123],[22,73,45,3,74,46],[8,53,23,26,54,24],[12,45,15,28,46,16],[3,147,117,10,148,118],[3,73,45,23,74,46],[4,54,24,31,55,25],[11,45,15,31,46,16],[7,146,116,7,147,117],[21,73,45,7,74,46],[1,53,23,37,54,24],[19,45,15,26,46,16],[5,145,115,10,146,116],[19,75,47,10,76,48],[15,54,24,25,55,25],[23,45,15,25,46,16],[13,145,115,3,146,116],[2,74,46,29,75,47],[42,54,24,1,55,25],[23,45,15,28,46,16],[17,145,115],[10,74,46,23,75,47],[10,54,24,35,55,25],[19,45,15,35,46,16],[17,145,115,1,146,116],[14,74,46,21,75,47],[29,54,24,19,55,25],[11,45,15,46,46,16],[13,145,115,6,146,116],[14,74,46,23,75,47],[44,54,24,7,55,25],[59,46,16,1,47,17],[12,151,121,7,152,122],[12,75,47,26,76,48],[39,54,24,14,55,25],[22,45,15,41,46,16],[6,151,121,14,152,122],[6,75,47,34,76,48],[46,54,24,10,55,25],[2,45,15,64,46,16],[17,152,122,4,153,123],[29,74,46,14,75,47],[49,54,24,10,55,25],[24,45,15,46,46,16],[4,152,122,18,153,123],[13,74,46,32,75,47],[48,54,24,14,55,25],[42,45,15,32,46,16],[20,147,117,4,148,118],[40,75,47,7,76,48],[43,54,24,22,55,25],[10,45,15,67,46,16],[19,148,118,6,149,119],[18,75,47,31,76,48],[34,54,24,34,55,25],[20,45,15,61,46,16]];
+  QRRSBlock.getRSBlocks = function(typeNumber, errorCorrectLevel) { var rsBlock = QRRSBlock.getRsBlockTable(typeNumber, errorCorrectLevel); if (rsBlock == undefined) throw new Error('bad rs block'); var length = rsBlock.length / 3; var list = []; for (var i=0; i<length; i++) { var count = rsBlock[i*3+0], totalCount = rsBlock[i*3+1], dataCount = rsBlock[i*3+2]; for (var j=0; j<count; j++) list.push(new QRRSBlock(totalCount, dataCount)); } return list; };
+  QRRSBlock.getRsBlockTable = function(typeNumber, errorCorrectLevel) { switch (errorCorrectLevel) { case QRErrorCorrectLevel.L: return QRRSBlock.RS_BLOCK_TABLE[(typeNumber-1)*4 + 0]; case QRErrorCorrectLevel.M: return QRRSBlock.RS_BLOCK_TABLE[(typeNumber-1)*4 + 1]; case QRErrorCorrectLevel.Q: return QRRSBlock.RS_BLOCK_TABLE[(typeNumber-1)*4 + 2]; case QRErrorCorrectLevel.H: return QRRSBlock.RS_BLOCK_TABLE[(typeNumber-1)*4 + 3]; default: return undefined; } };
   function QRBitBuffer() { this.buffer = []; this.length = 0; }
-  QRBitBuffer.prototype = {
-    get: function(index) { var bufIndex = Math.floor(index / 8); return ((this.buffer[bufIndex] >>> (7 - index % 8)) & 1) == 1; },
-    put: function(num, length) { for (var i=0; i<length; i++) this.putBit(((num >>> (length - i - 1)) & 1) == 1); },
-    getLengthInBits: function() { return this.length; },
-    putBit: function(bit) { var bufIndex = Math.floor(this.length / 8); if (this.buffer.length <= bufIndex) this.buffer.push(0); if (bit) this.buffer[bufIndex] |= (0x80 >>> (this.length % 8)); this.length++; }
-  };
-
-  function getTypeNumberForData(data) {
-    var len = data.length;
-    var limits = [17,32,53,78,106,134,154,192,230,271,321,367,425,458,520,586,644,718,792,858,929,1003,1091,1171,1273,1367,1465,1528,1628,1732,1840,1952,2068,2188,2303,2431,2563,2699,2809,2953];
-    for (var i=0; i<limits.length; i++) if (len <= limits[i]) return i+1;
-    throw new Error('Data too long for QR');
-  }
-
+  QRBitBuffer.prototype = { get: function(index) { var bufIndex = Math.floor(index / 8); return ((this.buffer[bufIndex] >>> (7 - index % 8)) & 1) == 1; }, put: function(num, length) { for (var i=0; i<length; i++) this.putBit(((num >>> (length - i - 1)) & 1) == 1); }, getLengthInBits: function() { return this.length; }, putBit: function(bit) { var bufIndex = Math.floor(this.length / 8); if (this.buffer.length <= bufIndex) this.buffer.push(0); if (bit) this.buffer[bufIndex] |= (0x80 >>> (this.length % 8)); this.length++; } };
+  function getTypeNumberForData(data) { var len = data.length; var limits = [17,32,53,78,106,134,154,192,230,271,321,367,425,458,520,586,644,718,792,858,929,1003,1091,1171,1273,1367,1465,1528,1628,1732,1840,1952,2068,2188,2303,2431,2563,2699,2809,2953]; for (var i=0; i<limits.length; i++) if (len <= limits[i]) return i+1; throw new Error('Data too long for QR'); }
   global.QRLite = {
     toCanvas: function(canvas, text, options) {
       options = options || {};
@@ -1290,34 +689,21 @@
       var margin = (options.margin != null) ? options.margin : 4;
       var darkColor = (options.color && options.color.dark) || '#000000';
       var lightColor = (options.color && options.color.light) || '#ffffff';
-
       var typeNumber = getTypeNumberForData(text);
       var qr = new QRCodeModel(typeNumber, QRErrorCorrectLevel.L);
-      qr.addData(text);
-      qr.make();
-
+      qr.addData(text); qr.make();
       var count = qr.getModuleCount();
       var cellSize = Math.floor((size - margin*2) / count);
       var actualSize = cellSize * count + margin*2;
-
-      canvas.width = actualSize;
-      canvas.height = actualSize;
+      canvas.width = actualSize; canvas.height = actualSize;
       var ctx = canvas.getContext('2d');
-      ctx.fillStyle = lightColor;
-      ctx.fillRect(0, 0, actualSize, actualSize);
+      ctx.fillStyle = lightColor; ctx.fillRect(0, 0, actualSize, actualSize);
       ctx.fillStyle = darkColor;
-      for (var r=0; r<count; r++) {
-        for (var c=0; c<count; c++) {
-          if (qr.isDark(r, c)) ctx.fillRect(margin + c*cellSize, margin + r*cellSize, cellSize, cellSize);
-        }
-      }
+      for (var r=0; r<count; r++) for (var c=0; c<count; c++) if (qr.isDark(r, c)) ctx.fillRect(margin + c*cellSize, margin + r*cellSize, cellSize, cellSize);
       return true;
     }
   };
 })(window);
-/* ============================================================
-   END QR GENERATOR
-   ============================================================ */
 
 const firebaseConfig = {
   apiKey: "AIzaSyB664ss54zAPuKsXHoXgc47HgIO-I5945w",
@@ -1349,6 +735,10 @@ let pendingAttachment = null, LOCAL_ONLY = true;
 let scanStream = null, scanRAF = null, scanCanvas = null, scanCtx = null, scanActive = false;
 let requestQueue = [], requestModalEl = null;
 
+/* ===== AUTO-CONNECT LISTENER ===== */
+let connectionsListenerRef = null;
+let knownConnectionUids = new Set();
+
 /* ===== PRESENCE & TYPING ===== */
 let typingRef = null, partnerTypingRef = null, typingTimeout = null, isPartnerTyping = false;
 let partnerOnline = false, partnerPresenceRef = null;
@@ -1356,7 +746,7 @@ let partnerOnline = false, partnerPresenceRef = null;
 /* ===== VOICE RECORDING ===== */
 let mediaRecorder = null, recChunks = [], recStream = null, recTimerInterval = null, recStartTime = 0, recSeconds = 0, recCancelled = false;
 const REC_MAX_SECONDS = 60;
-const REC_MAX_BYTES = 600 * 1024; // ~600 KB
+const REC_MAX_BYTES = 600 * 1024;
 
 /* ===== VOICE PLAYBACK ===== */
 let currentAudio = null, currentPlayerEl = null;
@@ -1395,11 +785,7 @@ const callCropToggle = $('callCropToggle'), callCropPanel = $('callCropPanel'), 
 const incomingCallAvatar = $('incomingCallAvatar'), incomingCallName = $('incomingCallName'), incomingCallType = $('incomingCallType');
 const incomingAccept = $('incomingAccept'), incomingReject = $('incomingReject');
 
-
-function firebaseUid(uid){
-  if(!uid) throw new Error('Missing Firebase UID');
-  return String(uid);
-}
+function firebaseUid(uid){ if(!uid) throw new Error('Missing Firebase UID'); return String(uid); }
 function showToast(msg){ if(String(msg||'').trim()==='Could not establish the call') return; const t=$('toast'); $('toastMsg').textContent=msg; t.classList.add('show'); clearTimeout(t._timer); t._timer=setTimeout(()=>t.classList.remove('show'),3500); }
 function timeNow(){ return new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}); }
 function esc(s){ return String(s).replace(/[&<>"']/g, ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch])); }
@@ -1408,7 +794,6 @@ function chatKey(a,b){ return [a,b].sort().join('__'); }
 function fmtBytes(b){ if(b<1024) return b+' B'; if(b<1024*1024) return (b/1024).toFixed(1)+' KB'; return (b/1024/1024).toFixed(1)+' MB'; }
 function fmtDur(sec){ sec=Math.max(0,Math.floor(sec||0)); const m=Math.floor(sec/60); const s=sec%60; return m+':'+String(s).padStart(2,'0'); }
 function signedIn(){ return !!(auth && auth.currentUser && auth.currentUser.uid); }
-function firebaseAuthenticated(){ return signedIn(); }
 function getFirebaseUid(){
   const user=auth && auth.currentUser;
   if(!user || !user.uid) return null;
@@ -1467,24 +852,11 @@ function setConnected(on, name){
 }
 function setStatus(kind,text){ statusChip.className = 'status-chip ' + (kind || ''); statusText.textContent=text; }
 
-/* ===== PRESENCE & TYPING LOGIC ===== */
 function updateStatusDisplay() {
-  if (!partnerUid) {
-    setConnected(false);
-    return;
-  }
-  if (isPartnerTyping) {
-    statusChip.className = 'status-chip typing';
-    statusText.textContent = 'typing…';
-    return;
-  }
-  if (partnerOnline) {
-    statusChip.className = 'status-chip online';
-    statusText.textContent = 'Online · ' + partnerName;
-  } else {
-    statusChip.className = 'status-chip offline';
-    statusText.textContent = 'Offline · ' + partnerName;
-  }
+  if (!partnerUid) { setConnected(false); return; }
+  if (isPartnerTyping) { statusChip.className = 'status-chip typing'; statusText.textContent = 'typing…'; return; }
+  if (partnerOnline) { statusChip.className = 'status-chip online'; statusText.textContent = 'Online · ' + partnerName; }
+  else { statusChip.className = 'status-chip offline'; statusText.textContent = 'Offline · ' + partnerName; }
 }
 
 function listenPartnerPresence() {
@@ -1494,9 +866,6 @@ function listenPartnerPresence() {
   partnerPresenceRef.on('value', snap => {
     partnerOnline = snap.val() === true;
     updateStatusDisplay();
-
-    // WhatsApp-style outgoing call state: offline = Calling, online = Ringing.
-    // Only change this while the caller is still waiting for the friend to answer.
     if (currentCallRole === 'caller' && currentCallSignalingStatus === 'ringing' && currentCallRef) {
       setCallStatus(partnerOnline ? 'Ringing…' : 'Calling…');
     }
@@ -1527,230 +896,96 @@ function emitTyping(){
   typingTimeout=setTimeout(()=>{ if(typingRef) typingRef.remove().catch(()=>{}); }, 2500);
 }
 
-/* ===== VOICE RECORDING ===== */
 async function startRecording(){
   if(!signedIn()){ showToast('Please sign in with Google first'); return; }
   if(!partnerUid){ showToast('Connect with a friend first'); return; }
-  if(typeof MediaRecorder==='undefined' || !navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){
-    showToast('Voice recording not supported in this browser'); return;
-  }
-  try{
-    recStream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation:true, noiseSuppression:true } });
-  }catch(err){
-    console.error('mic',err);
-    let msg='Could not access microphone.';
-    if(err?.name==='NotAllowedError') msg='Microphone permission denied. Allow it in browser settings.';
-    else if(err?.name==='NotFoundError') msg='No microphone found on this device.';
-    else if(err?.name==='NotReadableError') msg='Microphone is being used by another app.';
-    showToast(msg);
-    return;
-  }
-
-  recChunks = [];
-  recCancelled = false;
+  if(typeof MediaRecorder==='undefined' || !navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){ showToast('Voice recording not supported in this browser'); return; }
+  try{ recStream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation:true, noiseSuppression:true } }); }
+  catch(err){ console.error('mic',err); let msg='Could not access microphone.'; if(err?.name==='NotAllowedError') msg='Microphone permission denied. Allow it in browser settings.'; else if(err?.name==='NotFoundError') msg='No microphone found on this device.'; else if(err?.name==='NotReadableError') msg='Microphone is being used by another app.'; showToast(msg); return; }
+  recChunks = []; recCancelled = false;
   let mimeType='';
   if(MediaRecorder.isTypeSupported('audio/webm;codecs=opus')) mimeType='audio/webm;codecs=opus';
   else if(MediaRecorder.isTypeSupported('audio/webm')) mimeType='audio/webm';
   else if(MediaRecorder.isTypeSupported('audio/mp4')) mimeType='audio/mp4';
-
-  try{
-    mediaRecorder = mimeType
-      ? new MediaRecorder(recStream, { mimeType, audioBitsPerSecond: 32000 })
-      : new MediaRecorder(recStream, { audioBitsPerSecond: 32000 });
-  }catch(e){
-    console.error(e);
-    showToast('Recording not supported');
-    stopRecStream(); return;
-  }
-
+  try{ mediaRecorder = mimeType ? new MediaRecorder(recStream, { mimeType, audioBitsPerSecond: 32000 }) : new MediaRecorder(recStream, { audioBitsPerSecond: 32000 }); }
+  catch(e){ console.error(e); showToast('Recording not supported'); stopRecStream(); return; }
   mediaRecorder.ondataavailable = e => { if(e.data && e.data.size>0) recChunks.push(e.data); };
   mediaRecorder.onstop = handleRecordingStop;
   try{ mediaRecorder.start(); }catch(e){ console.error(e); showToast('Recording failed'); stopRecStream(); return; }
-
-  recStartTime = Date.now();
-  recSeconds = 0;
-  recTimer.textContent = '0:00';
-  recordingBar.classList.add('show');
-  inputBarMain.classList.add('hide');
-
-  recTimerInterval = setInterval(()=>{
-    recSeconds = Math.floor((Date.now()-recStartTime)/1000);
-    recTimer.textContent = fmtDur(recSeconds);
-    if(recSeconds >= REC_MAX_SECONDS) stopRecording(true);
-  }, 200);
+  recStartTime = Date.now(); recSeconds = 0; recTimer.textContent = '0:00';
+  recordingBar.classList.add('show'); inputBarMain.classList.add('hide');
+  recTimerInterval = setInterval(()=>{ recSeconds = Math.floor((Date.now()-recStartTime)/1000); recTimer.textContent = fmtDur(recSeconds); if(recSeconds >= REC_MAX_SECONDS) stopRecording(true); }, 200);
 }
-function stopRecStream(){
-  if(recStream){ try{ recStream.getTracks().forEach(t=>t.stop()); }catch{} recStream=null; }
-}
+function stopRecStream(){ if(recStream){ try{ recStream.getTracks().forEach(t=>t.stop()); }catch{} recStream=null; } }
 function stopRecording(sendIt){
   clearInterval(recTimerInterval); recTimerInterval=null;
-  if(mediaRecorder && mediaRecorder.state!=='inactive'){
-    mediaRecorder._sendIt = !!sendIt;
-    try{ mediaRecorder.stop(); }catch(e){ console.error(e); cleanupRecUI(); stopRecStream(); }
-  } else {
-    cleanupRecUI();
-    stopRecStream();
-  }
+  if(mediaRecorder && mediaRecorder.state!=='inactive'){ mediaRecorder._sendIt = !!sendIt; try{ mediaRecorder.stop(); }catch(e){ console.error(e); cleanupRecUI(); stopRecStream(); } }
+  else { cleanupRecUI(); stopRecStream(); }
 }
-function cleanupRecUI(){
-  recordingBar.classList.remove('show');
-  inputBarMain.classList.remove('hide');
-  recTimer.textContent = '0:00';
-}
+function cleanupRecUI(){ recordingBar.classList.remove('show'); inputBarMain.classList.remove('hide'); recTimer.textContent = '0:00'; }
 async function handleRecordingStop(){
   const sendIt = mediaRecorder && mediaRecorder._sendIt;
-  stopRecStream();
-  cleanupRecUI();
-
-  if(!sendIt || recCancelled || !recChunks.length){
-    recChunks = [];
-    if(sendIt) showToast('Recording cancelled');
-    return;
-  }
+  stopRecStream(); cleanupRecUI();
+  if(!sendIt || recCancelled || !recChunks.length){ recChunks = []; if(sendIt) showToast('Recording cancelled'); return; }
   const mime = recChunks[0].type || 'audio/webm';
   const blob = new Blob(recChunks, { type: mime });
   recChunks = [];
-
-  if(blob.size > REC_MAX_BYTES){
-    showToast('Voice too long — try shorter');
-    return;
-  }
-  if(recSeconds < 1){
-    showToast('Too short');
-    return;
-  }
-
+  if(blob.size > REC_MAX_BYTES){ showToast('Voice too long — try shorter'); return; }
+  if(recSeconds < 1){ showToast('Too short'); return; }
   const reader = new FileReader();
   reader.onload = async ()=>{
     const dataUrl = reader.result;
     const ext = mime.includes('mp4') ? 'm4a' : 'webm';
-    const msgObj = {
-      from: me.uid, fromId: me.id, fromName: me.name,
-      text: '',
-      time: timeNow(),
-      at: firebase.database.ServerValue.TIMESTAMP,
-      status: 'sent',
-      media: { type:'voice', name:'voice.'+ext, data:dataUrl, duration: recSeconds }
-    };
-    try{
-      await db.ref('messages/'+chatKey(me.uid, partnerUid)).push(msgObj);
-      showToast('Voice message sent');
-    }catch(e){ console.error(e); showToast('Failed: '+friendlyFirebaseError(e)); }
+    const msgObj = { from: me.uid, fromId: me.id, fromName: me.name, text: '', time: timeNow(), at: firebase.database.ServerValue.TIMESTAMP, status: 'sent', media: { type:'voice', name:'voice.'+ext, data:dataUrl, duration: recSeconds } };
+    try{ await db.ref('messages/'+chatKey(me.uid, partnerUid)).push(msgObj); showToast('Voice message sent'); }
+    catch(e){ console.error(e); showToast('Failed: '+friendlyFirebaseError(e)); }
   };
   reader.onerror = ()=>{ showToast('Could not prepare voice message'); };
   reader.readAsDataURL(blob);
 }
+micBtn.addEventListener('click', ()=>{ if(recordingBar.classList.contains('show')) return; if(msgInput.value.trim().length>0){ showToast('Send or clear the text first'); return; } startRecording(); });
+recCancel.addEventListener('click', ()=>{ recCancelled = true; stopRecording(false); });
+recSend.addEventListener('click', ()=>{ recCancelled = false; stopRecording(true); });
 
-micBtn.addEventListener('click', ()=>{
-  if(recordingBar.classList.contains('show')) return;
-  if(msgInput.value.trim().length>0){ showToast('Send or clear the text first'); return; }
-  startRecording();
-});
-recCancel.addEventListener('click', ()=>{
-  recCancelled = true;
-  stopRecording(false);
-});
-recSend.addEventListener('click', ()=>{
-  recCancelled = false;
-  stopRecording(true);
-});
-
-/* ===== VOICE PLAYBACK ===== */
 function setVoiceIcon(player, playing){
   const btn = player.querySelector('.voice-play-btn');
   if(!btn) return;
-  btn.innerHTML = playing
-    ? '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>'
-    : '<svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20"/></svg>';
+  btn.innerHTML = playing ? '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>' : '<svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20"/></svg>';
 }
-function stopCurrentAudio(){
-  if(currentAudio){
-    try{ currentAudio.pause(); }catch{}
-    currentAudio = null;
-  }
-  if(currentPlayerEl){
-    setVoiceIcon(currentPlayerEl, false);
-    const f = currentPlayerEl.querySelector('.voice-bar-fill');
-    if(f) f.style.width = '0%';
-    currentPlayerEl = null;
-  }
-}
+function stopCurrentAudio(){ if(currentAudio){ try{ currentAudio.pause(); }catch{} currentAudio = null; } if(currentPlayerEl){ setVoiceIcon(currentPlayerEl, false); const f = currentPlayerEl.querySelector('.voice-bar-fill'); if(f) f.style.width = '0%'; currentPlayerEl = null; } }
 function toggleVoice(player){
-  const src = player.dataset.src;
-  if(!src) return;
-  if(currentPlayerEl === player && currentAudio && !currentAudio.paused){
-    stopCurrentAudio();
-    return;
-  }
+  const src = player.dataset.src; if(!src) return;
+  if(currentPlayerEl === player && currentAudio && !currentAudio.paused){ stopCurrentAudio(); return; }
   stopCurrentAudio();
-  const audio = new Audio(src);
-  audio.preload = 'metadata';
-  audio.onended = ()=>{
-    setVoiceIcon(player, false);
-    const f = player.querySelector('.voice-bar-fill');
-    if(f) f.style.width = '0%';
-    if(currentAudio === audio){ currentAudio = null; currentPlayerEl = null; }
-  };
-  audio.ontimeupdate = ()=>{
-    if(audio.duration && isFinite(audio.duration)){
-      const pct = (audio.currentTime / audio.duration) * 100;
-      const f = player.querySelector('.voice-bar-fill');
-      if(f) f.style.width = pct + '%';
-    }
-  };
+  const audio = new Audio(src); audio.preload = 'metadata';
+  audio.onended = ()=>{ setVoiceIcon(player, false); const f = player.querySelector('.voice-bar-fill'); if(f) f.style.width = '0%'; if(currentAudio === audio){ currentAudio = null; currentPlayerEl = null; } };
+  audio.ontimeupdate = ()=>{ if(audio.duration && isFinite(audio.duration)){ const pct = (audio.currentTime / audio.duration) * 100; const f = player.querySelector('.voice-bar-fill'); if(f) f.style.width = pct + '%'; } };
   audio.onerror = ()=>{ showToast('Could not play voice'); setVoiceIcon(player, false); };
-  currentAudio = audio;
-  currentPlayerEl = player;
-  audio.play().then(()=>setVoiceIcon(player, true)).catch(err=>{
-    console.error(err);
-    showToast('Playback failed');
-    setVoiceIcon(player, false);
-  });
+  currentAudio = audio; currentPlayerEl = player;
+  audio.play().then(()=>setVoiceIcon(player, true)).catch(err=>{ console.error(err); showToast('Playback failed'); setVoiceIcon(player, false); });
 }
 
 async function ensureUserProfile(user){
   if(!user || !user.uid) throw new Error('Firebase user UID is missing');
-
   const firebaseId=firebaseUid(user.uid);
   const cachedRaw=localStorage.getItem(ME_KEY);
   let cached=null;
   try{ cached=cachedRaw?JSON.parse(cachedRaw):null; }catch{}
-
-  me={
-    ...(cached && cached.uid===user.uid ? cached : {}),
-    uid:user.uid,
-    id:firebaseId,
-    name:user.displayName||cached?.name||'Google User',
-    email:user.email||cached?.email||'',
-    picture:user.photoURL||cached?.picture||null,
-    provider:'firebase-google'
-  };
+  me={ ...(cached && cached.uid===user.uid ? cached : {}), uid:user.uid, id:firebaseId, name:user.displayName||cached?.name||'Google User', email:user.email||cached?.email||'', picture:user.photoURL||cached?.picture||null, provider:'firebase-google' };
   localStorage.setItem(ME_KEY,JSON.stringify(me));
-  paintMe();
-  setConnected(false);
-  setStatus('connecting','Setting up your Firebase UID…');
-
+  paintMe(); setConnected(false); setStatus('connecting','Setting up your Firebase UID…');
   try{
     const userRef=db.ref('users/'+user.uid);
-    const profile={
-      id:firebaseId, uid:user.uid, name:me.name, email:me.email,
-      picture:me.picture, provider:'firebase-google',
-      updatedAt:firebase.database.ServerValue.TIMESTAMP
-    };
+    const profile={ id:firebaseId, uid:user.uid, name:me.name, email:me.email, picture:me.picture, provider:'firebase-google', updatedAt:firebase.database.ServerValue.TIMESTAMP };
     await userRef.update(profile);
     me={...me};
     localStorage.setItem(ME_KEY,JSON.stringify(me));
-    paintMe();
-    setStatus('','Ready');
-  }catch(e){
-    console.error('Firebase database sync:',e);
-    setStatus('','Ready');
-    showToast('Firebase UID ready: '+firebaseId+' · Database sync needs setup');
-  }
-
+    paintMe(); setStatus('','Ready');
+  }catch(e){ console.error('Firebase database sync:',e); setStatus('','Ready'); showToast('Firebase UID ready: '+firebaseId+' · Database sync needs setup'); }
   try{ await startPresence(); }catch(e){ console.error('presence setup:',e); }
   try{ await listenRequests(); }catch(e){ console.error('request listener:',e); }
   try{ await restoreConnection(); }catch(e){ console.error('restore connection:',e); }
+  try{ listenForConnections(); }catch(e){ console.error('connection listener:',e); }
   return me;
 }
 
@@ -1766,6 +1001,31 @@ async function signInWithGoogle(){
 }
 googleLogoBtn.addEventListener('click', signInWithGoogle);
 if(mainSignInBtn) mainSignInBtn.addEventListener('click', signInWithGoogle);
+
+async function signOutGoogle(){
+  closeDrawer();
+  if(!signedIn()){ showToast('You are not signed in'); return; }
+  if(!confirm('Sign out from your Google account?')) return;
+  try{
+    // Cleanly tear down all live listeners before logout
+    try{ if(connectionsListenerRef){ connectionsListenerRef.off(); connectionsListenerRef=null; } }catch{}
+    knownConnectionUids = new Set();
+    try{ if(incomingCallsRef){ incomingCallsRef.off(); incomingCallsRef=null; } }catch{}
+    try{ await endWebRTCCall('ended'); }catch{}
+    if(recordingBar.classList.contains('show')){ recCancelled=true; stopRecording(false); }
+    stopCurrentAudio();
+    if(requestRef){ try{ requestRef.off(); }catch{} requestRef=null; }
+    if(messageRef){ try{ messageRef.off(); }catch{} messageRef=null; }
+    if(typingRef){ try{ typingRef.remove(); }catch{} typingRef=null; }
+    if(partnerTypingRef){ try{ partnerTypingRef.off(); }catch{} partnerTypingRef=null; }
+    if(partnerPresenceRef){ try{ partnerPresenceRef.off(); }catch{} partnerPresenceRef=null; }
+    if(presenceRef){ try{ await presenceRef.update({online:false, lastSeen:firebase.database.ServerValue.TIMESTAMP}); }catch{} }
+    await auth.signOut();
+    showToast('Signed out from Google');
+  }catch(e){ console.error('signOut', e); showToast('Sign out failed: '+friendlyFirebaseError(e)); }
+}
+const menuLogoutBtn = $('menuLogout');
+if(menuLogoutBtn) menuLogoutBtn.addEventListener('click', signOutGoogle);
 
 async function startPresence(){
   if(!signedIn()) return;
@@ -1786,14 +1046,7 @@ async function startPresence(){
 function requestStyle(){
   if($('convoRequestStyle')) return;
   const st=document.createElement('style'); st.id='convoRequestStyle';
-  st.textContent=`
-  .cl-request-backdrop{position:fixed;inset:0;background:rgba(10,14,25,.58);backdrop-filter:blur(8px);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px}
-  .cl-request-card{width:min(390px,100%);background:var(--card,#fff);color:var(--text,#1f2430);border-radius:22px;padding:22px;box-shadow:0 24px 70px rgba(0,0,0,.28)}
-  .cl-request-card h3{margin:0 0 7px;font-size:20px}.cl-request-card p{margin:0 0 18px;opacity:.72;font-size:14px;line-height:1.45}
-  .cl-request-person{display:flex;align-items:center;gap:12px;padding:12px;border-radius:14px;background:rgba(127,127,127,.08);margin-bottom:18px}
-  .cl-request-avatar{width:46px;height:46px;border-radius:50%;overflow:hidden;display:grid;place-items:center;background:#2f55a4;color:#fff;font-weight:700}.cl-request-avatar img{width:100%;height:100%;object-fit:cover}
-  .cl-request-actions{display:flex;gap:10px}.cl-request-actions button{flex:1;border:0;border-radius:12px;padding:12px;font-weight:700;cursor:pointer}.cl-reject{background:rgba(127,127,127,.12);color:inherit}.cl-accept{background:#2f55a4;color:#fff}
-  `;
+  st.textContent=` .cl-request-backdrop{position:fixed;inset:0;background:rgba(10,14,25,.58);backdrop-filter:blur(8px);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px} .cl-request-card{width:min(390px,100%);background:var(--card,#fff);color:var(--text,#1f2430);border-radius:22px;padding:22px;box-shadow:0 24px 70px rgba(0,0,0,.28)} .cl-request-card h3{margin:0 0 7px;font-size:20px}.cl-request-card p{margin:0 0 18px;opacity:.72;font-size:14px;line-height:1.45} .cl-request-person{display:flex;align-items:center;gap:12px;padding:12px;border-radius:14px;background:rgba(127,127,127,.08);margin-bottom:18px} .cl-request-avatar{width:46px;height:46px;border-radius:50%;overflow:hidden;display:grid;place-items:center;background:#2f55a4;color:#fff;font-weight:700}.cl-request-avatar img{width:100%;height:100%;object-fit:cover} .cl-request-actions{display:flex;gap:10px}.cl-request-actions button{flex:1;border:0;border-radius:12px;padding:12px;font-weight:700;cursor:pointer}.cl-reject{background:rgba(127,127,127,.12);color:inherit}.cl-accept{background:#2f55a4;color:#fff} `;
   document.head.appendChild(st);
 }
 function showNextRequest(){
@@ -1804,11 +1057,7 @@ function showNextRequest(){
   const pic=r.fromPicture ? `<img src="${esc(r.fromPicture)}" alt="">` : esc(initials(r.fromName));
   back.innerHTML=`<div class="cl-request-card"><h3>Connection request</h3><p>This person wants to connect with you on ConvoLink.</p><div class="cl-request-person"><div class="cl-request-avatar">${pic}</div><div><strong>${esc(r.fromName||'ConvoLink user')}</strong><div style="font-size:12px;opacity:.65">${esc(r.fromId||'')}</div></div></div><div class="cl-request-actions"><button class="cl-reject" data-action="reject">Reject</button><button class="cl-accept" data-action="accept">Accept</button></div></div>`;
   document.body.appendChild(back); requestModalEl=back;
-  back.addEventListener('click',async e=>{
-    const action=e.target.closest('button')?.dataset.action; if(!action) return;
-    if(action==='accept') await acceptRequest(r);
-    else await rejectRequest(r);
-  });
+  back.addEventListener('click',async e=>{ const action=e.target.closest('button')?.dataset.action; if(!action) return; if(action==='accept') await acceptRequest(r); else await rejectRequest(r); });
 }
 function closeRequestModal(){ if(requestModalEl){ requestModalEl.remove(); requestModalEl=null; } setTimeout(showNextRequest,80); }
 async function listenRequests(){
@@ -1833,9 +1082,7 @@ async function acceptRequest(r){
     updates[`requests/${me.uid}/${r.requestId}/respondedAt`]=now;
     await db.ref().update(updates);
     await db.ref(`requests/${me.uid}/${r.requestId}`).remove();
-    await selectPartner(other);
-    addSystem(`Connected with ${other.name || 'Friend'}`);
-    render();
+    await selectPartner(other); addSystem(`Connected with ${other.name || 'Friend'}`); render();
     showToast('Connection accepted. Chat is ready.');
   }catch(e){ console.error(e); showToast(friendlyFirebaseError(e)); }
   closeRequestModal();
@@ -1865,6 +1112,69 @@ async function restoreConnection(){
   }catch(e){ console.error('restore',e); showToast(friendlyFirebaseError(e)); }
 }
 
+/* ===== AUTO-CONNECT: जब सामने वाला QR स्कैन करे, तुरंत जुड़ जाओ ===== */
+function listenForConnections(){
+  if(connectionsListenerRef){ try{connectionsListenerRef.off();}catch{} connectionsListenerRef=null; }
+  knownConnectionUids = new Set();
+  if(!signedIn() || !me) return;
+
+  let initialLoadDone = false;
+  connectionsListenerRef = db.ref('connections/' + me.uid);
+
+  connectionsListenerRef.on('value', snap => {
+    const currentUids = new Set();
+    snap.forEach(child => { currentUids.add(child.key); });
+
+    // पहली बार value आने पर — सिर्फ existing UIDs याद रखो
+    if(!initialLoadDone){
+      initialLoadDone = true;
+      knownConnectionUids = currentUids;
+      // अगर localStorage साफ़ हो गया पर Firebase में connection पड़ा है, तो पहला वाला auto-select करो
+      if(!partnerUid && currentUids.size > 0){
+        const firstUid = currentUids.values().next().value;
+        const data = snap.child(firstUid).val();
+        if(data && data.uid) handleNewConnection(firstUid, data, true);
+      }
+      return;
+    }
+
+    // हर नए UID के लिए check करो
+    currentUids.forEach(uid => {
+      if(!knownConnectionUids.has(uid)){
+        const data = snap.child(uid).val();
+        if(data && data.uid) handleNewConnection(uid, data, false);
+      }
+    });
+
+    knownConnectionUids = currentUids;
+  });
+}
+
+async function handleNewConnection(uid, data, silent){
+  if(!data || !data.uid || !signedIn()) return;
+  if(uid === me.uid) return;
+
+  const partner = {
+    id: data.id || uid,
+    uid: uid,
+    name: data.name || 'Friend',
+    email: data.email || '',
+    picture: data.picture || null
+  };
+
+  if(partnerUid === uid) return;
+
+  if(partnerUid && partnerUid !== uid){
+    if(!silent) showToast(partner.name + ' connected with you');
+    return;
+  }
+
+  await selectPartner(partner);
+  addSystem('Connected with ' + partner.name);
+  render();
+  if(!silent) showToast('Connected with ' + partner.name);
+}
+
 async function connectToId(uid, opts){
   opts=opts||{}; uid=String(uid||'').trim();
   if(!signedIn()){ showToast('Please sign in with Google first'); return; }
@@ -1876,23 +1186,12 @@ async function connectToId(uid, opts){
     const targetSnap=await db.ref('users/'+uid).once('value');
     const target=targetSnap.val();
     if(!target){ showToast('User not found — check the Firebase UID'); setStatus('','Ready'); return; }
-
-    // One-sided connection: connecting by UID or QR immediately creates
-    // the connection on BOTH users, so the other person does not need
-    // to connect back or accept a second request.
     const now=firebase.database.ServerValue.TIMESTAMP;
-    const myProfile={
-      id:me.id, uid:me.uid, name:me.name||'Google User',
-      email:me.email||'', picture:me.picture||null
-    };
-    const other={
-      id:target.id||uid, uid:uid, name:target.name||'Friend',
-      email:target.email||'', picture:target.picture||null
-    };
+    const myProfile={ id:me.id, uid:me.uid, name:me.name||'Google User', email:me.email||'', picture:me.picture||null };
+    const other={ id:target.id||uid, uid:uid, name:target.name||'Friend', email:target.email||'', picture:target.picture||null };
     const updates={};
     updates[`connections/${me.uid}/${uid}`]={...other,connectedAt:now};
     updates[`connections/${uid}/${me.uid}`]={...myProfile,connectedAt:now};
-
     await db.ref().update(updates);
     await selectPartner(other);
     addSystem(`Connected with ${other.name}`);
@@ -1900,11 +1199,7 @@ async function connectToId(uid, opts){
     setStatus('', 'Ready');
     showToast(`Connected with ${other.name}`);
     if(opts.fromQR) closeScanModal(); else closeConnectModal();
-  }catch(e){
-    console.error('connectToId',e);
-    setStatus('','Ready');
-    showToast('Connection failed: '+friendlyFirebaseError(e));
-  }
+  }catch(e){ console.error('connectToId',e); setStatus('','Ready'); showToast('Connection failed: '+friendlyFirebaseError(e)); }
 }
 
 connectConfirm.addEventListener('click',()=>connectToId(connectInput.value));
@@ -1912,31 +1207,11 @@ connectInput.addEventListener('keydown',e=>{if(e.key==='Enter')connectConfirm.cl
 
 function messageCacheKey(){ return partnerUid ? MSG_KEY+'_'+chatKey(me.uid,partnerUid) : MSG_KEY+'_none'; }
 function getMsgs(){
-  try {
-    const r = localStorage.getItem(messageCacheKey());
-    let arr = r ? JSON.parse(r) : [];
-    // Clean up consecutive duplicate system messages
-    let cleanArr = [];
-    for (let i = 0; i < arr.length; i++) {
-      if (i > 0 && arr[i].system && arr[i-1].system && arr[i].text === arr[i-1].text) {
-        continue;
-      }
-      cleanArr.push(arr[i]);
-    }
-    if (cleanArr.length !== arr.length) {
-      localStorage.setItem(messageCacheKey(), JSON.stringify(cleanArr));
-    }
-    return cleanArr;
-  } catch { return []; }
+  try { const r = localStorage.getItem(messageCacheKey()); let arr = r ? JSON.parse(r) : []; let cleanArr = []; for (let i = 0; i < arr.length; i++) { if (i > 0 && arr[i].system && arr[i-1].system && arr[i].text === arr[i-1].text) continue; cleanArr.push(arr[i]); } if (cleanArr.length !== arr.length) localStorage.setItem(messageCacheKey(), JSON.stringify(cleanArr)); return cleanArr; } catch { return []; }
 }
 function saveMsg(m){
   const a=getMsgs();
-  if(m._key && a.some(x=>x._key===m._key)){
-    const i=a.findIndex(x=>x._key===m._key);
-    if(i>=0) a[i]={...a[i],...m};
-  } else {
-    a.push(m);
-  }
+  if(m._key && a.some(x=>x._key===m._key)){ const i=a.findIndex(x=>x._key===m._key); if(i>=0) a[i]={...a[i],...m}; } else { a.push(m); }
   if(a.length>500)a.splice(0,a.length-500);
   localStorage.setItem(messageCacheKey(),JSON.stringify(a));
 }
@@ -1952,20 +1227,9 @@ function render(){
       const mine=(m.from===me.uid || m.from===me.id);
       div.className='msg '+(mine?'mine':'theirs');
       let inner='';
-      if(m.media && m.media.type==='image'){
-        inner+=`<img class="msg-media" src="${m.media.data}" data-full="${m.media.data}" />`;
-      } else if(m.media && m.media.type==='file'){
-        inner+=`<div class="file-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg><a href="${m.media.data}" download="${esc(m.media.name)}">${esc(m.media.name)}</a></div>`;
-      } else if(m.media && m.media.type==='voice'){
-        const dur = fmtDur(m.media.duration||0);
-        inner+=`<div class="voice-player" data-src="${m.media.data}">
-          <button class="voice-play-btn" type="button" aria-label="Play voice message">
-            <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20"/></svg>
-          </button>
-          <div class="voice-bar"><div class="voice-bar-fill"></div></div>
-          <span class="voice-duration">${dur}</span>
-        </div>`;
-      }
+      if(m.media && m.media.type==='image'){ inner+=`<img class="msg-media" src="${m.media.data}" data-full="${m.media.data}" />`; }
+      else if(m.media && m.media.type==='file'){ inner+=`<div class="file-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg><a href="${m.media.data}" download="${esc(m.media.name)}">${esc(m.media.name)}</a></div>`; }
+      else if(m.media && m.media.type==='voice'){ const dur = fmtDur(m.media.duration||0); inner+=`<div class="voice-player" data-src="${m.media.data}"><button class="voice-play-btn" type="button" aria-label="Play voice message"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20"/></svg></button><div class="voice-bar"><div class="voice-bar-fill"></div></div><span class="voice-duration">${dur}</span></div>`; }
       if(m.text) inner+=esc(m.text);
       const tick = mine ? `<span class="tick ${m.status==='read'?'read':''}">${m.status==='read'?'✓✓':'✓'}</span>` : '';
       inner+=`<span class="time">${esc(m.time||'')}${tick}</span>`;
@@ -1980,16 +1244,12 @@ function listenMessages(){
   if(!signedIn()||!partnerUid)return;
   const key=chatKey(me.uid,partnerUid);
   messageRef=db.ref('messages/'+key).limitToLast(200);
-
   messageRef.on('child_added',snap=>{
     const m=snap.val(); if(!m) return;
     saveMsg({_key:snap.key,from:m.from,fromName:m.fromName,text:m.text||'',time:m.time||timeNow(),media:m.media||null,status:m.status||'sent'});
     render();
-    if(m.from!==me.uid && m.status!=='read' && !document.hidden){
-      db.ref('messages/'+key+'/'+snap.key+'/status').set('read').catch(()=>{});
-    }
+    if(m.from!==me.uid && m.status!=='read' && !document.hidden){ db.ref('messages/'+key+'/'+snap.key+'/status').set('read').catch(()=>{}); }
   });
-
   messageRef.on('child_changed',snap=>{
     const m=snap.val(); if(!m) return;
     saveMsg({_key:snap.key,from:m.from,fromName:m.fromName,text:m.text||'',time:m.time||timeNow(),media:m.media||null,status:m.status||'sent'});
@@ -2000,14 +1260,7 @@ function listenMessages(){
 document.addEventListener('visibilitychange', ()=>{
   if(document.hidden || !signedIn() || !partnerUid) return;
   const key=chatKey(me.uid,partnerUid);
-  db.ref('messages/'+key).once('value').then(snap=>{
-    snap.forEach(child=>{
-      const m=child.val();
-      if(m && m.from!==me.uid && m.status!=='read'){
-        db.ref('messages/'+key+'/'+child.key+'/status').set('read').catch(()=>{});
-      }
-    });
-  }).catch(()=>{});
+  db.ref('messages/'+key).once('value').then(snap=>{ snap.forEach(child=>{ const m=child.val(); if(m && m.from!==me.uid && m.status!=='read'){ db.ref('messages/'+key+'/'+child.key+'/status').set('read').catch(()=>{}); } }); }).catch(()=>{});
 });
 
 sendBtn.addEventListener('click',send);
@@ -2018,10 +1271,8 @@ async function send(){
   if(!signedIn()){showToast('Please sign in with Google first');return;}
   if(!partnerUid){showToast('Connect with a friend first');return;}
   const text=msgInput.value.trim();
-
   if(typingRef){ try{ typingRef.remove(); }catch{} }
   clearTimeout(typingTimeout);
-
   if(pendingAttachment){
     const att=pendingAttachment;pendingAttachment=null;clearAttachmentPreview();msgInput.value='';
     const m={from:me.uid,fromId:me.id,fromName:me.name,text:text||'',time:timeNow(),at:firebase.database.ServerValue.TIMESTAMP,status:'sent',media:{type:att.kind,name:att.name,data:att.dataUrl}};
@@ -2042,16 +1293,10 @@ function clearAttachmentPreview(){attachPreview.classList.remove('show');apThumb
 apRemove.addEventListener('click',()=>{pendingAttachment=null;clearAttachmentPreview();showToast('Attachment removed');});
 messagesEl.addEventListener('click',e=>{
   const playBtn = e.target.closest('.voice-play-btn');
-  if(playBtn){
-    e.stopPropagation();
-    const player = playBtn.closest('.voice-player');
-    if(player) toggleVoice(player);
-    return;
-  }
+  if(playBtn){ e.stopPropagation(); const player = playBtn.closest('.voice-player'); if(player) toggleVoice(player); return; }
   const img=e.target.closest('img.msg-media');
   if(!img)return;
-  imgPreview.src=img.dataset.full||img.src;
-  imgModal.classList.add('open');
+  imgPreview.src=img.dataset.full||img.src; imgModal.classList.add('open');
 });
 imgClose.addEventListener('click',()=>imgModal.classList.remove('open'));imgModal.addEventListener('click',e=>{if(e.target===imgModal)imgModal.classList.remove('open');});
 
@@ -2088,28 +1333,18 @@ function closeScanModal(){stopScanner();qrScanModal.classList.remove('open');sca
 $('menuScanQR').addEventListener('click',openScanModal);qrScanClose.addEventListener('click',closeScanModal);scanCancelBtn.addEventListener('click',closeScanModal);scanRetryBtn.addEventListener('click',()=>{stopScanner();setTimeout(startScanner,250);});qrScanModal.addEventListener('click',e=>{if(e.target===qrScanModal)closeScanModal();});fallbackPickBtn.addEventListener('click',()=>qrImageInput.click());
 qrImageInput.addEventListener('change',e=>{const f=e.target.files&&e.target.files[0];qrImageInput.value='';if(!f)return;scannerStatus.textContent='Reading image…';scannerStatus.className='scanner-status';const rd=new FileReader();rd.onload=()=>{const img=new Image();img.onload=()=>{const c=document.createElement('canvas');c.width=img.naturalWidth;c.height=img.naturalHeight;const ctx=c.getContext('2d',{willReadFrequently:true});ctx.drawImage(img,0,0);const data=ctx.getImageData(0,0,c.width,c.height);if(typeof jsQR==='undefined'){scannerStatus.textContent='QR reader not loaded';scannerStatus.classList.add('error');return;}const code=jsQR(data.data,c.width,c.height,{inversionAttempts:'attemptBoth'});if(code?.data)handleScanned(code.data);else{scannerStatus.textContent='No QR code found in that image.';scannerStatus.classList.add('error');}};img.onerror=()=>{scannerStatus.textContent='Could not read the image.';scannerStatus.classList.add('error');};img.src=rd.result;};rd.readAsDataURL(f);});
 
-async function copyMyId(){
-  const id=(signedIn() ? (me?.uid || getFirebaseUid()) : null);
-  if(!id){showToast('Please sign in with Google first');return;}
-  await copyText(id);showToast('Firebase UID copied');
-}
+async function copyMyId(){ const id=(signedIn() ? (me?.uid || getFirebaseUid()) : null); if(!id){showToast('Please sign in with Google first');return;} await copyText(id);showToast('Firebase UID copied'); }
 drawerCopyId.addEventListener('click',async e=>{e.stopPropagation();await copyMyId();drawerCopyId.classList.add('done');setTimeout(()=>drawerCopyId.classList.remove('done'),1500);});
 $('menuCopyId').addEventListener('click',async()=>{await copyMyId();closeDrawer();});
 
-/* ===== CLEAR ALL CHATS ===== */
 $('menuClearChats').addEventListener('click', async ()=>{
   closeDrawer();
   if(!signedIn()){ showToast('Please sign in with Google first'); return; }
   if(!confirm('Clear ALL chats? All messages will be permanently deleted.')) return;
   try{
     stopCurrentAudio();
-    if(partnerUid){
-      await db.ref('messages/'+chatKey(me.uid,partnerUid)).remove();
-      await db.ref('typing/'+chatKey(me.uid,partnerUid)).remove().catch(()=>{});
-    }
-    Object.keys(localStorage).forEach(k=>{
-      if(k===MSG_KEY || k.startsWith(MSG_KEY+'_')) localStorage.removeItem(k);
-    });
+    if(partnerUid){ await db.ref('messages/'+chatKey(me.uid,partnerUid)).remove(); await db.ref('typing/'+chatKey(me.uid,partnerUid)).remove().catch(()=>{}); }
+    Object.keys(localStorage).forEach(k=>{ if(k===MSG_KEY || k.startsWith(MSG_KEY+'_')) localStorage.removeItem(k); });
     render();
     showToast('All chats cleared');
   }catch(e){ console.error(e); showToast('Failed to clear: '+friendlyFirebaseError(e)); }
@@ -2141,6 +1376,8 @@ if(firebaseReady && auth){
       }else{
         try{await endWebRTCCall('ended');}catch{}
         if(incomingCallsRef){try{incomingCallsRef.off();}catch{} incomingCallsRef=null;}
+        if(connectionsListenerRef){try{connectionsListenerRef.off();}catch{} connectionsListenerRef=null;}
+        knownConnectionUids=new Set();
         me=null;partnerId=null;partnerUid=null;LOCAL_ONLY=true;
         if(recordingBar.classList.contains('show')){ recCancelled=true; stopRecording(false); }
         stopCurrentAudio();
@@ -2159,78 +1396,39 @@ if(firebaseReady && auth){
         const id=firebaseUid(user.uid);
         me={uid:user.uid,id,name:user.displayName||'Google User',email:user.email||'',picture:user.photoURL||null,provider:'firebase-google'};
         localStorage.setItem(ME_KEY,JSON.stringify(me));
-        paintMe();
-        setConnected(false);
-        setStatus('', 'Ready');
+        paintMe(); setConnected(false); setStatus('', 'Ready');
         showToast('Google signed in. Firebase UID ready. Database sync needs setup: '+friendlyFirebaseError(e));
-      }else{
-        setStatus('','Sign in to connect');
-      }
+      }else{ setStatus('','Sign in to connect'); }
     }
   });
 }else{setStatus('','Firebase unavailable');showToast('Firebase could not initialize');}
 
-/* ===== WEBRTC VOICE + VIDEO CALLING =====
-   Firebase Realtime Database is used only for signaling (offer/answer/ICE).
-   Media itself travels peer-to-peer through WebRTC.
-*/
+/* ===== WEBRTC VOICE + VIDEO CALLING ===== */
 const RTC_CONFIG = {
   iceServers: [
     { urls: 'stun:stun.l.google.com:19302' },
     { urls: 'stun:stun1.l.google.com:19302' },
     { urls: 'stun:stun2.l.google.com:19302' }
-    // Production: add your TURN server here, e.g.
-    // { urls: 'turn:YOUR_TURN_HOST:3478', username: 'TURN_USER', credential: 'TURN_PASSWORD' }
   ]
 };
 
-let peerConnection = null;
-let localStream = null;
-let remoteStream = null;
-let currentCallId = null;
-let currentCallType = null;
-let currentCallRole = null;
-let currentCallRef = null;
-let currentCallerCandidatesRef = null;
-let currentCalleeCandidatesRef = null;
-let answerValueHandler = null;
-let callValueHandler = null;
-let callerCandidateHandler = null;
-let calleeCandidateHandler = null;
-let incomingCallsRef = null;
-let incomingCallHandler = null;
-let incomingCallChangedHandler = null;
-let incomingCallData = null;
-let pendingRemoteCandidates = [];
-let remoteDescriptionReady = false;
-let callTimer = null;
-let callStartedAt = 0;
-let callEnding = false;
-let callCleanupTimer = null;
-let activeCallPath = null;
-let currentCallSignalingStatus = null;
-let preferredCameraFacing = 'user';
+let peerConnection = null, localStream = null, remoteStream = null;
+let currentCallId = null, currentCallType = null, currentCallRole = null, currentCallRef = null;
+let currentCallerCandidatesRef = null, currentCalleeCandidatesRef = null;
+let answerValueHandler = null, callValueHandler = null, callerCandidateHandler = null, calleeCandidateHandler = null;
+let incomingCallsRef = null, incomingCallHandler = null, incomingCallChangedHandler = null, incomingCallData = null;
+let pendingRemoteCandidates = [], remoteDescriptionReady = false;
+let callTimer = null, callStartedAt = 0, callEnding = false, callCleanupTimer = null, activeCallPath = null;
+let currentCallSignalingStatus = null, preferredCameraFacing = 'user';
 let previewDrag = {active:false, moved:false, pointerId:null, target:null, startX:0, startY:0, baseLeft:0, baseTop:0};
 let previewPositions = {local:null, remote:null};
-let iceRestartTimer = null;
-let callFailureTimer = null;
-let iceRestartInProgress = false;
-let iceRestartAttempts = 0;
-let reconnectStartedAt = 0;
-let callHeartbeatTimer = null;
-let lastRemoteOfferSdp = '';
-let lastRemoteAnswerSdp = '';
+let iceRestartTimer = null, callFailureTimer = null, iceRestartInProgress = false, iceRestartAttempts = 0, reconnectStartedAt = 0;
+let callHeartbeatTimer = null, lastRemoteOfferSdp = '', lastRemoteAnswerSdp = '';
 
-/* ===== CALL RING / RINGBACK ===== */
 let callToneContext = null, callToneTimer = null, callToneMode = null;
-function stopCallTone(){
-  if(callToneTimer){clearInterval(callToneTimer);callToneTimer=null;}
-  if(callToneContext){try{callToneContext.close();}catch{} callToneContext=null;}
-  callToneMode=null;
-}
+function stopCallTone(){ if(callToneTimer){clearInterval(callToneTimer);callToneTimer=null;} if(callToneContext){try{callToneContext.close();}catch{} callToneContext=null;} callToneMode=null; }
 function startCallTone(mode){
-  stopCallTone();
-  callToneMode=mode;
+  stopCallTone(); callToneMode=mode;
   try{
     const AC=window.AudioContext||window.webkitAudioContext;
     if(!AC)return;
@@ -2238,7 +1436,6 @@ function startCallTone(mode){
     const playBurst=(duration=1.9)=>{
       if(!callToneContext)return;
       const now=callToneContext.currentTime;
-      // Two-tone telephone ringback: 440 Hz + 480 Hz, long ON / OFF cadence.
       const freqs=mode==='ringback'?[440,480]:[440,480];
       freqs.forEach(freq=>{
         const osc=callToneContext.createOscillator();
@@ -2261,18 +1458,14 @@ function startCallTone(mode){
 }
 
 function callIcon(kind, active){
-  if(kind==='mute') return active
-    ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 1l22 22"/><path d="M9 9v3a3 3 0 0 0 5.12 2.12M19 10v2a7 7 0 0 1-11.93 4.93M12 19v4M8 23h8"/><path d="M15 5.35V4a3 3 0 0 0-5.12-2.12"/></svg>'
-    : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>';
+  if(kind==='mute') return active ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 1l22 22"/><path d="M9 9v3a3 3 0 0 0 5.12 2.12M19 10v2a7 7 0 0 1-11.93 4.93M12 19v4M8 23h8"/><path d="M15 5.35V4a3 3 0 0 0-5.12-2.12"/></svg>' : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>';
   return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>';
 }
 function setCallPeerVisual(name, picture){
   callPeerName.textContent=name||'Friend';
   const ini=initials(name||'Friend');
-  if(picture){
-    const img='<img src="'+esc(picture)+'" alt="">';
-    callPeerAvatar.innerHTML=img; callAudioAvatar.innerHTML=img;
-  }else{ callPeerAvatar.textContent=ini; callAudioAvatar.textContent=ini; }
+  if(picture){ const img='<img src="'+esc(picture)+'" alt="">'; callPeerAvatar.innerHTML=img; callAudioAvatar.innerHTML=img; }
+  else{ callPeerAvatar.textContent=ini; callAudioAvatar.textContent=ini; }
 }
 function setCallStatus(text){ callPeerStatus.textContent=text; callStatusCenter.textContent=text; }
 function setCallMode(type){
@@ -2286,49 +1479,16 @@ function setCallMode(type){
   if(callStage) callStage.classList.remove('swap-local');
 }
 let cropState={remote:{zoom:1,x:0,y:0},local:{zoom:1,x:0,y:0}};
-function activeCropVideo(){
-  if(!callStage || currentCallType!=='video') return null;
-  return callStage.classList.contains('swap-local') ? 'local' : 'remote';
-}
-function renderCrop(){
-  const active=activeCropVideo();
-  if(!active) return;
-  const st=cropState[active];
-  const el=active==='local'?localVideo:remoteVideo;
-  el.style.transform=`translate(${st.x}px,${st.y}px) scale(${st.zoom})`;
-  if(cropZoom) cropZoom.value=String(st.zoom);
-}
-function resetCrop(which){
-  if(which) cropState[which]={zoom:1,x:0,y:0};
-  else { cropState.remote={zoom:1,x:0,y:0}; cropState.local={zoom:1,x:0,y:0}; }
-  renderCrop();
-}
-function moveCrop(dir){
-  const active=activeCropVideo(); if(!active) return;
-  const st=cropState[active]; const step=18;
-  if(dir==='up') st.y-=step;
-  if(dir==='down') st.y+=step;
-  if(dir==='left') st.x-=step;
-  if(dir==='right') st.x+=step;
-  if(dir==='center'){st.x=0;st.y=0;}
-  renderCrop();
-}
-function applyPreviewPosition(which){
-  const el=which==='local'?localVideo:remoteVideo;
-  if(!el) return;
-  const pos=previewPositions[which];
-  if(pos){el.style.left=pos.left+'px';el.style.top=pos.top+'px';el.style.right='auto';el.style.bottom='auto';}
-  else {el.style.left='';el.style.top='';el.style.right='';el.style.bottom='';}
-}
-function clearFullVideoPosition(which){
-  const el=which==='local'?localVideo:remoteVideo;
-  if(!el) return;
-  el.style.left='';el.style.top='';el.style.right='';el.style.bottom='';
-}
+function activeCropVideo(){ if(!callStage || currentCallType!=='video') return null; return callStage.classList.contains('swap-local') ? 'local' : 'remote'; }
+function renderCrop(){ const active=activeCropVideo(); if(!active) return; const st=cropState[active]; const el=active==='local'?localVideo:remoteVideo; el.style.transform=`translate(${st.x}px,${st.y}px) scale(${st.zoom})`; if(cropZoom) cropZoom.value=String(st.zoom); }
+function resetCrop(which){ if(which) cropState[which]={zoom:1,x:0,y:0}; else { cropState.remote={zoom:1,x:0,y:0}; cropState.local={zoom:1,x:0,y:0}; } renderCrop(); }
+function moveCrop(dir){ const active=activeCropVideo(); if(!active) return; const st=cropState[active]; const step=18; if(dir==='up') st.y-=step; if(dir==='down') st.y+=step; if(dir==='left') st.x-=step; if(dir==='right') st.x+=step; if(dir==='center'){st.x=0;st.y=0;} renderCrop(); }
+function applyPreviewPosition(which){ const el=which==='local'?localVideo:remoteVideo; if(!el) return; const pos=previewPositions[which]; if(pos){el.style.left=pos.left+'px';el.style.top=pos.top+'px';el.style.right='auto';el.style.bottom='auto';} else {el.style.left='';el.style.top='';el.style.right='';el.style.bottom='';} }
+function clearFullVideoPosition(which){ const el=which==='local'?localVideo:remoteVideo; if(!el) return; el.style.left='';el.style.top='';el.style.right='';el.style.bottom=''; }
 function swapCallVideos(){
   if(currentCallType!=='video' || !callStage) return;
   const wasLocalPreview=callStage.classList.contains('swap-local');
-  const nextLocalFull=wasLocalPreview; // after toggle, local becomes full only when previous state was swap-local
+  const nextLocalFull=wasLocalPreview;
   callStage.classList.toggle('swap-local');
   clearFullVideoPosition(nextLocalFull?'local':'remote');
   const nextPreview=nextLocalFull?'remote':'local';
@@ -2357,89 +1517,34 @@ function closeCallUI(){
   callMuteBtn.innerHTML=callIcon('mute',false); callCameraBtn.innerHTML=callIcon('camera',false);
   if(!recordingBar.classList.contains('show')) inputBarMain.classList.remove('hide');
 }
-function startCallTimer(){
-  if(!callStartedAt) callStartedAt=Date.now();
-  clearInterval(callTimer);
-  callTimer=setInterval(()=>{ if(callStartedAt) setCallStatus('Connected · '+fmtDur((Date.now()-callStartedAt)/1000)); },1000);
-}
+function startCallTimer(){ if(!callStartedAt) callStartedAt=Date.now(); clearInterval(callTimer); callTimer=setInterval(()=>{ if(callStartedAt) setCallStatus('Connected · '+fmtDur((Date.now()-callStartedAt)/1000)); },1000); }
 function stopCallTimer(){ clearInterval(callTimer); callTimer=null; callStartedAt=0; }
-function startCallHeartbeat(){
-  clearInterval(callHeartbeatTimer);
-  callHeartbeatTimer=setInterval(()=>{
-    if(currentCallRef && currentCallSignalingStatus==='active') currentCallRef.update({lastHeartbeat:firebase.database.ServerValue.TIMESTAMP}).catch(()=>{});
-  },15000);
-}
+function startCallHeartbeat(){ clearInterval(callHeartbeatTimer); callHeartbeatTimer=setInterval(()=>{ if(currentCallRef && currentCallSignalingStatus==='active') currentCallRef.update({lastHeartbeat:firebase.database.ServerValue.TIMESTAMP}).catch(()=>{}); },15000); }
 function stopCallHeartbeat(){ clearInterval(callHeartbeatTimer); callHeartbeatTimer=null; }
-function clearReconnectTimers(){
-  clearTimeout(iceRestartTimer); iceRestartTimer=null;
-  clearTimeout(callFailureTimer); callFailureTimer=null;
-  iceRestartInProgress=false; iceRestartAttempts=0; reconnectStartedAt=0;
-}
-function scheduleCallFailureTimeout(){
-  if(callFailureTimer || !currentCallId || callEnding) return;
-  callFailureTimer=setTimeout(()=>{
-    callFailureTimer=null;
-    if(peerConnection && !callEnding && peerConnection.connectionState!=='connected') endWebRTCCall('failed');
-  },45000);
-}
-function scheduleIceRestart(){
-  if(iceRestartTimer || !peerConnection || !currentCallId || callEnding) return;
-  if(currentCallRole!=='caller') return;
-  if(!reconnectStartedAt) reconnectStartedAt=Date.now();
-  setCallStatus('Reconnecting…');
-  scheduleCallFailureTimeout();
-  iceRestartTimer=setTimeout(()=>{iceRestartTimer=null; restartIceConnection();},2000);
-}
+function clearReconnectTimers(){ clearTimeout(iceRestartTimer); iceRestartTimer=null; clearTimeout(callFailureTimer); callFailureTimer=null; iceRestartInProgress=false; iceRestartAttempts=0; reconnectStartedAt=0; }
+function scheduleCallFailureTimeout(){ if(callFailureTimer || !currentCallId || callEnding) return; callFailureTimer=setTimeout(()=>{ callFailureTimer=null; if(peerConnection && !callEnding && peerConnection.connectionState!=='connected') endWebRTCCall('failed'); },45000); }
+function scheduleIceRestart(){ if(iceRestartTimer || !peerConnection || !currentCallId || callEnding) return; if(currentCallRole!=='caller') return; if(!reconnectStartedAt) reconnectStartedAt=Date.now(); setCallStatus('Reconnecting…'); scheduleCallFailureTimeout(); iceRestartTimer=setTimeout(()=>{iceRestartTimer=null; restartIceConnection();},2000); }
 async function restartIceConnection(){
   if(!peerConnection || !currentCallId || callEnding || currentCallRole!=='caller' || iceRestartInProgress) return;
   iceRestartInProgress=true;
-  try{
-    iceRestartAttempts++;
-    const offer=await peerConnection.createOffer({iceRestart:true});
-    await peerConnection.setLocalDescription(offer);
-    if(currentCallRef) await currentCallRef.child('offer').set({type:offer.type,sdp:offer.sdp,iceRestart:true,revision:Date.now()});
-  }catch(e){
-    console.warn('ICE restart failed',e);
-    scheduleIceRestart();
-  }finally{ iceRestartInProgress=false; }
+  try{ iceRestartAttempts++; const offer=await peerConnection.createOffer({iceRestart:true}); await peerConnection.setLocalDescription(offer); if(currentCallRef) await currentCallRef.child('offer').set({type:offer.type,sdp:offer.sdp,iceRestart:true,revision:Date.now()}); }
+  catch(e){ console.warn('ICE restart failed',e); scheduleIceRestart(); }
+  finally{ iceRestartInProgress=false; }
 }
 async function handleRemoteOffer(data){
   if(!peerConnection || currentCallRole!=='callee' || !data?.offer) return;
   const offer=data.offer;
   if(!offer.sdp || offer.sdp===lastRemoteOfferSdp) return;
-  try{
-    lastRemoteOfferSdp=offer.sdp;
-    await peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
-    remoteDescriptionReady=true;
-    await flushRemoteCandidates();
-    const answer=await peerConnection.createAnswer();
-    await peerConnection.setLocalDescription(answer);
-    if(currentCallRef) await currentCallRef.update({answer:{type:answer.type,sdp:answer.sdp},status:'active'});
-  }catch(e){
-    console.error('remote offer',e);
-    setCallStatus('Reconnecting…');
-  }
+  try{ lastRemoteOfferSdp=offer.sdp; await peerConnection.setRemoteDescription(new RTCSessionDescription(offer)); remoteDescriptionReady=true; await flushRemoteCandidates(); const answer=await peerConnection.createAnswer(); await peerConnection.setLocalDescription(answer); if(currentCallRef) await currentCallRef.update({answer:{type:answer.type,sdp:answer.sdp},status:'active'}); }
+  catch(e){ console.error('remote offer',e); setCallStatus('Reconnecting…'); }
 }
 
-function stopLocalMedia(){
-  if(localStream){ try{localStream.getTracks().forEach(t=>t.stop());}catch{} localStream=null; }
-  localVideo.srcObject=null;
-}
-function closePeerConnection(){
-  if(peerConnection){
-    try{peerConnection.ontrack=null;peerConnection.onicecandidate=null;peerConnection.onconnectionstatechange=null;peerConnection.close();}catch{}
-    peerConnection=null;
-  }
-  if(remoteStream){try{remoteStream.getTracks().forEach(t=>t.stop());}catch{} remoteStream=null;}
-  remoteVideo.srcObject=null;
-}
+function stopLocalMedia(){ if(localStream){ try{localStream.getTracks().forEach(t=>t.stop());}catch{} localStream=null; } localVideo.srcObject=null; }
+function closePeerConnection(){ if(peerConnection){ try{peerConnection.ontrack=null;peerConnection.onicecandidate=null;peerConnection.onconnectionstatechange=null;peerConnection.close();}catch{} peerConnection=null; } if(remoteStream){try{remoteStream.getTracks().forEach(t=>t.stop());}catch{} remoteStream=null;} remoteVideo.srcObject=null; }
 async function getCallMedia(type){
   if(!window.isSecureContext){ throw Object.assign(new Error('Secure context required'),{name:'SecurityError'}); }
   if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) throw new Error('getUserMedia is not supported');
-  return navigator.mediaDevices.getUserMedia({
-    audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true},
-    video:type==='video'?{facingMode:{ideal:preferredCameraFacing},width:{ideal:1280},height:{ideal:720}}:false
-  });
+  return navigator.mediaDevices.getUserMedia({ audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true}, video:type==='video'?{facingMode:{ideal:preferredCameraFacing},width:{ideal:1280},height:{ideal:720}}:false });
 }
 function mediaErrorMessage(err){
   if(err?.name==='NotAllowedError') return 'Microphone/camera permission was denied. Allow access in browser settings.';
@@ -2448,70 +1553,21 @@ function mediaErrorMessage(err){
   if(err?.name==='SecurityError') return 'Calls require HTTPS (or localhost).';
   return 'Could not start the call: '+(err?.message||'media access failed');
 }
-function addLocalTracks(){
-  if(!peerConnection||!localStream)return;
-  localStream.getTracks().forEach(track=>peerConnection.addTrack(track,localStream));
-}
+function addLocalTracks(){ if(!peerConnection||!localStream)return; localStream.getTracks().forEach(track=>peerConnection.addTrack(track,localStream)); }
 function makePeerConnection(callId, role){
   const pc=new RTCPeerConnection(RTC_CONFIG);
   remoteStream=new MediaStream();
   remoteVideo.srcObject=remoteStream;
-  pc.ontrack=e=>{
-    if(e.streams && e.streams[0]) e.streams[0].getTracks().forEach(t=>{ if(!remoteStream.getTracks().some(x=>x.id===t.id)) remoteStream.addTrack(t); });
-    else if(e.track) remoteStream.addTrack(e.track);
-    if(currentCallType==='video') remoteVideo.play().catch(()=>{});
-  };
-  pc.onicecandidate=e=>{
-    if(!e.candidate || !currentCallRef)return;
-    const target=role==='caller'?currentCallerCandidatesRef:currentCalleeCandidatesRef;
-    if(target) target.push(e.candidate.toJSON()).catch(err=>console.error('ICE write',err));
-  };
-  pc.oniceconnectionstatechange=()=>{
-    const st=pc.iceConnectionState;
-    if(st==='connected'||st==='completed'){
-      clearTimeout(callFailureTimer); callFailureTimer=null; reconnectStartedAt=0; iceRestartAttempts=0;
-      if(currentCallSignalingStatus==='active'){setCallStatus('Connected');startCallTimer();}
-    }else if(st==='checking'){
-      if(currentCallSignalingStatus==='active') setCallStatus('Connecting…');
-    }else if(st==='disconnected'){
-      setCallStatus('Reconnecting…');
-      scheduleIceRestart();
-    }else if(st==='failed'){
-      setCallStatus('Reconnecting…');
-      scheduleIceRestart();
-    }
-  };
-  pc.onconnectionstatechange=()=>{
-    const st=pc.connectionState;
-    if(st==='connected'){clearTimeout(callFailureTimer);callFailureTimer=null;setCallStatus('Connected');startCallTimer();}
-    else if(st==='connecting') setCallStatus('Connecting…');
-    else if(st==='disconnected'){setCallStatus('Reconnecting…');scheduleIceRestart();}
-    else if(st==='failed'){setCallStatus('Reconnecting…');scheduleIceRestart();}
-    else if(st==='closed') setCallStatus('Call ended');
-  };
+  pc.ontrack=e=>{ if(e.streams && e.streams[0]) e.streams[0].getTracks().forEach(t=>{ if(!remoteStream.getTracks().some(x=>x.id===t.id)) remoteStream.addTrack(t); }); else if(e.track) remoteStream.addTrack(e.track); if(currentCallType==='video') remoteVideo.play().catch(()=>{}); };
+  pc.onicecandidate=e=>{ if(!e.candidate || !currentCallRef)return; const target=role==='caller'?currentCallerCandidatesRef:currentCalleeCandidatesRef; if(target) target.push(e.candidate.toJSON()).catch(err=>console.error('ICE write',err)); };
+  pc.oniceconnectionstatechange=()=>{ const st=pc.iceConnectionState; if(st==='connected'||st==='completed'){ clearTimeout(callFailureTimer); callFailureTimer=null; reconnectStartedAt=0; iceRestartAttempts=0; if(currentCallSignalingStatus==='active'){setCallStatus('Connected');startCallTimer();} }else if(st==='checking'){ if(currentCallSignalingStatus==='active') setCallStatus('Connecting…'); }else if(st==='disconnected'){ setCallStatus('Reconnecting…'); scheduleIceRestart(); }else if(st==='failed'){ setCallStatus('Reconnecting…'); scheduleIceRestart(); } };
+  pc.onconnectionstatechange=()=>{ const st=pc.connectionState; if(st==='connected'){clearTimeout(callFailureTimer);callFailureTimer=null;setCallStatus('Connected');startCallTimer();} else if(st==='connecting') setCallStatus('Connecting…'); else if(st==='disconnected'){setCallStatus('Reconnecting…');scheduleIceRestart();} else if(st==='failed'){setCallStatus('Reconnecting…');scheduleIceRestart();} else if(st==='closed') setCallStatus('Call ended'); };
   return pc;
 }
-async function addRemoteCandidate(candidate){
-  if(!candidate || !peerConnection)return;
-  if(!remoteDescriptionReady){pendingRemoteCandidates.push(candidate);return;}
-  try{await peerConnection.addIceCandidate(new RTCIceCandidate(candidate));}
-  catch(e){console.warn('addIceCandidate failed',e);}
-}
-async function flushRemoteCandidates(){
-  if(!peerConnection||!remoteDescriptionReady)return;
-  const list=pendingRemoteCandidates.splice(0);
-  for(const c of list) await addRemoteCandidate(c);
-}
-function listenCalleeCandidates(){
-  if(calleeCandidateHandler||!currentCalleeCandidatesRef)return;
-  calleeCandidateHandler=snap=>addRemoteCandidate(snap.val());
-  currentCalleeCandidatesRef.on('child_added',calleeCandidateHandler);
-}
-function listenCallerCandidates(){
-  if(callerCandidateHandler||!currentCallerCandidatesRef)return;
-  callerCandidateHandler=snap=>addRemoteCandidate(snap.val());
-  currentCallerCandidatesRef.on('child_added',callerCandidateHandler);
-}
+async function addRemoteCandidate(candidate){ if(!candidate || !peerConnection)return; if(!remoteDescriptionReady){pendingRemoteCandidates.push(candidate);return;} try{await peerConnection.addIceCandidate(new RTCIceCandidate(candidate));}catch(e){console.warn('addIceCandidate failed',e);} }
+async function flushRemoteCandidates(){ if(!peerConnection||!remoteDescriptionReady)return; const list=pendingRemoteCandidates.splice(0); for(const c of list) await addRemoteCandidate(c); }
+function listenCalleeCandidates(){ if(calleeCandidateHandler||!currentCalleeCandidatesRef)return; calleeCandidateHandler=snap=>addRemoteCandidate(snap.val()); currentCalleeCandidatesRef.on('child_added',calleeCandidateHandler); }
+function listenCallerCandidates(){ if(callerCandidateHandler||!currentCallerCandidatesRef)return; callerCandidateHandler=snap=>addRemoteCandidate(snap.val()); currentCallerCandidatesRef.on('child_added',callerCandidateHandler); }
 function clearCallListeners(){
   try{if(currentCallRef){if(callValueHandler)currentCallRef.off('value',callValueHandler);if(answerValueHandler)currentCallRef.off('value',answerValueHandler);}}catch{}
   try{if(currentCallerCandidatesRef&&callerCandidateHandler)currentCallerCandidatesRef.off('child_added',callerCandidateHandler);}catch{}
@@ -2551,28 +1607,13 @@ async function startWebRTCCall(type){
     setCallStatus(partnerOnline ? 'Ringing…' : 'Calling…');
     callValueHandler=snap=>{
       const data=snap.val();if(!data)return;
-      if(data.status==='active'){
-        currentCallSignalingStatus='active';
-        startCallHeartbeat();
-        stopCallTone();
-        setCallStatus('Connecting…');
-      }
+      if(data.status==='active'){ currentCallSignalingStatus='active'; startCallHeartbeat(); stopCallTone(); setCallStatus('Connecting…'); }
       if(data.answer && peerConnection){
         const answerSdp=data.answer.sdp||'';
         if(answerSdp && answerSdp!==lastRemoteAnswerSdp){
           (async()=>{
-            try{
-              currentCallSignalingStatus='active'; stopCallTone();
-              lastRemoteAnswerSdp=answerSdp;
-              await peerConnection.setRemoteDescription(new RTCSessionDescription(data.answer));
-              remoteDescriptionReady=true;
-              await flushRemoteCandidates();
-              setCallStatus('Connecting…');
-            }catch(e){
-              console.error('remote answer',e);
-              setCallStatus('Reconnecting…');
-              scheduleIceRestart();
-            }
+            try{ currentCallSignalingStatus='active'; stopCallTone(); lastRemoteAnswerSdp=answerSdp; await peerConnection.setRemoteDescription(new RTCSessionDescription(data.answer)); remoteDescriptionReady=true; await flushRemoteCandidates(); setCallStatus('Connecting…'); }
+            catch(e){ console.error('remote answer',e); setCallStatus('Reconnecting…'); scheduleIceRestart(); }
           })();
         }
       }
@@ -2581,9 +1622,7 @@ async function startWebRTCCall(type){
     };
     currentCallRef.on('value',callValueHandler);
     setStatus('','Ready');
-  }catch(err){
-    console.error('start call',err);showToast(mediaErrorMessage(err));setStatus('','Ready');await endWebRTCCall('failed',false);
-  }
+  }catch(err){ console.error('start call',err);showToast(mediaErrorMessage(err));setStatus('','Ready');await endWebRTCCall('failed',false); }
 }
 function showIncomingCall(callId,data){
   incomingCallData={callId,data};
@@ -2609,16 +1648,10 @@ function listenForIncomingCalls(){
   };
   incomingCallsRef.on('child_added',incomingCallHandler);
   incomingCallChangedHandler=async snap=>{
-    const data=snap.val();
-    if(!data) return;
+    const data=snap.val(); if(!data) return;
     const status=data.status;
     if(status!=='ended' && status!=='cancelled' && status!=='rejected' && status!=='expired' && status!=='busy') return;
-    if(incomingCallData && incomingCallData.callId===snap.key){
-      incomingCallData=null;
-      incomingCallModal.classList.remove('open');
-      stopCallTone();
-      if(status==='ended' || status==='cancelled') showToast('Caller ended the call');
-    }
+    if(incomingCallData && incomingCallData.callId===snap.key){ incomingCallData=null; incomingCallModal.classList.remove('open'); stopCallTone(); if(status==='ended' || status==='cancelled') showToast('Caller ended the call'); }
   };
   incomingCallsRef.on('child_changed',incomingCallChangedHandler);
 }
@@ -2643,12 +1676,7 @@ async function acceptIncomingCall(){
     const answer=await peerConnection.createAnswer();await peerConnection.setLocalDescription(answer);
     await currentCallRef.update({answer:{type:answer.type,sdp:answer.sdp},status:'active',acceptedAt:firebase.database.ServerValue.TIMESTAMP});
     await markActiveCall(true);
-    callValueHandler=s=>{
-      const d=s.val();
-      if(!d)return;
-      if(d.status==='ended'||d.status==='cancelled'||d.status==='rejected'){showToast('Call ended');endWebRTCCall('ended');return;}
-      handleRemoteOffer(d);
-    };
+    callValueHandler=s=>{ const d=s.val(); if(!d)return; if(d.status==='ended'||d.status==='cancelled'||d.status==='rejected'){showToast('Call ended');endWebRTCCall('ended');return;} handleRemoteOffer(d); };
     currentCallRef.on('value',callValueHandler);
     startCallHeartbeat();
     currentCallSignalingStatus='active';
@@ -2668,9 +1696,7 @@ async function endWebRTCCall(reason='ended',updateRemote=true){
   stopCallHeartbeat();
   const id=currentCallId,ref=currentCallRef;
   clearCallListeners();stopCallTimer();closePeerConnection();stopLocalMedia();
-  if(updateRemote&&ref&&id){
-    try{await ref.child('status').set(reason==='rejected'?'rejected':reason==='failed'?'ended':'ended');}catch(e){console.warn('call end update',e);}
-  }
+  if(updateRemote&&ref&&id){ try{await ref.child('status').set(reason==='rejected'?'rejected':reason==='failed'?'ended':'ended');}catch(e){console.warn('call end update',e);} }
   if(activeCallPath){try{await db.ref(activeCallPath).remove();}catch{}}
   activeCallPath=null;closeCallUI();
   currentCallId=null;currentCallType=null;currentCallRole=null;currentCallSignalingStatus=null;currentCallRef=null;currentCallerCandidatesRef=null;currentCalleeCandidatesRef=null;pendingRemoteCandidates=[];remoteDescriptionReady=false;lastRemoteOfferSdp='';lastRemoteAnswerSdp='';callEnding=false;
@@ -2684,20 +1710,14 @@ async function switchCallCamera(){
   const currentFacing=oldTrack.getSettings ? oldTrack.getSettings().facingMode : preferredCameraFacing;
   const nextFacing=(currentFacing==='environment' || preferredCameraFacing==='environment')?'user':'environment';
   try{
-    const nextStream=await navigator.mediaDevices.getUserMedia({
-      audio:false,
-      video:{facingMode:{exact:nextFacing},width:{ideal:1280},height:{ideal:720}}
-    });
+    const nextStream=await navigator.mediaDevices.getUserMedia({ audio:false, video:{facingMode:{exact:nextFacing},width:{ideal:1280},height:{ideal:720}} });
     const newTrack=nextStream.getVideoTracks()[0];
     if(!newTrack) throw new Error('No camera track returned');
     const sender=peerConnection?.getSenders().find(x=>x.track && x.track.kind==='video');
     if(sender) await sender.replaceTrack(newTrack);
-    localStream.removeTrack(oldTrack);
-    localStream.addTrack(newTrack);
-    try{oldTrack.stop();}catch{}
+    localStream.removeTrack(oldTrack); localStream.addTrack(newTrack); try{oldTrack.stop();}catch{}
     preferredCameraFacing=nextFacing;
-    localVideo.srcObject=localStream;
-    localVideo.muted=true;
+    localVideo.srcObject=localStream; localVideo.muted=true;
     if(callSwitchCameraBtn){callSwitchCameraBtn.classList.add('active');setTimeout(()=>callSwitchCameraBtn.classList.remove('active'),220);}
     showToast(nextFacing==='environment'?'Back camera':'Front camera');
   }catch(err){
@@ -2716,21 +1736,11 @@ async function switchCallCamera(){
       preferredCameraFacing=nextFacing;
       localVideo.srcObject=localStream;localVideo.muted=true;
       showToast('Camera switched');
-    }catch(e){
-      console.error('camera switch',e);
-      showToast('Could not switch camera. Check camera permission.');
-    }
+    }catch(e){ console.error('camera switch',e); showToast('Could not switch camera. Check camera permission.'); }
   }
 }
-function prepareIncomingCameraSwitch(){
-  if(!incomingCallData || incomingCallData.data?.type!=='video') return;
-  preferredCameraFacing=preferredCameraFacing==='user'?'environment':'user';
-  showToast(preferredCameraFacing==='environment'?'Back camera selected':'Front camera selected');
-}
-function previewElement(){
-  if(!callStage || currentCallType!=='video') return null;
-  return callStage.classList.contains('swap-local')?remoteVideo:localVideo;
-}
+function prepareIncomingCameraSwitch(){ if(!incomingCallData || incomingCallData.data?.type!=='video') return; preferredCameraFacing=preferredCameraFacing==='user'?'environment':'user'; showToast(preferredCameraFacing==='environment'?'Back camera selected':'Front camera selected'); }
+function previewElement(){ if(!callStage || currentCallType!=='video') return null; return callStage.classList.contains('swap-local')?remoteVideo:localVideo; }
 function clampPreviewPosition(el,left,top){
   if(!callStage || !el) return;
   const rect=callStage.getBoundingClientRect();
@@ -2770,55 +1780,25 @@ if(callStage){
   callStage.addEventListener('pointerup',endPreviewDrag);
   callStage.addEventListener('pointercancel',endPreviewDrag);
 }
-callMuteBtn.addEventListener('click',()=>{
-  if(!localStream)return;const track=localStream.getAudioTracks()[0];if(!track)return;track.enabled=!track.enabled;const muted=!track.enabled;callMuteBtn.classList.toggle('active',muted);callMuteBtn.innerHTML=callIcon('mute',muted);callMuteBtn.title=muted?'Unmute microphone':'Mute microphone';
-});
-callCameraBtn.addEventListener('click',()=>{
-  if(!localStream||currentCallType!=='video')return;const track=localStream.getVideoTracks()[0];if(!track)return;track.enabled=!track.enabled;const off=!track.enabled;callCameraBtn.classList.toggle('active',off);callCameraBtn.innerHTML=callIcon('camera',off);callCameraBtn.title=off?'Turn camera on':'Turn camera off';
-});
+callMuteBtn.addEventListener('click',()=>{ if(!localStream)return;const track=localStream.getAudioTracks()[0];if(!track)return;track.enabled=!track.enabled;const muted=!track.enabled;callMuteBtn.classList.toggle('active',muted);callMuteBtn.innerHTML=callIcon('mute',muted);callMuteBtn.title=muted?'Unmute microphone':'Mute microphone'; });
+callCameraBtn.addEventListener('click',()=>{ if(!localStream||currentCallType!=='video')return;const track=localStream.getVideoTracks()[0];if(!track)return;track.enabled=!track.enabled;const off=!track.enabled;callCameraBtn.classList.toggle('active',off);callCameraBtn.innerHTML=callIcon('camera',off);callCameraBtn.title=off?'Turn camera on':'Turn camera off'; });
 callEndBtn.addEventListener('click',()=>endWebRTCCall('ended'));
 
-/* ===== INCOMING CALL: REAL DIALER BUTTONS (tap to accept / decline) ===== */
-function callActionHaptic(){
-  if(navigator.vibrate) navigator.vibrate(15);
-}
-if(incomingAccept){
-  incomingAccept.addEventListener('pointerdown', callActionHaptic);
-  incomingAccept.addEventListener('click', acceptIncomingCall);
-}
-if(incomingReject){
-  incomingReject.addEventListener('pointerdown', callActionHaptic);
-  incomingReject.addEventListener('click', rejectIncomingCall);
-}
+function callActionHaptic(){ if(navigator.vibrate) navigator.vibrate(15); }
+if(incomingAccept){ incomingAccept.addEventListener('pointerdown', callActionHaptic); incomingAccept.addEventListener('click', acceptIncomingCall); }
+if(incomingReject){ incomingReject.addEventListener('pointerdown', callActionHaptic); incomingReject.addEventListener('click', rejectIncomingCall); }
 
 if(callStage){
   localVideo.addEventListener('click',e=>{e.stopPropagation();if(localVideo.dataset.dragged==='1')return;swapCallVideos();});
   remoteVideo.addEventListener('click',e=>{e.stopPropagation();if(remoteVideo.dataset.dragged==='1')return;swapCallVideos();});
 }
-if(callCropToggle){
-  callCropToggle.addEventListener('click',e=>{
-    e.stopPropagation();
-    callCropPanel.classList.toggle('open');
-    callCropToggle.classList.toggle('active',callCropPanel.classList.contains('open'));
-  });
-}
-if(cropZoom){
-  cropZoom.addEventListener('input',()=>{
-    const active=activeCropVideo(); if(!active) return;
-    cropState[active].zoom=parseFloat(cropZoom.value)||1;
-    renderCrop();
-  });
-}
+if(callCropToggle){ callCropToggle.addEventListener('click',e=>{ e.stopPropagation(); callCropPanel.classList.toggle('open'); callCropToggle.classList.toggle('active',callCropPanel.classList.contains('open')); }); }
+if(cropZoom){ cropZoom.addEventListener('input',()=>{ const active=activeCropVideo(); if(!active) return; cropState[active].zoom=parseFloat(cropZoom.value)||1; renderCrop(); }); }
 document.querySelectorAll('[data-crop-dir]').forEach(btn=>btn.addEventListener('click',e=>{e.stopPropagation();moveCrop(btn.dataset.cropDir);}));
-if(cropReset){
-  cropReset.addEventListener('click',e=>{e.stopPropagation();const active=activeCropVideo();resetCrop(active);});
-}
+if(cropReset){ cropReset.addEventListener('click',e=>{e.stopPropagation();const active=activeCropVideo();resetCrop(active);}); }
 $('voiceCallBtn').addEventListener('click',()=>startWebRTCCall('voice'));
 $('videoCallBtn').addEventListener('click',()=>startWebRTCCall('video'));
-window.addEventListener('beforeunload',()=>{
-  try{if(currentCallRef&&currentCallId)currentCallRef.child('status').set('ended');}catch{}
-  try{stopLocalMedia();closePeerConnection();}catch{}
-});
+window.addEventListener('beforeunload',()=>{ try{if(currentCallRef&&currentCallId)currentCallRef.child('status').set('ended');}catch{} try{stopLocalMedia();closePeerConnection();}catch{} });
 window.addEventListener('error',e=>{console.error('ConvoLink error',e.error||e.message);});
 window.addEventListener('unhandledrejection',e=>console.error('ConvoLink rejection',e.reason));
 render();
