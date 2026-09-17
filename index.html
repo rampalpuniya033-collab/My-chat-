@@ -1015,7 +1015,24 @@ const scannerFallback = $('scannerFallback'), fallbackMsg = $('fallbackMsg'), fa
 const imgModal = $('imgModal'), imgPreview = $('imgPreview'), imgClose = $('imgClose');
 const attachPreview = $('attachPreview'), apThumb = $('apThumb'), apName = $('apName'), apSize = $('apSize'), apRemove = $('apRemove');
 
-function genId(){ const c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; const p=()=>Array.from({length:4},()=>c[Math.floor(Math.random()*c.length)]).join(''); return `CL-${p()}-${p()}`; }
+function firebaseChatId(uid){
+  // The Chat ID is derived ONLY from the Firebase Authentication UID.
+  // No Math.random/local-only ID generation is used anymore.
+  if(!uid) throw new Error('Missing Firebase UID');
+  const c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let h1=2166136261, h2=2246822519;
+  for(let i=0;i<uid.length;i++){
+    const n=uid.charCodeAt(i);
+    h1^=n; h1=Math.imul(h1,16777619);
+    h2^=n; h2=Math.imul(h2,3266489917);
+  }
+  h1^=h1>>>16; h2^=h2>>>13;
+  let x=(BigInt(h1>>>0)<<32n)|BigInt(h2>>>0);
+  let out='';
+  for(let i=0;i<12;i++){ out=c[Number(x&31n)]; x>>=5n; }
+  out=out.split('').reverse().join('');
+  return `CL-${out.slice(0,6)}-${out.slice(6,12)}`;
+}
 function showToast(msg){ const t=$('toast'); $('toastMsg').textContent=msg; t.classList.add('show'); clearTimeout(t._timer); t._timer=setTimeout(()=>t.classList.remove('show'),3500); }
 function timeNow(){ return new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}); }
 function esc(s){ return String(s).replace(/[&<>"']/g, ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch])); }
@@ -1070,13 +1087,11 @@ function setConnected(on, name){
 function setStatus(kind,text){ statusChip.classList.remove('online','connecting'); if(kind) statusChip.classList.add(kind); statusText.textContent=text; }
 
 async function reserveChatId(uid, profile){
-  for(let i=0;i<12;i++){
-    const id=genId();
-    const ref=db.ref('chatIds/'+id);
-    const result=await ref.transaction(current=>current===null ? uid : undefined);
-    if(result.committed && result.snapshot.val()===uid) return id;
-  }
-  throw new Error('Could not create a unique Chat ID');
+  const id=firebaseChatId(uid);
+  const ref=db.ref('chatIds/'+id);
+  const result=await ref.transaction(current=>current===null ? uid : (current===uid ? uid : undefined));
+  if(result.committed && result.snapshot.val()===uid) return id;
+  throw new Error('Firebase Chat ID collision. Please try again.');
 }
 async function ensureUserProfile(user){
   // Paint the authenticated Google profile immediately so the UI never falls
