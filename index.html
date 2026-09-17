@@ -44,7 +44,7 @@
     position: relative; overflow: hidden;
   }
 
-  /* Top bar */
+  /* ---------- Top bar ---------- */
   .topbar {
     background: var(--brand); color: #fff;
     padding: 14px 16px;
@@ -74,42 +74,10 @@
   }
   .topbar .avatar-chip img { width: 100%; height: 100%; object-fit: cover; }
 
-  /* ID card */
-  .id-card {
-    margin: 12px 14px 6px;
-    background: var(--card); border: 1px solid var(--line);
-    border-radius: var(--radius); padding: 12px 14px;
-    display: flex; align-items: center; gap: 10px;
-    box-shadow: var(--shadow-sm); flex-shrink: 0;
-  }
-  .id-card .label {
-    font-size: 10px; font-weight: 700; letter-spacing: .8px;
-    color: var(--muted); text-transform: uppercase; white-space: nowrap;
-  }
-  .id-card .val {
-    flex: 1; min-width: 0;
-    font-family: 'SF Mono', 'Menlo', monospace;
-    font-size: 13px; color: var(--ink);
-    background: var(--blue-soft); border-radius: 8px;
-    padding: 7px 10px;
-    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-    letter-spacing: .4px; font-weight: 600;
-  }
-  .id-card .copy-btn {
-    width: 36px; height: 36px; border-radius: 10px;
-    background: var(--gold); border: none; color: #fff;
-    display: flex; align-items: center; justify-content: center;
-    cursor: pointer; transition: transform .15s, background .15s;
-    flex-shrink: 0;
-  }
-  .id-card .copy-btn:hover { transform: translateY(-1px); }
-  .id-card .copy-btn.done { background: var(--green); }
-  .id-card .copy-btn svg { width: 16px; height: 16px; }
-
-  /* Status chip */
+  /* ---------- Status chip ---------- */
   .status-row {
     display: flex; align-items: center; justify-content: center;
-    gap: 6px; padding: 4px 14px 8px; flex-shrink: 0;
+    gap: 6px; padding: 10px 14px 8px; flex-shrink: 0;
   }
   .status-chip {
     display: inline-flex; align-items: center; gap: 7px;
@@ -120,11 +88,11 @@
   }
   .status-chip .dot {
     width: 7px; height: 7px; border-radius: 50%;
-    background: var(--red); transition: background .3s;
+    background: var(--green); box-shadow: 0 0 0 3px rgba(34,197,94,.15);
+    transition: background .3s;
   }
-  .status-chip.online .dot { background: var(--green); box-shadow: 0 0 0 3px rgba(34,197,94,.15); }
   .status-chip.connecting .dot {
-    background: var(--gold);
+    background: var(--gold); box-shadow: 0 0 0 3px rgba(224,177,0,.18);
     animation: pulseDot 1s ease-in-out infinite;
   }
   @keyframes pulseDot {
@@ -132,7 +100,7 @@
     50% { opacity: .3; }
   }
 
-  /* Messages */
+  /* ---------- Messages ---------- */
   .messages {
     flex: 1; overflow-y: auto;
     padding: 6px 14px 14px;
@@ -186,67 +154,151 @@
     max-width: 88%; text-align: center; box-shadow: none;
   }
 
-  /* Connect bar */
-  .connect-bar {
-    padding: 12px 14px;
+  .msg img.msg-media {
+    max-width: 100%;
+    max-height: 260px;
+    border-radius: 10px;
+    margin: 4px 0;
+    display: block;
+    cursor: pointer;
+    object-fit: cover;
+  }
+  .msg .file-chip {
+    display: flex; align-items: center; gap: 8px;
+    background: rgba(0,0,0,.08);
+    padding: 8px 10px; border-radius: 10px;
+    margin: 4px 0;
+    font-size: 12.5px;
+    word-break: break-all;
+  }
+  .msg.mine .file-chip { background: rgba(255,255,255,.18); }
+  .msg .file-chip svg { width: 16px; height: 16px; flex-shrink: 0; }
+  .msg .file-chip a {
+    color: inherit; text-decoration: underline;
+    word-break: break-all;
+  }
+
+  /* ---------- Attachment preview strip ---------- */
+  .attach-preview {
+    display: none;
+    padding: 10px 14px 0;
     background: var(--card);
     border-top: 1px solid var(--line);
-    display: flex; gap: 8px; flex-shrink: 0;
+    animation: slideUp .22s ease;
   }
-  .connect-bar input {
-    flex: 1; min-width: 0;
-    padding: 12px 14px;
+  .attach-preview.show { display: block; }
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .attach-preview .ap-inner {
+    display: flex; align-items: center; gap: 10px;
+    background: #f5f6fa;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 8px 10px;
+  }
+  .attach-preview .ap-thumb {
+    width: 46px; height: 46px;
+    border-radius: 8px;
+    background: var(--blue-soft);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; overflow: hidden;
+    color: var(--brand);
+  }
+  .attach-preview .ap-thumb img {
+    width: 100%; height: 100%; object-fit: cover;
+  }
+  .attach-preview .ap-thumb svg { width: 22px; height: 22px; }
+  .attach-preview .ap-info { flex: 1; min-width: 0; }
+  .attach-preview .ap-info .ap-name {
+    font-size: 12.5px; font-weight: 600; color: var(--ink);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .attach-preview .ap-info .ap-size {
+    font-size: 11px; color: var(--muted); margin-top: 2px;
+  }
+  .attach-preview .ap-remove {
+    width: 32px; height: 32px; border-radius: 8px;
+    background: #fff; border: 1px solid var(--line);
+    color: var(--red);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; flex-shrink: 0;
+    transition: background .15s;
+  }
+  .attach-preview .ap-remove:hover { background: var(--red-soft); }
+  .attach-preview .ap-remove svg { width: 15px; height: 15px; }
+
+  /* ---------- Input bar ---------- */
+  .input-bar {
+    padding: 10px 12px calc(10px + env(safe-area-inset-bottom, 0px));
+    background: var(--card);
+    border-top: 1px solid var(--line);
+    display: flex; align-items: flex-end; gap: 8px;
+    flex-shrink: 0;
+  }
+
+  .input-bar .tool-btn {
+    width: 40px; height: 40px; border-radius: 50%;
     background: #f5f6fa; border: 1px solid var(--line);
-    border-radius: 12px; color: var(--ink); font-size: 13.5px;
-    outline: none; font-family: 'SF Mono', 'Menlo', monospace;
-    letter-spacing: .5px; font-weight: 600;
+    color: var(--ink-2);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; flex-shrink: 0;
+    transition: background .15s, transform .12s, color .15s;
+  }
+  .input-bar .tool-btn:hover {
+    background: var(--blue-soft); color: var(--brand);
+    transform: translateY(-1px);
+  }
+  .input-bar .tool-btn svg { width: 18px; height: 18px; }
+
+  .input-bar .msg-wrap {
+    flex: 1; min-width: 0;
+    display: flex; align-items: center;
+    background: #f5f6fa; border: 1px solid var(--line);
+    border-radius: 22px; padding: 0 4px 0 14px;
     transition: border-color .15s, background .15s;
   }
-  .connect-bar input::placeholder {
-    color: var(--muted); font-family: inherit;
-    letter-spacing: 0; font-weight: 400;
+  .input-bar .msg-wrap:focus-within {
+    border-color: var(--brand); background: #fff;
   }
-  .connect-bar input:focus { border-color: var(--brand); background: #fff; }
-  .connect-bar .btn {
-    padding: 0 20px; background: var(--brand); border: none;
-    border-radius: 12px; color: #fff; font-size: 13.5px; font-weight: 700;
-    cursor: pointer; display: flex; align-items: center; gap: 7px;
-    transition: transform .15s, background .15s; white-space: nowrap;
-  }
-  .connect-bar .btn:hover { background: var(--brand-2); transform: translateY(-1px); }
-  .connect-bar .btn:disabled { opacity: .55; cursor: not-allowed; }
-  .connect-bar .btn svg { width: 15px; height: 15px; }
-
-  /* Message input */
-  .input-bar {
-    padding: 12px 14px calc(12px + env(safe-area-inset-bottom, 0px));
-    background: var(--card);
-    border-top: 1px solid var(--line);
-    display: flex; align-items: center; gap: 8px; flex-shrink: 0;
-  }
-  .input-bar input {
+  .input-bar .msg-wrap input {
     flex: 1; min-width: 0;
-    padding: 12px 16px;
-    background: #f5f6fa; border: 1px solid var(--line);
-    border-radius: 22px; color: var(--ink); font-size: 13.5px;
-    outline: none; transition: border-color .15s, background .15s;
+    padding: 12px 0;
+    background: transparent; border: none; outline: none;
+    color: var(--ink); font-size: 13.5px;
   }
-  .input-bar input::placeholder { color: var(--muted); }
-  .input-bar input:focus { border-color: var(--brand); background: #fff; }
-  .input-bar input:disabled { opacity: .55; cursor: not-allowed; }
+  .input-bar .msg-wrap input::placeholder { color: var(--muted); }
+
   .input-bar .send-btn {
     width: 44px; height: 44px; border-radius: 50%;
     background: var(--brand); border: none; color: #fff;
     display: flex; align-items: center; justify-content: center;
     cursor: pointer;
-    transition: transform .15s, background .15s, opacity .15s;
+    transition: transform .15s, background .15s;
     flex-shrink: 0;
+    position: relative;
   }
-  .input-bar .send-btn:hover:not(:disabled) { background: var(--brand-2); transform: translateY(-1px); }
-  .input-bar .send-btn:disabled { opacity: .4; cursor: not-allowed; }
+  .input-bar .send-btn:hover { background: var(--brand-2); transform: translateY(-1px); }
   .input-bar .send-btn svg { width: 18px; height: 18px; }
+  .input-bar .send-btn.has-attach {
+    background: var(--green);
+    animation: pulseSend 1.4s ease-in-out infinite;
+  }
+  @keyframes pulseSend {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(34,197,94,.4); }
+    50% { box-shadow: 0 0 0 6px rgba(34,197,94,0); }
+  }
+  .input-bar .send-btn.has-attach::after {
+    content: '';
+    position: absolute; top: -2px; right: -2px;
+    width: 10px; height: 10px; border-radius: 50%;
+    background: #fff; border: 2px solid var(--green);
+  }
 
-  /* Drawer */
+  .hidden-file { display: none; }
+
+  /* ---------- Drawer ---------- */
   .drawer-overlay {
     position: fixed; inset: 0;
     background: rgba(15, 20, 35, 0.45);
@@ -280,22 +332,108 @@
   }
   .drawer-head .close-btn:hover { background: rgba(255,255,255,.26); }
   .drawer-head .close-btn svg { width: 15px; height: 15px; }
+
+  .drawer-head .avatar-row {
+    display: flex; align-items: center; gap: 12px;
+  }
   .drawer-head .avatar-lg {
     width: 56px; height: 56px; border-radius: 50%;
     background: rgba(255,255,255,.18);
     border: 2px solid rgba(255,255,255,.4);
     display: flex; align-items: center; justify-content: center;
     font-size: 20px; font-weight: 700; color: #fff; overflow: hidden;
+    flex-shrink: 0;
   }
   .drawer-head .avatar-lg img { width: 100%; height: 100%; object-fit: cover; }
+
+  .google-logo-btn {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 1.5px solid rgba(255,255,255,.6);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,.18);
+    transition: transform .15s, box-shadow .15s;
+  }
+  .google-logo-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(0,0,0,.28);
+  }
+  .google-logo-btn:active { transform: translateY(0) scale(.96); }
+  .google-logo-btn > svg {
+    width: 22px; height: 22px;
+    pointer-events: none;
+  }
+  .google-logo-btn .real-gsi-mount {
+    position: absolute;
+    inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0.001;
+    overflow: hidden;
+  }
+  .google-logo-btn .real-gsi-mount > div {
+    transform: scale(2.2);
+    transform-origin: center center;
+  }
+  .google-logo-btn.no-gsi .real-gsi-mount { display: none; }
+  .google-logo-btn.signed::after {
+    content: '';
+    position: absolute; bottom: -1px; right: -1px;
+    width: 12px; height: 12px; border-radius: 50%;
+    background: var(--green);
+    border: 2px solid var(--brand);
+    z-index: 3;
+  }
+
+  .drawer-head .who { flex: 1; min-width: 0; }
   .drawer-head .who .name { font-size: 16px; font-weight: 700; color: #fff; line-height: 1.25; }
   .drawer-head .who .email { font-size: 12px; color: rgba(255,255,255,.78); margin-top: 3px; word-break: break-all; }
+
+  .drawer-head .myid-mini {
+    display: flex; align-items: center; gap: 8px;
+    background: rgba(0,0,0,.22);
+    border: 1px solid rgba(255,255,255,.14);
+    border-radius: 10px;
+    padding: 8px 10px;
+    margin-top: 4px;
+  }
+  .drawer-head .myid-mini .lbl {
+    font-size: 9.5px; font-weight: 700; letter-spacing: .8px;
+    color: rgba(255,255,255,.6); text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .drawer-head .myid-mini .v {
+    flex: 1; min-width: 0;
+    font-family: 'SF Mono', 'Menlo', monospace;
+    font-size: 12px; font-weight: 600; color: #fff;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    letter-spacing: .4px;
+  }
+  .drawer-head .myid-mini .cbtn {
+    width: 26px; height: 26px; border-radius: 7px;
+    background: var(--gold); border: none; color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; flex-shrink: 0;
+    transition: transform .15s, background .15s;
+  }
+  .drawer-head .myid-mini .cbtn:hover { transform: translateY(-1px); }
+  .drawer-head .myid-mini .cbtn.done { background: var(--green); }
+  .drawer-head .myid-mini .cbtn svg { width: 13px; height: 13px; }
+
   .drawer-body { flex: 1; overflow-y: auto; padding: 14px 12px 20px; }
+  .drawer-body::-webkit-scrollbar { width: 4px; }
+  .drawer-body::-webkit-scrollbar-thumb { background: #d6d9e3; border-radius: 8px; }
+
   .drawer-section-label {
     font-size: 10.5px; font-weight: 700; letter-spacing: 1px;
     text-transform: uppercase; color: var(--muted);
     padding: 12px 10px 8px;
   }
+
   .drawer-item {
     display: flex; align-items: center; gap: 12px;
     padding: 11px 12px; border-radius: 10px;
@@ -317,51 +455,14 @@
     display: block; font-size: 11.5px; color: var(--muted);
     font-weight: 500; margin-top: 1px;
   }
+  .drawer-item.primary .ic { background: var(--brand); color: #fff; }
+  .drawer-item.primary { color: var(--brand); font-weight: 600; }
+  .drawer-item.qr .ic { background: var(--gold); color: #fff; }
+  .drawer-item.qr { color: var(--brand); font-weight: 600; }
   .drawer-item.danger .ic { background: var(--red-soft); color: var(--red); }
   .drawer-item.danger { color: var(--red); }
   .drawer-divider { height: 1px; background: var(--line); margin: 8px 10px; }
-  .google-card {
-    margin: 6px 6px 4px;
-    background: linear-gradient(180deg, #ffffff 0%, #f7f9ff 100%);
-    border: 1.5px solid #e3e8f5; border-radius: 14px;
-    padding: 14px;
-    box-shadow: 0 2px 8px rgba(43,74,139,.06);
-  }
-  .google-card .gc-title {
-    display: flex; align-items: center; gap: 8px;
-    font-size: 12.5px; font-weight: 700; color: var(--ink);
-    margin-bottom: 4px;
-  }
-  .google-card .gc-title svg { width: 16px; height: 16px; }
-  .google-card .gc-sub { font-size: 11.5px; color: var(--muted); line-height: 1.5; margin-bottom: 12px; }
-  .gsi-btn {
-    width: 100%; display: flex; align-items: center; justify-content: center;
-    gap: 10px; padding: 12px 14px;
-    background: #fff; border: 1.5px solid #dadce0;
-    border-radius: 10px; font-size: 13.5px; font-weight: 600;
-    color: #3c4043; cursor: pointer;
-    transition: background .15s, border-color .15s, box-shadow .15s;
-    font-family: inherit;
-    box-shadow: 0 1px 2px rgba(60,64,67,.08);
-    position: relative; overflow: hidden;
-  }
-  .gsi-btn svg { width: 18px; height: 18px; flex-shrink: 0; }
-  .gsi-btn.has-real-gsi { padding: 0; border: none; background: transparent; box-shadow: none; height: 44px; }
-  .gsi-btn.has-real-gsi > *:not(.real-gsi-mount) { display: none; }
-  .real-gsi-mount {
-    position: absolute; inset: 0;
-    display: flex; align-items: center; justify-content: center;
-    opacity: 0.001;
-  }
-  .signed-pill {
-    display: flex; align-items: center; gap: 8px;
-    margin-top: 8px; padding: 8px 12px;
-    background: var(--green-soft); border: 1px solid #bfe9d2;
-    border-radius: 10px; font-size: 11.5px; font-weight: 600;
-    color: #146c43;
-  }
-  .signed-pill svg { width: 14px; height: 14px; flex-shrink: 0; }
-  .signed-pill .sp-email { color: #15803d; font-weight: 500; word-break: break-all; }
+
   .drawer-foot {
     padding: 12px 18px 16px;
     border-top: 1px solid var(--line);
@@ -370,7 +471,241 @@
   }
   .drawer-foot b { color: var(--ink-2); font-weight: 700; }
 
-  /* Toast */
+  /* ---------- Generic modal ---------- */
+  .modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(15, 20, 35, 0.55);
+    backdrop-filter: blur(3px);
+    display: none; align-items: center; justify-content: center;
+    padding: 20px; z-index: 100;
+    animation: fadeIn .2s ease;
+  }
+  .modal-overlay.open { display: flex; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  .modal {
+    background: var(--card); border-radius: 20px;
+    width: 100%; max-width: 380px;
+    max-height: 92vh; overflow-y: auto;
+    padding: 22px 20px 18px;
+    box-shadow: 0 24px 60px rgba(16,24,40,.28);
+    animation: popIn .26s cubic-bezier(.2,.8,.2,1);
+    position: relative;
+  }
+  @keyframes popIn {
+    from { opacity: 0; transform: translateY(14px) scale(.95); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  .modal .m-close {
+    position: absolute; top: 12px; right: 12px;
+    width: 34px; height: 34px; border-radius: 50%;
+    background: #f5f6fa; border: 1px solid var(--line);
+    color: var(--ink-2);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+  }
+  .modal .m-close:hover { background: #eef1f7; }
+  .modal .m-close svg { width: 15px; height: 15px; }
+
+  /* ========== QR - SHOW MODAL ========== */
+  .qr-modal h3 {
+    text-align: center; font-size: 17px; font-weight: 700;
+    color: var(--ink); margin-bottom: 4px;
+  }
+  .qr-modal .qr-sub {
+    text-align: center; font-size: 12px;
+    color: var(--muted); margin-bottom: 16px;
+    line-height: 1.5;
+  }
+  .qr-wrap {
+    background: #fff;
+    border: 2px solid var(--line);
+    border-radius: 16px;
+    padding: 18px;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 14px;
+    width: fit-content;
+    max-width: 100%;
+    box-shadow: 0 4px 20px rgba(16,24,40,.06);
+  }
+  .qr-wrap canvas, .qr-wrap img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    image-rendering: pixelated;
+  }
+  .qr-id-box {
+    background: var(--blue-soft);
+    border: 1px solid #cdd9f5;
+    border-radius: 12px;
+    padding: 12px 14px;
+    text-align: center;
+    margin-bottom: 12px;
+  }
+  .qr-id-box .lbl {
+    font-size: 10px; font-weight: 700; letter-spacing: .8px;
+    color: var(--muted); text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .qr-id-box .v {
+    font-family: 'SF Mono', 'Menlo', monospace;
+    font-size: 15px; font-weight: 700; color: var(--brand);
+    letter-spacing: 1px;
+  }
+  .qr-actions {
+    display: flex; gap: 8px;
+  }
+  .qr-actions button {
+    flex: 1;
+    padding: 11px 12px; border-radius: 11px;
+    font-size: 13px; font-weight: 700;
+    cursor: pointer; font-family: inherit;
+    display: flex; align-items: center; justify-content: center;
+    gap: 6px; border: none;
+    transition: transform .12s, background .15s;
+  }
+  .qr-actions button svg { width: 15px; height: 15px; }
+  .qr-actions .secondary {
+    background: #f5f6fa; color: var(--ink-2);
+    border: 1px solid var(--line) !important;
+  }
+  .qr-actions .secondary:hover { background: #eef1f7; }
+  .qr-actions .primary-btn {
+    background: var(--brand); color: #fff;
+  }
+  .qr-actions .primary-btn:hover {
+    background: var(--brand-2); transform: translateY(-1px);
+  }
+
+  /* ========== QR - SCAN MODAL ========== */
+  .scan-modal h3 {
+    text-align: center; font-size: 17px; font-weight: 700;
+    color: var(--ink); margin-bottom: 4px;
+  }
+  .scan-modal .scan-sub {
+    text-align: center; font-size: 12px;
+    color: var(--muted); margin-bottom: 14px;
+    line-height: 1.5;
+  }
+  .scanner-box {
+    width: 100%;
+    aspect-ratio: 1;
+    max-height: 60vh;
+    background: #000;
+    border-radius: 16px;
+    overflow: hidden;
+    position: relative;
+    margin-bottom: 14px;
+  }
+  .scanner-box video {
+    width: 100%; height: 100%; object-fit: cover;
+    display: block;
+  }
+  .scanner-frame {
+    position: absolute; inset: 0;
+    pointer-events: none;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .scanner-frame::before {
+    content: '';
+    width: 62%; aspect-ratio: 1;
+    border: 3px solid #fff;
+    border-radius: 16px;
+    box-shadow: 0 0 0 9999px rgba(0,0,0,.45);
+    animation: scanPulse 1.8s ease-in-out infinite;
+  }
+  @keyframes scanPulse {
+    0%, 100% { opacity: .9; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.02); }
+  }
+  .scanner-laser {
+    position: absolute;
+    left: 19%; right: 19%;
+    top: 25%; height: 2px;
+    background: linear-gradient(90deg, transparent, #22c55e, transparent);
+    box-shadow: 0 0 8px #22c55e;
+    animation: laserMove 2s ease-in-out infinite;
+    pointer-events: none;
+  }
+  @keyframes laserMove {
+    0%, 100% { top: 25%; }
+    50% { top: 75%; }
+  }
+  .scanner-fallback {
+    position: absolute;
+    inset: 0;
+    display: none;
+    flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 12px;
+    padding: 30px 20px;
+    background: #1f2430;
+    text-align: center;
+    color: #fff;
+  }
+  .scanner-fallback.show { display: flex; }
+  .scanner-fallback svg {
+    width: 48px; height: 48px; color: var(--gold);
+    margin-bottom: 4px;
+  }
+  .scanner-fallback .msg {
+    font-size: 13px; line-height: 1.55;
+    color: rgba(255,255,255,.85);
+    max-width: 260px;
+  }
+  .scanner-status {
+    text-align: center;
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 12px;
+    min-height: 18px;
+    line-height: 1.5;
+  }
+  .scanner-status.error { color: var(--red); font-weight: 600; }
+  .scanner-status.ok { color: var(--green); font-weight: 600; }
+  .scan-actions {
+    display: flex; gap: 8px; flex-wrap: wrap;
+  }
+  .scan-actions button {
+    flex: 1; min-width: 100px;
+    padding: 11px 12px; border-radius: 11px;
+    font-size: 13px; font-weight: 700;
+    cursor: pointer; font-family: inherit;
+    border: none;
+    display: flex; align-items: center; justify-content: center;
+    gap: 6px;
+    transition: transform .12s, background .15s;
+  }
+  .scan-actions button svg { width: 14px; height: 14px; }
+  .scan-actions .cancel { background: #f5f6fa; color: var(--ink-2); border: 1px solid var(--line) !important; }
+  .scan-actions .cancel:hover { background: #eef1f7; }
+  .scan-actions .retry { background: var(--brand); color: #fff; }
+  .scan-actions .retry:hover { background: var(--brand-2); }
+
+  /* ---------- Image preview modal ---------- */
+  .img-modal {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,.92);
+    display: none; align-items: center; justify-content: center;
+    z-index: 200; padding: 20px;
+    animation: fadeIn .18s ease;
+  }
+  .img-modal.open { display: flex; }
+  .img-modal img {
+    max-width: 100%; max-height: 100%;
+    border-radius: 8px;
+    box-shadow: 0 20px 60px rgba(0,0,0,.5);
+  }
+  .img-modal .close {
+    position: absolute; top: 16px; right: 16px;
+    width: 40px; height: 40px; border-radius: 50%;
+    background: rgba(255,255,255,.15); border: none; color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+  }
+  .img-modal .close svg { width: 18px; height: 18px; }
+
+  /* ---------- Toast ---------- */
   .toast {
     position: fixed; left: 50%; bottom: 24px;
     transform: translateX(-50%) translateY(120px);
@@ -382,6 +717,7 @@
     opacity: 0;
     transition: transform .3s cubic-bezier(.2,.8,.2,1), opacity .3s;
     z-index: 999; pointer-events: none; max-width: 90vw;
+    text-align: center;
   }
   .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
   .toast svg { width: 15px; height: 15px; color: var(--green); flex-shrink: 0; }
@@ -425,21 +761,10 @@
     <div class="avatar-chip" id="topAvatar">?</div>
   </header>
 
-  <div class="id-card">
-    <span class="label">Your ID</span>
-    <span class="val" id="myIdVal">—</span>
-    <button class="copy-btn" id="copyIdBtn" title="Copy ID">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
-        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-      </svg>
-    </button>
-  </div>
-
   <div class="status-row">
     <div class="status-chip" id="statusChip">
       <span class="dot"></span>
-      <span id="statusText">Not connected</span>
+      <span id="statusText">Ready</span>
     </div>
   </div>
 
@@ -450,35 +775,191 @@
           <path d="M21 11.5C21 16.1944 16.9706 20 12 20C10.663 20 9.396 19.7444 8.253 19.283L4 21L5.085 17.025C3.774 15.526 3 13.598 3 11.5C3 6.80558 7.02944 3 12 3C16.9706 3 21 6.80558 21 11.5Z"/>
         </svg>
       </div>
-      <h3>No connection yet</h3>
-      <p>Copy your Chat ID above and share it with a friend. When they paste it below, you'll be connected instantly.</p>
+      <h3>Start chatting</h3>
+      <p>Open the menu (☰) and tap <b>My QR Code</b> to share, or <b>Scan QR Code</b> to connect with a friend.</p>
     </div>
   </main>
 
-  <div class="connect-bar" id="connectBar">
-    <input type="text" id="connectInput" placeholder="Paste friend's Chat ID…" autocomplete="off" spellcheck="false" />
-    <button class="btn" id="connectBtn">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
-        <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
-      </svg>
-      Connect
-    </button>
+  <div class="attach-preview" id="attachPreview">
+    <div class="ap-inner">
+      <div class="ap-thumb" id="apThumb"></div>
+      <div class="ap-info">
+        <div class="ap-name" id="apName">photo.jpg</div>
+        <div class="ap-size" id="apSize">120 KB · ready to send</div>
+      </div>
+      <button class="ap-remove" id="apRemove" title="Remove">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
   </div>
 
   <div class="input-bar">
-    <input type="text" id="msgInput" placeholder="Type a message…" disabled autocomplete="off" />
-    <button class="send-btn" id="sendBtn" disabled>
+    <button class="tool-btn" id="attachBtn" title="Attach a file">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66L9.64 16.2a2 2 0 0 1-2.83-2.83l8.49-8.48"/>
+      </svg>
+    </button>
+
+    <button class="tool-btn" id="cameraBtn" title="Take a photo">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+        <circle cx="12" cy="13" r="4"/>
+      </svg>
+    </button>
+
+    <div class="msg-wrap">
+      <input type="text" id="msgInput" placeholder="Type a message…" autocomplete="off" />
+    </div>
+
+    <button class="send-btn" id="sendBtn" title="Send">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
         <line x1="22" y1="2" x2="11" y2="13"/>
         <polygon points="22 2 15 22 11 13 2 9 22 2"/>
       </svg>
     </button>
+
+    <input type="file" id="fileInput" class="hidden-file" accept="*/*" />
+    <input type="file" id="cameraInput" class="hidden-file" accept="image/*" capture="environment" />
+    <!-- QR image fallback input -->
+    <input type="file" id="qrImageInput" class="hidden-file" accept="image/*" />
   </div>
 
 </div>
 
-<!-- Drawer -->
+<!-- ================= CONNECT MODAL ================= -->
+<div class="modal-overlay" id="connectModal">
+  <div class="modal" style="max-width:360px;">
+    <button class="m-close" id="connectCancel">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round">
+        <line x1="18" y1="6" x2="6" y2="18"/>
+        <line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </button>
+    <div style="width:52px;height:52px;border-radius:14px;background:var(--blue-soft);color:var(--brand);display:flex;align-items:center;justify-content:center;margin:0 auto 14px;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:24px;height:24px;">
+        <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+        <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+      </svg>
+    </div>
+    <h3 style="text-align:center;font-size:16px;font-weight:700;color:var(--ink);margin-bottom:6px;">Connect to a friend</h3>
+    <div style="text-align:center;font-size:12.5px;color:var(--muted);line-height:1.55;margin-bottom:18px;">Paste your friend's Chat ID below to start a private chat.</div>
+    <input type="text" id="connectInput" placeholder="CL-XXXX-XXXX" autocomplete="off" spellcheck="false"
+      style="width:100%;padding:13px 14px;background:#f5f6fa;border:1.5px solid var(--line);border-radius:12px;color:var(--ink);font-size:14px;outline:none;font-family:'SF Mono','Menlo',monospace;letter-spacing:1px;font-weight:600;text-align:center;text-transform:uppercase;margin-bottom:6px;" />
+    <div style="font-size:11px;color:var(--muted);text-align:center;margin-bottom:16px;">Ask your friend for their Chat ID</div>
+    <div style="display:flex;gap:10px;">
+      <button id="connectCancelBtn" style="flex:1;padding:12px 14px;border-radius:12px;font-size:13.5px;font-weight:700;cursor:pointer;font-family:inherit;background:#f5f6fa;color:var(--ink-2);border:1px solid var(--line);">Cancel</button>
+      <button id="connectConfirm" style="flex:1;padding:12px 14px;border-radius:12px;font-size:13.5px;font-weight:700;cursor:pointer;font-family:inherit;background:var(--brand);color:#fff;border:none;display:flex;align-items:center;justify-content:center;gap:6px;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px;">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+        Connect
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ================= SHOW MY QR MODAL ================= -->
+<div class="modal-overlay" id="qrShowModal">
+  <div class="modal qr-modal" style="max-width:380px;">
+    <button class="m-close" id="qrShowClose">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round">
+        <line x1="18" y1="6" x2="6" y2="18"/>
+        <line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </button>
+    <h3>My QR Code</h3>
+    <div class="qr-sub">Ask your friend to scan this QR code to connect with you instantly.</div>
+
+    <div class="qr-wrap" id="qrWrap">
+      <canvas id="qrCanvas" width="240" height="240"></canvas>
+    </div>
+
+    <div class="qr-id-box">
+      <div class="lbl">Your Chat ID</div>
+      <div class="v" id="qrMyId">—</div>
+    </div>
+
+    <div class="qr-actions">
+      <button class="secondary" id="qrCopyId">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+        </svg>
+        Copy ID
+      </button>
+      <button class="primary-btn" id="qrDownload">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="7 10 12 15 17 10"/>
+          <line x1="12" y1="15" x2="12" y2="3"/>
+        </svg>
+        Save
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ================= SCAN QR MODAL ================= -->
+<div class="modal-overlay" id="qrScanModal">
+  <div class="modal scan-modal" style="max-width:400px;">
+    <button class="m-close" id="qrScanClose">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round">
+        <line x1="18" y1="6" x2="6" y2="18"/>
+        <line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </button>
+    <h3>Scan QR Code</h3>
+    <div class="scan-sub">Point your camera at your friend's QR code to connect.</div>
+
+    <div class="scanner-box" id="scannerBox">
+      <video id="scanVideo" playsinline muted autoplay></video>
+      <div class="scanner-frame"></div>
+      <div class="scanner-laser"></div>
+
+      <!-- Fallback UI when live camera can't open -->
+      <div class="scanner-fallback" id="scannerFallback">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+          <circle cx="12" cy="13" r="4"/>
+          <line x1="1" y1="1" x2="23" y2="23" stroke="#ef4444" stroke-width="2"/>
+        </svg>
+        <div class="msg" id="fallbackMsg">Camera could not be opened.</div>
+        <button id="fallbackPickBtn" style="padding:11px 18px;border-radius:10px;background:var(--gold);color:#fff;border:none;font-size:13px;font-weight:700;cursor:pointer;">
+          Pick QR image from gallery
+        </button>
+      </div>
+    </div>
+
+    <div class="scanner-status" id="scannerStatus">Opening camera…</div>
+
+    <div class="scan-actions">
+      <button class="cancel" id="scanCancelBtn">Cancel</button>
+      <button class="retry" id="scanRetryBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="23 4 23 10 17 10"/>
+          <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+        </svg>
+        Restart
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ================= IMAGE PREVIEW ================= -->
+<div class="img-modal" id="imgModal">
+  <button class="close" id="imgClose">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+      <line x1="18" y1="6" x2="6" y2="18"/>
+      <line x1="6" y1="6" x2="18" y2="18"/>
+    </svg>
+  </button>
+  <img id="imgPreview" src="" alt="" />
+</div>
+
+<!-- ================= DRAWER ================= -->
 <div class="drawer-overlay" id="drawerOverlay"></div>
 <aside class="drawer" id="drawer">
   <div class="drawer-head">
@@ -488,46 +969,81 @@
         <line x1="6" y1="6" x2="18" y2="18"/>
       </svg>
     </button>
-    <div class="avatar-lg" id="drawerAvatar">?</div>
+
+    <div class="avatar-row">
+      <div class="avatar-lg" id="drawerAvatar">?</div>
+
+      <button class="google-logo-btn no-gsi" id="googleLogoBtn" title="Sign in with Google">
+        <svg viewBox="0 0 48 48">
+          <path fill="#FFC107" d="M43.611 20.083H42V20H24v8h11.303c-1.649 4.657-6.08 8-11.303 8-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 12.955 4 4 12.955 4 24s8.955 20 20 20 20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z"/>
+          <path fill="#FF3D00" d="M6.306 14.691l6.571 4.819C14.655 15.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 16.318 4 9.656 8.337 6.306 14.691z"/>
+          <path fill="#4CAF50" d="M24 44c5.166 0 9.86-1.977 13.409-5.192l-6.19-5.238A11.91 11.91 0 0 1 24 36c-5.202 0-9.619-3.317-11.283-7.946l-6.522 5.025C9.505 39.556 16.227 44 24 44z"/>
+          <path fill="#1976D2" d="M43.611 20.083H42V20H24v8h11.303a12.04 12.04 0 0 1-4.087 5.571l.003-.002 6.19 5.238C36.971 39.205 44 34 44 24c0-1.341-.138-2.65-.389-3.917z"/>
+        </svg>
+        <span class="real-gsi-mount" id="realGsiMount"></span>
+      </button>
+    </div>
+
     <div class="who">
       <div class="name" id="drawerName">Guest User</div>
       <div class="email" id="drawerEmail">Not signed in</div>
     </div>
+
+    <div class="myid-mini">
+      <span class="lbl">My ID</span>
+      <span class="v" id="drawerMyId">—</span>
+      <button class="cbtn" id="drawerCopyId" title="Copy my ID">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+        </svg>
+      </button>
+    </div>
   </div>
 
   <div class="drawer-body">
-    <div class="drawer-section-label">Account</div>
+    <div class="drawer-section-label">Connect</div>
 
-    <div class="google-card">
-      <div class="gc-title">
-        <svg viewBox="0 0 48 48">
-          <path fill="#FFC107" d="M43.611 20.083H42V20H24v8h11.303c-1.649 4.657-6.08 8-11.303 8-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 12.955 4 4 12.955 4 24s8.955 20 20 20 20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z"/>
-          <path fill="#FF3D00" d="M6.306 14.691l6.571 4.819C14.655 15.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 16.318 4 9.656 8.337 6.306 14.691z"/>
-          <path fill="#4CAF50" d="M24 44c5.166 0 9.86-1.977 13.409-5.192l-6.19-5.238A11.91 11.91 0 0 1 24 36c-5.202 0-9.619-3.317-11.283-7.946l-6.522 5.025C9.505 39.556 16.227 44 24 44z"/>
-          <path fill="#1976D2" d="M43.611 20.083H42V20H24v8h11.303a12.04 12.04 0 0 1-4.087 5.571l.003-.002 6.19 5.238C36.971 39.205 44 34 44 24c0-1.341-.138-2.65-.389-3.917z"/>
+    <button class="drawer-item qr" id="menuShowQR">
+      <span class="ic">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="7" height="7" rx="1"/>
+          <rect x="14" y="3" width="7" height="7" rx="1"/>
+          <rect x="3" y="14" width="7" height="7" rx="1"/>
+          <line x1="14" y1="14" x2="14" y2="14.01"/>
+          <line x1="18" y1="14" x2="21" y2="14"/>
+          <line x1="14" y1="18" x2="14" y2="21"/>
+          <line x1="18" y1="18" x2="21" y2="18"/>
+          <line x1="18" y1="21" x2="21" y2="21"/>
+          <line x1="14" y1="21" x2="17" y2="21"/>
+          <line x1="21" y1="14" x2="21" y2="17"/>
         </svg>
-        Sign in with Google
-      </div>
-      <div class="gc-sub">Get a verified Chat ID linked to your Google account.</div>
+      </span>
+      <span class="txt">My QR Code<small>Show to a friend</small></span>
+    </button>
 
-      <button class="gsi-btn" id="googleSignInBtn">
-        <svg viewBox="0 0 48 48">
-          <path fill="#FFC107" d="M43.611 20.083H42V20H24v8h11.303c-1.649 4.657-6.08 8-11.303 8-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 12.955 4 4 12.955 4 24s8.955 20 20 20 20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z"/>
-          <path fill="#FF3D00" d="M6.306 14.691l6.571 4.819C14.655 15.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 16.318 4 9.656 8.337 6.306 14.691z"/>
-          <path fill="#4CAF50" d="M24 44c5.166 0 9.86-1.977 13.409-5.192l-6.19-5.238A11.91 11.91 0 0 1 24 36c-5.202 0-9.619-3.317-11.283-7.946l-6.522 5.025C9.505 39.556 16.227 44 24 44z"/>
-          <path fill="#1976D2" d="M43.611 20.083H42V20H24v8h11.303a12.04 12.04 0 0 1-4.087 5.571l.003-.002 6.19 5.238C36.971 39.205 44 34 44 24c0-1.341-.138-2.65-.389-3.917z"/>
+    <button class="drawer-item qr" id="menuScanQR">
+      <span class="ic">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 7V5a2 2 0 0 1 2-2h2"/>
+          <path d="M17 3h2a2 2 0 0 1 2 2v2"/>
+          <path d="M21 17v2a2 2 0 0 1-2 2h-2"/>
+          <path d="M7 21H5a2 2 0 0 1-2-2v-2"/>
+          <line x1="3" y1="12" x2="21" y2="12"/>
         </svg>
-        <span>Continue with Google</span>
-        <span class="real-gsi-mount" id="realGsiMount"></span>
-      </button>
+      </span>
+      <span class="txt">Scan QR Code<small>Connect instantly</small></span>
+    </button>
 
-      <div class="signed-pill" id="signedPill" style="display:none;">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="20 6 9 17 4 12"/>
+    <button class="drawer-item primary" id="menuConnect">
+      <span class="ic">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+          <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
         </svg>
-        <span>Signed in · <span class="sp-email" id="signedEmail">—</span></span>
-      </div>
-    </div>
+      </span>
+      <span class="txt">Connect by Chat ID<small>Paste manually</small></span>
+    </button>
 
     <div class="drawer-divider"></div>
     <div class="drawer-section-label">Chat</div>
@@ -540,15 +1056,6 @@
         </svg>
       </span>
       <span class="txt">Copy my Chat ID<small>Share with a friend</small></span>
-    </button>
-
-    <button class="drawer-item" id="menuNewChat">
-      <span class="ic">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M12 5v14M5 12h14"/>
-        </svg>
-      </span>
-      <span class="txt">New connection<small>Paste a Chat ID</small></span>
     </button>
 
     <div class="drawer-divider"></div>
@@ -576,20 +1083,23 @@
   <span id="toastMsg">Copied!</span>
 </div>
 
-<!-- Firebase SDK (compat version — works without modules) -->
+<!-- Firebase SDK -->
 <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-database-compat.js"></script>
+<!-- QR code generator -->
+<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+<!-- QR code scanner (jsQR) -->
+<script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
 
 <script>
 /* ============================================================
-   ConvoLink — Firebase-powered chat
-   ✅ Auto-connect
-   ✅ Real-time across devices (without any server)
+   ConvoLink — Firebase chat + QR
+   • Robust scanner: live camera + image-upload fallback
+   • Detailed error messages so user knows exactly what's wrong
    ============================================================ */
 
 const GOOGLE_CLIENT_ID = "617375562543-iojpcek0skc33nd3tvi1osn4iguivktd.apps.googleusercontent.com";
 
-/* ---------- Firebase config ---------- */
 const firebaseConfig = {
   apiKey: "AIzaSyB664ss54zAPuKsXHoXgc47HgIO-I5945w",
   authDomain: "my-chat-f66d9.firebaseapp.com",
@@ -604,6 +1114,8 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
+const QR_PREFIX = "CONVOLINK:";
+
 let me = null;
 let partnerId = null;
 let partnerName = 'Friend';
@@ -611,35 +1123,77 @@ let gsiReady = false;
 let presenceRef = null;
 let incomingReqRef = null;
 let messageRef = null;
-let partnerPresenceRef = null;
+let pendingAttachment = null;
+
+let scanStream = null;
+let scanRAF = null;
+let scanCanvas = null;
+let scanCtx = null;
+let scanActive = false;
 
 const ME_KEY = "convolink_me";
 const PARTNER_KEY = "convolink_partner";
 const MSG_KEY = "convolink_messages";
+const LOCAL_ONLY_KEY = "convolink_local_only";
+
+let LOCAL_ONLY = true;
 
 const $ = id => document.getElementById(id);
 
-const messagesEl   = $('messages');
-const emptyState   = $('emptyState');
-const myIdVal      = $('myIdVal');
-const copyIdBtn    = $('copyIdBtn');
-const connectInput = $('connectInput');
-const connectBtn   = $('connectBtn');
-const connectBar   = $('connectBar');
-const msgInput     = $('msgInput');
-const sendBtn      = $('sendBtn');
-const statusChip   = $('statusChip');
-const statusText   = $('statusText');
-const topAvatar    = $('topAvatar');
-const drawerAvatar = $('drawerAvatar');
-const drawerName   = $('drawerName');
-const drawerEmail  = $('drawerEmail');
-const drawer       = $('drawer');
-const drawerOverlay= $('drawerOverlay');
-const signedPill   = $('signedPill');
-const signedEmail  = $('signedEmail');
-const googleSignInBtn = $('googleSignInBtn');
-const realGsiMount = $('realGsiMount');
+const messagesEl    = $('messages');
+const emptyState    = $('emptyState');
+const msgInput      = $('msgInput');
+const sendBtn       = $('sendBtn');
+const attachBtn     = $('attachBtn');
+const cameraBtn     = $('cameraBtn');
+const fileInput     = $('fileInput');
+const cameraInput   = $('cameraInput');
+const qrImageInput  = $('qrImageInput');
+const statusChip    = $('statusChip');
+const statusText    = $('statusText');
+const topAvatar     = $('topAvatar');
+const drawerAvatar  = $('drawerAvatar');
+const drawerName    = $('drawerName');
+const drawerEmail   = $('drawerEmail');
+const drawerMyId    = $('drawerMyId');
+const drawerCopyId  = $('drawerCopyId');
+const drawer        = $('drawer');
+const drawerOverlay = $('drawerOverlay');
+const googleLogoBtn = $('googleLogoBtn');
+const realGsiMount  = $('realGsiMount');
+
+const connectModal  = $('connectModal');
+const connectInput  = $('connectInput');
+const connectConfirm= $('connectConfirm');
+const connectCancel = $('connectCancel');
+const connectCancelBtn = $('connectCancelBtn');
+
+const qrShowModal   = $('qrShowModal');
+const qrShowClose   = $('qrShowClose');
+const qrCanvas      = $('qrCanvas');
+const qrMyId        = $('qrMyId');
+const qrCopyId      = $('qrCopyId');
+const qrDownload    = $('qrDownload');
+
+const qrScanModal   = $('qrScanModal');
+const qrScanClose   = $('qrScanClose');
+const scanVideo     = $('scanVideo');
+const scannerStatus = $('scannerStatus');
+const scanCancelBtn = $('scanCancelBtn');
+const scanRetryBtn  = $('scanRetryBtn');
+const scannerFallback = $('scannerFallback');
+const fallbackMsg   = $('fallbackMsg');
+const fallbackPickBtn = $('fallbackPickBtn');
+
+const imgModal   = $('imgModal');
+const imgPreview = $('imgPreview');
+const imgClose   = $('imgClose');
+
+const attachPreview = $('attachPreview');
+const apThumb       = $('apThumb');
+const apName        = $('apName');
+const apSize        = $('apSize');
+const apRemove      = $('apRemove');
 
 /* ---------- Utils ---------- */
 function genId() {
@@ -652,7 +1206,7 @@ function showToast(msg) {
   $('toastMsg').textContent = msg;
   t.classList.add('show');
   clearTimeout(t._timer);
-  t._timer = setTimeout(() => t.classList.remove('show'), 2400);
+  t._timer = setTimeout(() => t.classList.remove('show'), 3000);
 }
 function timeNow() {
   return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
@@ -663,9 +1217,11 @@ function esc(s) {
 function initials(name) {
   return (name || '?').trim().split(/\s+/).map(w => w[0]).slice(0,2).join('').toUpperCase();
 }
-function chatKey(a, b) {
-  // Consistent key regardless of order
-  return [a, b].sort().join('__');
+function chatKey(a, b) { return [a, b].sort().join('__'); }
+function fmtBytes(b) {
+  if (b < 1024) return b + ' B';
+  if (b < 1024*1024) return (b/1024).toFixed(1) + ' KB';
+  return (b/1024/1024).toFixed(1) + ' MB';
 }
 
 /* ---------- Drawer ---------- */
@@ -674,6 +1230,21 @@ function closeDrawer() { drawer.classList.remove('open'); drawerOverlay.classLis
 $('menuBtn').addEventListener('click', openDrawer);
 $('closeDrawer').addEventListener('click', closeDrawer);
 drawerOverlay.addEventListener('click', closeDrawer);
+
+/* ---------- Connect modal ---------- */
+function openConnectModal() {
+  closeDrawer();
+  connectModal.classList.add('open');
+  setTimeout(() => connectInput.focus(), 250);
+}
+function closeConnectModal() {
+  connectModal.classList.remove('open');
+  connectInput.value = '';
+}
+$('menuConnect').addEventListener('click', openConnectModal);
+connectCancel.addEventListener('click', closeConnectModal);
+connectCancelBtn.addEventListener('click', closeConnectModal);
+connectModal.addEventListener('click', (e) => { if (e.target === connectModal) closeConnectModal(); });
 
 /* ============================================================
    Google Sign-In
@@ -687,26 +1258,18 @@ window.handleGoogleResponse = function(response) {
       picture: payload.picture || null
     });
     showToast('Signed in as ' + (payload.name || payload.email));
-  } catch (e) {
-    console.error(e);
-    showToast('Google sign-in failed');
-  }
+  } catch (e) { console.error(e); showToast('Google sign-in failed'); }
 };
 
 function applyGoogleUser(u) {
-  const oldId = me ? me.id : null;
+  if (presenceRef) presenceRef.remove();
   const newId = genId();
-
-  // If old session existed, clean it up
-  if (oldId && presenceRef) presenceRef.remove();
-
   me = { id: newId, name: u.name, email: u.email, picture: u.picture, provider: 'google' };
   localStorage.setItem(ME_KEY, JSON.stringify(me));
   paintMe();
   closeDrawer();
-
-  // Register with new ID
   registerPresence();
+  if (qrShowModal.classList.contains('open')) drawMyQR();
 }
 
 function initGoogle() {
@@ -720,11 +1283,11 @@ function initGoogle() {
     ux_mode: 'popup'
   });
   google.accounts.id.renderButton(realGsiMount, {
-    type: 'standard', theme: 'outline', size: 'large',
-    text: 'continue_with', shape: 'rectangular', width: 280
+    type: 'icon', theme: 'outline', size: 'large',
+    shape: 'circle', logo_alignment: 'center'
   });
   gsiReady = true;
-  googleSignInBtn.classList.add('has-real-gsi');
+  googleLogoBtn.classList.remove('no-gsi');
   return true;
 }
 function tryInitGoogle() {
@@ -737,9 +1300,22 @@ function tryInitGoogle() {
 }
 tryInitGoogle();
 
+googleLogoBtn.addEventListener('click', () => {
+  if (!gsiReady) {
+    showToast('Connecting to Google…');
+    setTimeout(() => {
+      if (window.google && google.accounts && google.accounts.id) {
+        initGoogle();
+        try { google.accounts.id.prompt(); } catch {}
+      } else {
+        showToast('Could not reach Google — check internet');
+      }
+    }, 400);
+  }
+});
+
 /* ---------- Paint user ---------- */
 function paintMe() {
-  myIdVal.textContent = me.id;
   const ini = initials(me.name);
   if (me.picture) {
     topAvatar.innerHTML    = `<img src="${me.picture}" alt="">`;
@@ -750,11 +1326,13 @@ function paintMe() {
   }
   drawerName.textContent  = me.name;
   drawerEmail.textContent = me.email || 'Not signed in';
+  drawerMyId.textContent  = me.id;
+  qrMyId.textContent      = me.id;
+
   if (me.provider === 'google' && me.email) {
-    signedPill.style.display = 'flex';
-    signedEmail.textContent = me.email;
+    googleLogoBtn.classList.add('signed');
   } else {
-    signedPill.style.display = 'none';
+    googleLogoBtn.classList.remove('signed');
   }
 }
 
@@ -766,55 +1344,40 @@ function initMe() {
 }
 
 /* ============================================================
-   Firebase Presence — register our Chat ID
+   Firebase presence
    ============================================================ */
 function registerPresence() {
   if (presenceRef) presenceRef.remove();
 
   presenceRef = db.ref('users/' + me.id);
   presenceRef.set({
-    id: me.id,
-    name: me.name,
-    picture: me.picture,
-    email: me.email,
-    online: true,
+    id: me.id, name: me.name, picture: me.picture,
+    email: me.email, online: true,
     lastSeen: firebase.database.ServerValue.TIMESTAMP
   });
-
-  // On disconnect, mark offline
   presenceRef.onDisconnect().update({
     online: false,
     lastSeen: firebase.database.ServerValue.TIMESTAMP
   });
 
-  // Listen for incoming auto-connect requests
   incomingReqRef = db.ref('incoming/' + me.id);
   incomingReqRef.on('value', (snap) => {
     const data = snap.val();
-    if (!data) return;
+    if (!data || !data.from) return;
 
-    // Someone wants to connect with us
-    const { from, fromName, fromPicture } = data;
-    if (!from) return;
-
-    console.log('⚡ Auto-connect from', fromName);
-
-    // Accept it: set connection on both sides
+    const { from, fromName } = data;
     partnerId = from;
     partnerName = fromName || 'Friend';
+    LOCAL_ONLY = false;
     localStorage.setItem(PARTNER_KEY, partnerId);
+    localStorage.setItem(LOCAL_ONLY_KEY, 'false');
 
-    // Write our side of connection
     db.ref('connections/' + me.id).set({
       partnerId: from,
       partnerName: fromName || 'Friend',
       at: firebase.database.ServerValue.TIMESTAMP
     });
-
-    // Clear the incoming request
     incomingReqRef.remove();
-
-    // Notify the other side we accepted
     db.ref('accepted/' + from).set({
       partnerId: me.id,
       partnerName: me.name,
@@ -828,19 +1391,16 @@ function registerPresence() {
     showToast(`${partnerName} connected!`);
   });
 
-  // Listen for accept confirmations (when WE sent a request)
   db.ref('accepted/' + me.id).on('value', (snap) => {
     const data = snap.val();
     if (!data) return;
     const { partnerId: pId, partnerName: pName } = data;
-
     partnerId = pId;
     partnerName = pName || 'Friend';
+    LOCAL_ONLY = false;
     localStorage.setItem(PARTNER_KEY, partnerId);
-
-    // Clear the accepted flag so it doesn't re-fire
+    localStorage.setItem(LOCAL_ONLY_KEY, 'false');
     db.ref('accepted/' + me.id).remove();
-
     setConnected(true, partnerName);
     addSystem(`Connected with ${partnerName} 🎉`);
     render();
@@ -849,83 +1409,69 @@ function registerPresence() {
   });
 }
 
-/* ============================================================
-   Listen for incoming messages
-   ============================================================ */
 function listenMessages() {
   if (messageRef) messageRef.off();
   if (!partnerId) return;
-
   const key = chatKey(me.id, partnerId);
   messageRef = db.ref('messages/' + key).limitToLast(200);
 
   messageRef.on('child_added', (snap) => {
     const m = snap.val();
     if (!m) return;
-    // Avoid double-saving our own sent messages
     const existing = getMsgs();
     if (existing.some(x => x._key === snap.key)) return;
-
     saveMsg({
       _key: snap.key,
-      from: m.from,
-      fromName: m.fromName,
-      text: m.text,
-      time: m.time || timeNow()
+      from: m.from, fromName: m.fromName,
+      text: m.text || '', time: m.time || timeNow(),
+      media: m.media || null
     });
     render();
   });
 }
 
 /* ============================================================
-   Auto-connect: write a request to target's incoming
+   Connect (shared by manual + QR)
    ============================================================ */
-connectBtn.addEventListener('click', async () => {
-  const id = connectInput.value.trim().toUpperCase();
-  if (!id) { showToast('Paste a Chat ID'); return; }
+async function connectToId(id, opts) {
+  opts = opts || {};
+  id = (id || '').trim().toUpperCase();
+
+  if (!id) { showToast('Please enter a Chat ID'); return; }
   if (id === me.id) { showToast("That's your own ID!"); return; }
-  if (!id.startsWith('CL-')) { showToast('Invalid Chat ID'); return; }
+  if (!id.startsWith('CL-')) { showToast('Invalid Chat ID format'); return; }
   if (id === partnerId) { showToast('Already connected'); return; }
 
   setStatus('connecting', 'Connecting…');
-  connectBtn.disabled = true;
 
   try {
-    // Check if user exists
     const snap = await db.ref('users/' + id).once('value');
     const target = snap.val();
 
     if (!target) {
       showToast('User not found — check the ID');
-      setStatus('', 'Not connected');
-      connectBtn.disabled = false;
+      setStatus('', 'Ready');
       return;
     }
-
-    // If target is offline
     if (!target.online) {
       showToast(`${target.name || 'User'} is offline`);
-      setStatus('', 'Not connected');
-      connectBtn.disabled = false;
+      setStatus('', 'Ready');
       return;
     }
 
-    // Write incoming request for target
     await db.ref('incoming/' + id).set({
-      from: me.id,
-      fromName: me.name,
-      fromPicture: me.picture,
+      from: me.id, fromName: me.name, fromPicture: me.picture,
       at: firebase.database.ServerValue.TIMESTAMP
     });
 
-    // Also write our side immediately (both sides connected)
     partnerId = id;
     partnerName = target.name || 'Friend';
+    LOCAL_ONLY = false;
     localStorage.setItem(PARTNER_KEY, partnerId);
+    localStorage.setItem(LOCAL_ONLY_KEY, 'false');
 
     await db.ref('connections/' + me.id).set({
-      partnerId: id,
-      partnerName: partnerName,
+      partnerId: id, partnerName: partnerName,
       at: firebase.database.ServerValue.TIMESTAMP
     });
 
@@ -934,17 +1480,18 @@ connectBtn.addEventListener('click', async () => {
     render();
     listenMessages();
     showToast('Connected! Start chatting');
+    if (opts.fromQR) closeScanModal();
+    else closeConnectModal();
 
   } catch (e) {
     console.error(e);
     showToast('Connection failed');
-    setStatus('', 'Not connected');
-  } finally {
-    connectBtn.disabled = false;
+    setStatus('', 'Ready');
   }
-});
+}
 
-connectInput.addEventListener('keydown', e => { if (e.key === 'Enter') connectBtn.click(); });
+connectConfirm.addEventListener('click', () => connectToId(connectInput.value));
+connectInput.addEventListener('keydown', e => { if (e.key === 'Enter') connectConfirm.click(); });
 
 /* ============================================================
    Connection state
@@ -954,17 +1501,9 @@ function setConnected(on, name) {
     statusChip.classList.remove('connecting');
     statusChip.classList.add('online');
     statusText.textContent = 'Connected' + (name ? ' · ' + name : '');
-    msgInput.disabled = false;
-    sendBtn.disabled = false;
-    connectBar.style.display = 'none';
-    connectBtn.disabled = false;
   } else {
-    statusChip.classList.remove('online', 'connecting');
-    statusText.textContent = 'Not connected';
-    msgInput.disabled = true;
-    sendBtn.disabled = true;
-    connectBar.style.display = 'flex';
-    connectBtn.disabled = false;
+    statusChip.classList.remove('connecting', 'online');
+    statusText.textContent = 'Ready';
   }
 }
 function setStatus(kind, text) {
@@ -977,10 +1516,8 @@ function setStatus(kind, text) {
    Messages
    ============================================================ */
 function getMsgs() {
-  try {
-    const raw = localStorage.getItem(MSG_KEY);
-    return raw ? JSON.parse(raw) : [];
-  } catch { return []; }
+  try { const r = localStorage.getItem(MSG_KEY); return r ? JSON.parse(r) : []; }
+  catch { return []; }
 }
 function saveMsg(m) {
   const a = getMsgs();
@@ -1011,7 +1548,22 @@ function render() {
     } else {
       const mine = m.from === me.id;
       div.className = 'msg ' + (mine ? 'mine' : 'theirs');
-      div.innerHTML = `${esc(m.text)}<span class="time">${m.time || ''}</span>`;
+
+      let inner = '';
+      if (m.media && m.media.type === 'image') {
+        inner += `<img class="msg-media" src="${m.media.data}" alt="" data-full="${m.media.data}" />`;
+      } else if (m.media && m.media.type === 'file') {
+        inner += `<div class="file-chip">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/>
+            <polyline points="13 2 13 9 20 9"/>
+          </svg>
+          <a href="${m.media.data}" download="${esc(m.media.name)}">${esc(m.media.name)}</a>
+        </div>`;
+      }
+      if (m.text) inner += esc(m.text);
+      inner += `<span class="time">${m.time || ''}</span>`;
+      div.innerHTML = inner;
     }
     messagesEl.appendChild(div);
   });
@@ -1025,33 +1577,374 @@ msgInput.addEventListener('keydown', e => {
 
 async function send() {
   const text = msgInput.value.trim();
-  if (!text || !partnerId) return;
 
+  if (pendingAttachment) {
+    const att = pendingAttachment;
+    pendingAttachment = null;
+    clearAttachmentPreview();
+    msgInput.value = '';
+
+    const m = {
+      from: me.id, fromName: me.name,
+      text: text || '',
+      time: timeNow(),
+      at: firebase.database.ServerValue.TIMESTAMP,
+      media: { type: att.kind, name: att.name, data: att.dataUrl }
+    };
+    const tempKey = 'local_' + Date.now() + '_' + Math.random();
+    saveMsg({ _key: tempKey, ...m });
+    render();
+
+    if (!LOCAL_ONLY && partnerId) {
+      try {
+        const key = chatKey(me.id, partnerId);
+        await db.ref('messages/' + key).push(m);
+        showToast(att.kind === 'image' ? 'Photo sent' : 'File sent');
+      } catch (e) { console.error(e); showToast('Upload failed'); }
+    } else {
+      showToast(att.kind === 'image' ? 'Photo added' : 'File added');
+    }
+    return;
+  }
+
+  if (!text) return;
   const m = {
-    from: me.id,
-    fromName: me.name,
-    text,
-    time: timeNow(),
+    from: me.id, fromName: me.name, text, time: timeNow(),
     at: firebase.database.ServerValue.TIMESTAMP
   };
-
-  // Save locally with a temp key
   const tempKey = 'local_' + Date.now() + '_' + Math.random();
   saveMsg({ _key: tempKey, ...m });
   render();
   msgInput.value = '';
 
-  // Push to Firebase
-  try {
-    const key = chatKey(me.id, partnerId);
-    await db.ref('messages/' + key).push(m);
-  } catch (e) {
-    console.error('Send failed', e);
-    showToast('Message failed to send');
+  if (!LOCAL_ONLY && partnerId) {
+    try {
+      const key = chatKey(me.id, partnerId);
+      await db.ref('messages/' + key).push(m);
+    } catch (e) { console.error(e); showToast('Message failed to send'); }
   }
 }
 
-/* ---------- Copy ID ---------- */
+/* ---------- File / Camera ---------- */
+attachBtn.addEventListener('click', () => fileInput.click());
+cameraBtn.addEventListener('click', () => cameraInput.click());
+
+fileInput.addEventListener('change', (e) => {
+  const f = e.target.files && e.target.files[0];
+  if (f) stageAttachment(f, f.type.startsWith('image/') ? 'image' : 'file');
+  fileInput.value = '';
+});
+cameraInput.addEventListener('change', (e) => {
+  const f = e.target.files && e.target.files[0];
+  if (f) stageAttachment(f, 'image');
+  cameraInput.value = '';
+});
+
+function stageAttachment(file, kind) {
+  const MAX = 500 * 1024;
+  if (file.size > MAX) { showToast('File too large (max 500 KB)'); return; }
+  const reader = new FileReader();
+  reader.onload = () => {
+    pendingAttachment = {
+      file, kind,
+      dataUrl: reader.result,
+      name: file.name || (kind === 'image' ? 'photo.jpg' : 'file'),
+      size: file.size
+    };
+    showAttachmentPreview();
+    msgInput.focus();
+    showToast('Ready to send — tap Send');
+  };
+  reader.readAsDataURL(file);
+}
+
+function showAttachmentPreview() {
+  const att = pendingAttachment;
+  if (!att) return;
+  attachPreview.classList.add('show');
+  apName.textContent = att.name;
+  apSize.textContent = fmtBytes(att.size) + ' · ready to send';
+  if (att.kind === 'image') {
+    apThumb.innerHTML = `<img src="${att.dataUrl}" alt="">`;
+  } else {
+    apThumb.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>`;
+  }
+  sendBtn.classList.add('has-attach');
+}
+function clearAttachmentPreview() {
+  attachPreview.classList.remove('show');
+  apThumb.innerHTML = '';
+  sendBtn.classList.remove('has-attach');
+}
+apRemove.addEventListener('click', () => {
+  pendingAttachment = null;
+  clearAttachmentPreview();
+  showToast('Attachment removed');
+});
+
+/* ---------- Image preview ---------- */
+messagesEl.addEventListener('click', (e) => {
+  const img = e.target.closest('img.msg-media');
+  if (!img) return;
+  imgPreview.src = img.dataset.full || img.src;
+  imgModal.classList.add('open');
+});
+imgClose.addEventListener('click', () => imgModal.classList.remove('open'));
+imgModal.addEventListener('click', (e) => { if (e.target === imgModal) imgModal.classList.remove('open'); });
+
+/* ============================================================
+   QR CODE — SHOW MY QR
+   ============================================================ */
+function drawMyQR() {
+  if (typeof QRCode === 'undefined') {
+    showToast('QR generator not loaded');
+    return;
+  }
+  qrMyId.textContent = me.id;
+  const payload = QR_PREFIX + me.id;
+
+  QRCode.toCanvas(qrCanvas, payload, {
+    width: 240,
+    margin: 1,
+    color: { dark: '#1f2430', light: '#ffffff' },
+    errorCorrectionLevel: 'M'
+  }, (err) => { if (err) console.error('QR error:', err); });
+}
+
+$('menuShowQR').addEventListener('click', () => {
+  closeDrawer();
+  qrShowModal.classList.add('open');
+  setTimeout(drawMyQR, 80);
+});
+
+qrShowClose.addEventListener('click', () => qrShowModal.classList.remove('open'));
+qrShowModal.addEventListener('click', (e) => { if (e.target === qrShowModal) qrShowModal.classList.remove('open'); });
+
+qrCopyId.addEventListener('click', async () => {
+  try { await navigator.clipboard.writeText(me.id); }
+  catch {
+    const ta = document.createElement('textarea');
+    ta.value = me.id; document.body.appendChild(ta);
+    ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+  }
+  showToast('Chat ID copied');
+});
+
+qrDownload.addEventListener('click', () => {
+  try {
+    const url = qrCanvas.toDataURL('image/png');
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'convolink-' + me.id + '.png';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    showToast('QR saved');
+  } catch (e) {
+    showToast('Could not save QR');
+  }
+});
+
+/* ============================================================
+   QR CODE — SCANNER (robust)
+   ============================================================ */
+async function startScanner() {
+  stopScanner(); // reset
+  scannerFallback.classList.remove('show');
+  scannerStatus.className = 'scanner-status';
+  scannerStatus.textContent = 'Opening camera…';
+
+  // === Pre-flight checks ===
+  if (!window.isSecureContext) {
+    scannerStatus.textContent = 'Camera needs HTTPS — open site via https://';
+    scannerStatus.classList.add('error');
+    showFallback('Camera requires a secure (https) connection.');
+    return;
+  }
+
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+    scannerStatus.textContent = 'This browser does not support camera.';
+    scannerStatus.classList.add('error');
+    showFallback('This browser does not support camera. Try Chrome or Safari.');
+    return;
+  }
+
+  // === Try to open camera ===
+  try {
+    scanStream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: { ideal: 'environment' } },
+      audio: false
+    });
+  } catch (err) {
+    console.error('getUserMedia error:', err);
+    let msg = 'Could not open camera.';
+    if (err && err.name === 'NotAllowedError') msg = 'Camera permission was denied. Please allow camera access.';
+    else if (err && err.name === 'NotFoundError') msg = 'No camera found on this device.';
+    else if (err && err.name === 'NotReadableError') msg = 'Camera is being used by another app.';
+    else if (err && err.name === 'OverconstrainedError') msg = 'Camera not compatible with this device.';
+    scannerStatus.textContent = msg;
+    scannerStatus.classList.add('error');
+    showFallback(msg);
+    return;
+  }
+
+  // === Attach to video element ===
+  try {
+    scanVideo.srcObject = scanStream;
+    scanVideo.setAttribute('playsinline', 'true');
+    scanVideo.setAttribute('muted', 'true');
+    await scanVideo.play();
+  } catch (err) {
+    console.error('video.play error:', err);
+    scannerStatus.textContent = 'Camera opened, but preview failed.';
+    scannerStatus.classList.add('error');
+    showFallback('Camera preview failed. Try reloading or using gallery picker.');
+    return;
+  }
+
+  // === Setup canvas for scanning ===
+  if (!scanCanvas) {
+    scanCanvas = document.createElement('canvas');
+    scanCtx = scanCanvas.getContext('2d', { willReadFrequently: true });
+  }
+
+  // Wait a moment for camera to warm up
+  setTimeout(() => {
+    scannerStatus.textContent = 'Point camera at the QR code…';
+    scanActive = true;
+    scanLoop();
+  }, 300);
+}
+
+function scanLoop() {
+  if (!scanActive || !scanStream) return;
+
+  if (scanVideo.readyState === scanVideo.HAVE_ENOUGH_DATA) {
+    const w = scanVideo.videoWidth;
+    const h = scanVideo.videoHeight;
+    if (w && h) {
+      scanCanvas.width = w;
+      scanCanvas.height = h;
+      scanCtx.drawImage(scanVideo, 0, 0, w, h);
+      try {
+        const imgData = scanCtx.getImageData(0, 0, w, h);
+        if (typeof jsQR !== 'undefined') {
+          const code = jsQR(imgData.data, w, h, { inversionAttempts: 'attemptBoth' });
+          if (code && code.data) {
+            handleScanned(code.data);
+            return;
+          }
+        }
+      } catch (e) { /* ignore per-frame errors */ }
+    }
+  }
+  scanRAF = requestAnimationFrame(scanLoop);
+}
+
+function handleScanned(text) {
+  let id = text.trim();
+  if (id.startsWith(QR_PREFIX)) id = id.slice(QR_PREFIX.length);
+  id = id.trim().toUpperCase();
+
+  if (!id.startsWith('CL-')) {
+    // Not our QR — silently continue
+    return;
+  }
+
+  scannerStatus.textContent = 'QR found: ' + id;
+  scannerStatus.className = 'scanner-status ok';
+  if (navigator.vibrate) navigator.vibrate(60);
+
+  scanActive = false;
+  stopScanner();
+
+  setTimeout(() => {
+    connectToId(id, { fromQR: true });
+  }, 350);
+}
+
+function stopScanner() {
+  scanActive = false;
+  if (scanRAF) { cancelAnimationFrame(scanRAF); scanRAF = null; }
+  if (scanStream) {
+    scanStream.getTracks().forEach(t => t.stop());
+    scanStream = null;
+  }
+  if (scanVideo) {
+    try { scanVideo.srcObject = null; } catch {}
+  }
+}
+
+function showFallback(msg) {
+  fallbackMsg.textContent = msg;
+  scannerFallback.classList.add('show');
+}
+
+function openScanModal() {
+  closeDrawer();
+  qrScanModal.classList.add('open');
+  // Small delay so modal is fully visible before requesting camera
+  setTimeout(startScanner, 300);
+}
+function closeScanModal() {
+  stopScanner();
+  qrScanModal.classList.remove('open');
+  scannerStatus.textContent = 'Opening camera…';
+  scannerStatus.className = 'scanner-status';
+  scannerFallback.classList.remove('show');
+}
+
+$('menuScanQR').addEventListener('click', openScanModal);
+qrScanClose.addEventListener('click', closeScanModal);
+scanCancelBtn.addEventListener('click', closeScanModal);
+scanRetryBtn.addEventListener('click', () => {
+  stopScanner();
+  setTimeout(startScanner, 250);
+});
+qrScanModal.addEventListener('click', (e) => { if (e.target === qrScanModal) closeScanModal(); });
+
+/* ---------- Fallback: scan from gallery image ---------- */
+fallbackPickBtn.addEventListener('click', () => qrImageInput.click());
+qrImageInput.addEventListener('change', (e) => {
+  const f = e.target.files && e.target.files[0];
+  qrImageInput.value = '';
+  if (!f) return;
+  scannerStatus.textContent = 'Reading image…';
+  scannerStatus.className = 'scanner-status';
+
+  const reader = new FileReader();
+  reader.onload = () => {
+    const img = new Image();
+    img.onload = () => {
+      const c = document.createElement('canvas');
+      c.width = img.naturalWidth;
+      c.height = img.naturalHeight;
+      const ctx = c.getContext('2d', { willReadFrequently: true });
+      ctx.drawImage(img, 0, 0);
+      const data = ctx.getImageData(0, 0, c.width, c.height);
+      if (typeof jsQR === 'undefined') {
+        scannerStatus.textContent = 'QR reader not loaded';
+        scannerStatus.className = 'scanner-status error';
+        return;
+      }
+      const code = jsQR(data.data, c.width, c.height, { inversionAttempts: 'attemptBoth' });
+      if (code && code.data) {
+        handleScanned(code.data);
+      } else {
+        scannerStatus.textContent = 'No QR code found in that image.';
+        scannerStatus.className = 'scanner-status error';
+      }
+    };
+    img.onerror = () => {
+      scannerStatus.textContent = 'Could not read the image.';
+      scannerStatus.className = 'scanner-status error';
+    };
+    img.src = reader.result;
+  };
+  reader.readAsDataURL(f);
+});
+
+/* ---------- Copy ID (drawer mini) ---------- */
 async function copyMyId() {
   try { await navigator.clipboard.writeText(me.id); }
   catch {
@@ -1061,24 +1954,22 @@ async function copyMyId() {
   }
   showToast('Chat ID copied');
 }
-copyIdBtn.addEventListener('click', async () => {
+
+drawerCopyId.addEventListener('click', async (e) => {
+  e.stopPropagation();
   await copyMyId();
-  copyIdBtn.classList.add('done');
-  setTimeout(() => copyIdBtn.classList.remove('done'), 1500);
+  drawerCopyId.classList.add('done');
+  setTimeout(() => drawerCopyId.classList.remove('done'), 1500);
 });
 
-/* ---------- Drawer actions ---------- */
 $('menuCopyId').addEventListener('click', async () => { await copyMyId(); closeDrawer(); });
-$('menuNewChat').addEventListener('click', () => {
-  closeDrawer();
-  setTimeout(() => connectInput.focus(), 250);
-});
 $('menuReset').addEventListener('click', () => {
   if (!confirm('Reset session? Your Chat ID will change.')) return;
   if (presenceRef) presenceRef.remove();
   if (incomingReqRef) incomingReqRef.off();
   if (messageRef) messageRef.off();
-  [ME_KEY, PARTNER_KEY, MSG_KEY].forEach(k => localStorage.removeItem(k));
+  stopScanner();
+  [ME_KEY, PARTNER_KEY, MSG_KEY, LOCAL_ONLY_KEY].forEach(k => localStorage.removeItem(k));
   location.reload();
 });
 
@@ -1090,10 +1981,15 @@ window.addEventListener('load', () => {
   registerPresence();
 
   const savedPartner = localStorage.getItem(PARTNER_KEY);
-  if (savedPartner && savedPartner !== me.id) {
+  const savedLocalOnly = localStorage.getItem(LOCAL_ONLY_KEY);
+  if (savedPartner && savedPartner !== me.id && savedLocalOnly === 'false') {
     partnerId = savedPartner;
+    LOCAL_ONLY = false;
     setConnected(true, 'Friend');
     listenMessages();
+  } else {
+    LOCAL_ONLY = true;
+    setConnected(false);
   }
   render();
 });
