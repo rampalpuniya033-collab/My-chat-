@@ -494,13 +494,13 @@ html,body{background:linear-gradient(145deg,#f7f9fc 0%,#eef3f9 100%);color:var(-
 }
 
 /* ===== PRO CHAT ACTIONS / VOICE PLAYER ===== */
-.msg{position:relative}
-.msg-menu-btn{position:absolute;right:6px;top:5px;width:25px;height:25px;border:0;border-radius:8px;background:rgba(255,255,255,.16);color:inherit;display:none;place-items:center;cursor:pointer;z-index:4}
+.msg{position:relative;-webkit-user-select:none;user-select:none;touch-action:pan-y}
+.msg-menu-btn{display:none!important}
 .msg.theirs .msg-menu-btn{background:#f2f4f8}.msg:hover .msg-menu-btn,.msg:focus-within .msg-menu-btn{display:grid}.msg-menu-btn svg{width:15px;height:15px}
 .msg-edited{font-size:9px;opacity:.58;margin-left:5px}.msg-action-pop{position:fixed;z-index:1000;min-width:170px;background:#fff;border:1px solid #e5e9f0;border-radius:14px;padding:6px;box-shadow:0 18px 45px rgba(15,25,45,.20);display:none}.msg-action-pop.open{display:block}.msg-action-pop button{width:100%;display:flex;align-items:center;gap:9px;border:0;background:transparent;border-radius:10px;padding:10px 11px;color:#202737;font:600 12.5px inherit;text-align:left;cursor:pointer}.msg-action-pop button:hover{background:#f3f6fa}.msg-action-pop button.danger{color:#d33b45}.msg-action-pop svg{width:16px;height:16px;flex:none}
 .voice-player{min-width:215px;gap:8px}.voice-play-btn{width:38px;height:38px}.voice-wave{height:28px;flex:1;display:flex;align-items:center;gap:2px;min-width:85px;cursor:pointer;padding:0 2px}.voice-wave span{display:block;width:3px;border-radius:4px;background:currentColor;opacity:.42;transform-origin:center;transition:opacity .12s}.voice-wave span.played{opacity:.95}.voice-speed{border:0;background:rgba(255,255,255,.18);color:inherit;border-radius:8px;padding:4px 6px;font:700 9px inherit;cursor:pointer}.msg.theirs .voice-speed{background:#edf1f7;color:var(--brand)}
 .profile-preview-card{width:min(390px,100%);background:var(--card);border-radius:26px;padding:24px 20px 18px;box-shadow:0 30px 80px rgba(0,0,0,.28);text-align:center;position:relative}.profile-preview-avatar{width:86px;height:86px;border-radius:24px;background:var(--blue-soft);color:var(--brand);display:grid;place-items:center;margin:4px auto 13px;font-size:30px;font-weight:800;overflow:hidden}.profile-preview-avatar img{width:100%;height:100%;object-fit:cover}.profile-preview-card h3{font-size:19px;margin-bottom:4px}.profile-preview-email{font-size:12px;color:var(--muted);margin-bottom:14px;word-break:break-all}.profile-preview-uid{font:700 12px 'SF Mono','Menlo',monospace;background:#f4f6fa;border:1px solid var(--line);border-radius:11px;padding:10px;margin-bottom:16px;color:var(--ink-2);word-break:break-all}.profile-preview-actions{display:flex;gap:8px}.profile-preview-actions button{flex:1;padding:12px;border-radius:12px;border:0;font:700 13px inherit;cursor:pointer}.profile-preview-actions .cancel{background:#f3f5f8;color:#596275}.profile-preview-actions .connect{background:var(--brand);color:#fff}.profile-share-row{display:flex;gap:8px;margin:12px 0}.profile-share-row button{flex:1;border:1px solid var(--line);background:#f7f8fa;color:var(--ink-2);border-radius:10px;padding:9px;font:700 11px inherit;cursor:pointer}.profile-edit-card{width:min(400px,100%);background:var(--card);border-radius:24px;padding:22px 20px 18px;box-shadow:0 28px 75px rgba(0,0,0,.25);position:relative}.profile-edit-card h3{font-size:18px;margin-bottom:5px}.profile-edit-sub{font-size:12px;color:var(--muted);margin-bottom:16px}.profile-edit-row{display:flex;flex-direction:column;gap:6px;margin-bottom:13px}.profile-edit-row label{font-size:11px;font-weight:700;color:var(--ink-2)}.profile-edit-row input{height:44px;border:1px solid var(--line);border-radius:11px;padding:0 12px;outline:none;font:500 13px inherit;color:var(--ink);background:#fafbfd}.profile-edit-row input:focus{border-color:#9db2e1;box-shadow:0 0 0 3px rgba(49,87,166,.08)}.profile-edit-actions{display:flex;gap:8px;margin-top:5px}.profile-edit-actions button{flex:1;padding:12px;border-radius:12px;border:0;font:700 13px inherit;cursor:pointer}.profile-edit-actions .cancel{background:#f3f5f8;color:#596275}.profile-edit-actions .save{background:var(--brand);color:#fff}
-@media(max-width:600px){.msg-menu-btn{display:grid}.msg-action-pop{min-width:180px}.voice-player{min-width:205px}.voice-wave span{width:2.7px}}
+@media(max-width:600px){.msg-action-pop{min-width:180px}.voice-player{min-width:205px}.voice-wave span{width:2.7px}}
 
 </style>
 </head>
@@ -913,7 +913,7 @@ const PARTNER_KEY = "convolink_partner";
 const MSG_KEY = "convolink_messages";
 const LOCAL_ONLY_KEY = "convolink_local_only";
 let me = null, partnerId = null, partnerUid = null, partnerName = 'Friend';
-let presenceRef = null, requestRef = null, messageRef = null, authUnsub = null;
+let presenceRef = null, requestRef = null, messageRef = null, authUnsub = null, firebaseConnectionRef = null;
 let pendingAttachment = null, LOCAL_ONLY = true;
 let scanStream = null, scanRAF = null, scanCanvas = null, scanCtx = null, scanActive = false;
 let requestQueue = [], requestModalEl = null;
@@ -996,6 +996,61 @@ function getFirebaseUid(){
   }
   return id;
 }
+async function ensureUserProfile(user){
+  if(!db || !user || !user.uid) throw new Error('Firebase user is not available');
+  const uid=firebaseUid(user.uid);
+  const profileRef=db.ref('users/'+uid);
+  const existingSnap=await profileRef.once('value');
+  const existing=existingSnap.val()||{};
+  me={
+    uid:user.uid,
+    id:uid,
+    name:user.displayName||existing.name||'Google User',
+    email:user.email||existing.email||'',
+    picture:user.photoURL||existing.picture||null,
+    provider:'firebase-google'
+  };
+  localStorage.setItem(ME_KEY,JSON.stringify(me));
+  presenceRef=profileRef;
+
+  // Use Firebase's connection monitor instead of trusting the browser alone.
+  // This keeps online/offline state correct on both mobile and desktop and
+  // automatically marks the user offline when the connection is lost.
+  if(firebaseConnectionRef){try{firebaseConnectionRef.off();}catch{}}
+  firebaseConnectionRef=db.ref('.info/connected');
+  firebaseConnectionRef.on('value',snap=>{
+    if(snap.val()!==true) return;
+    profileRef.onDisconnect().update({
+      online:false,
+      lastSeen:firebase.database.ServerValue.TIMESTAMP
+    }).catch(e=>console.warn('presence onDisconnect',e));
+    profileRef.update({
+      id:uid,
+      uid:user.uid,
+      name:me.name,
+      email:me.email,
+      picture:me.picture,
+      online:true,
+      lastSeen:firebase.database.ServerValue.TIMESTAMP,
+      updatedAt:firebase.database.ServerValue.TIMESTAMP
+    }).catch(e=>console.warn('presence online update',e));
+  });
+
+  await profileRef.update({
+    id:uid,
+    uid:user.uid,
+    name:me.name,
+    email:me.email,
+    picture:me.picture,
+    online:true,
+    lastSeen:firebase.database.ServerValue.TIMESTAMP
+  });
+
+  paintMe();
+  listenForConnections();
+  await restoreConnection();
+}
+
 function friendlyFirebaseError(e){
   const code=e && e.code ? e.code : '';
   if(code.includes('permission-denied')) return 'Firebase permission denied. Check Realtime Database Rules.';
@@ -1332,7 +1387,55 @@ function updateChatTypingIndicator(){
   }
 }
 
-function render(){const all=getMsgs();messagesEl.innerHTML='';if(!all.length){messagesEl.appendChild(emptyState);emptyState.style.display='block';updateChatTypingIndicator();return;}emptyState.style.display='none';all.forEach(m=>{if(m._hiddenForMe)return;const div=document.createElement('div');div.dataset.msgKey=m._key||'';if(m.system){div.className='msg system';div.textContent=m.text;}else{const mine=(m.from===me.uid||m.from===me.id);div.className='msg '+(mine?'mine':'theirs');let inner='';if(m.media&&m.media.type==='image')inner+=`<img class="msg-media" src="${m.media.data}" data-full="${m.media.data}" />`;else if(m.media&&m.media.type==='file')inner+=`<div class="file-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg><a href="${m.media.data}" download="${esc(m.media.name)}">${esc(m.media.name)}</a></div>`;else if(m.media&&m.media.type==='voice'){const dur=Number(m.media.duration||0),bars=voiceBars(String(m._key||m.time||'').length+dur);inner+=`<div class="voice-player" data-src="${m.media.data}" data-total="${dur}"><button class="voice-play-btn" type="button" aria-label="Play voice message"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20"/></svg></button><div class="voice-wave">${bars.map(h=>`<span style="height:${h}px"></span>`).join('')}</div><button class="voice-speed" type="button">1x</button><span class="voice-duration">${fmtDur(dur)}</span></div>`;}if(m.text)inner+=esc(m.text);const tick=mine?`<span class="tick ${m.status==='read'?'read':''}">${m.status==='read'?'✓✓':'✓'}</span>`:'';const edited=m.edited?'<span class="msg-edited">edited</span>':'';inner+=`<span class="time">${esc(m.time||'')}${edited}${tick}</span>`;inner=`<button class="msg-menu-btn" type="button" aria-label="Message options"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="5" cy="12" r="1" fill="currentColor"/><circle cx="12" cy="12" r="1" fill="currentColor"/><circle cx="19" cy="12" r="1" fill="currentColor"/></svg></button>`+inner;div.innerHTML=inner;}messagesEl.appendChild(div);});messagesEl.querySelectorAll('.voice-player').forEach(player=>{player.querySelector('.voice-play-btn')?.addEventListener('click',e=>{e.stopPropagation();toggleVoice(player);});player.querySelector('.voice-speed')?.addEventListener('click',e=>{e.stopPropagation();cycleVoiceSpeed(player);});player.querySelector('.voice-wave')?.addEventListener('click',e=>{if(currentPlayerEl===player&&currentAudio&&currentAudio.duration){const r=e.currentTarget.getBoundingClientRect();currentAudio.currentTime=((e.clientX-r.left)/r.width)*currentAudio.duration;}});});messagesEl.querySelectorAll('.msg-menu-btn').forEach(btn=>btn.addEventListener('click',e=>{e.stopPropagation();openMessageActions(btn.closest('.msg'));}));updateChatTypingIndicator();messagesEl.scrollTop=messagesEl.scrollHeight;}
+function render(){
+  const all=getMsgs();
+  messagesEl.innerHTML='';
+  if(!all.length){
+    messagesEl.appendChild(emptyState);
+    emptyState.style.display='block';
+    updateChatTypingIndicator();
+    return;
+  }
+  emptyState.style.display='none';
+  all.forEach(m=>{
+    if(m._hiddenForMe)return;
+    const div=document.createElement('div');
+    div.dataset.msgKey=m._key||'';
+    if(m.system){
+      div.className='msg system';
+      div.textContent=m.text;
+    }else{
+      const mine=(m.from===me.uid||m.from===me.id);
+      div.className='msg '+(mine?'mine':'theirs');
+      let inner='';
+      if(m.media&&m.media.type==='image') inner+=`<img class="msg-media" src="${m.media.data}" data-full="${m.media.data}" />`;
+      else if(m.media&&m.media.type==='file') inner+=`<div class="file-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg><a href="${m.media.data}" download="${esc(m.media.name)}">${esc(m.media.name)}</a></div>`;
+      else if(m.media&&m.media.type==='voice'){
+        const dur=Number(m.media.duration||0),bars=voiceBars(String(m._key||m.time||'').length+dur);
+        inner+=`<div class="voice-player" data-src="${m.media.data}" data-total="${dur}"><button class="voice-play-btn" type="button" aria-label="Play voice message"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20"/></svg></button><div class="voice-wave">${bars.map(h=>`<span style="height:${h}px"></span>`).join('')}</div><button class="voice-speed" type="button">1x</button><span class="voice-duration">${fmtDur(dur)}</span></div>`;
+      }
+      if(m.text) inner+=esc(m.text);
+      const tick=mine?`<span class="tick ${m.status==='read'?'read':''}">${m.status==='read'?'✓✓':'✓'}</span>`:'';
+      const edited=m.edited?'<span class="msg-edited">edited</span>':'';
+      inner+=`<span class="time">${esc(m.time||'')}${edited}${tick}</span>`;
+      // No visible three-dot button. Message actions are opened by long-press.
+      div.innerHTML=inner;
+    }
+    messagesEl.appendChild(div);
+  });
+  messagesEl.querySelectorAll('.voice-player').forEach(player=>{
+    player.querySelector('.voice-play-btn')?.addEventListener('click',e=>{e.stopPropagation();toggleVoice(player);});
+    player.querySelector('.voice-speed')?.addEventListener('click',e=>{e.stopPropagation();cycleVoiceSpeed(player);});
+    player.querySelector('.voice-wave')?.addEventListener('click',e=>{
+      if(currentPlayerEl===player&&currentAudio&&currentAudio.duration){
+        const r=e.currentTarget.getBoundingClientRect();
+        currentAudio.currentTime=((e.clientX-r.left)/r.width)*currentAudio.duration;
+      }
+    });
+  });
+  updateChatTypingIndicator();
+  messagesEl.scrollTop=messagesEl.scrollHeight;
+}
 
 async function listenMessages(){
   if(messageRef){messageRef.off();messageRef=null;}
@@ -1351,6 +1454,12 @@ async function listenMessages(){
     const m=snap.val();if(!m)return;
     saveMsg({_key:snap.key,from:m.from,fromId:m.fromId,fromName:m.fromName,text:m.text||'',time:m.time||timeNow(),media:m.media||null,status:m.status||'sent',edited:!!m.edited,_hiddenForMe:hiddenMessageKeys.has(snap.key)});render();
   });
+  messageRef.on('child_removed',snap=>{
+    const key=snap.key;
+    const all=getMsgs().filter(x=>x._key!==key);
+    localStorage.setItem(messageCacheKey(),JSON.stringify(all));
+    render();
+  });
 }
 
 document.addEventListener('visibilitychange', ()=>{
@@ -1368,7 +1477,33 @@ function openMessageActions(msgEl){const key=msgEl?.dataset.msgKey;if(!key)retur
 async function editActiveMessage(){const m=activeMessageAction;closeMessageActions();if(!m||!m._key||!partnerUid||m.media)return;const next=prompt('Edit message',m.text||'');if(next===null)return;const text=next.trim();if(!text){showToast('Message cannot be empty');return;}try{await db.ref('messages/'+chatKey(me.uid,partnerUid)+'/'+m._key).update({text,edited:true,editedAt:firebase.database.ServerValue.TIMESTAMP});showToast('Message edited');}catch(e){showToast('Edit failed: '+friendlyFirebaseError(e));}}
 async function deleteMessageForMe(){const m=activeMessageAction;closeMessageActions();if(!m||!m._key)return;hiddenMessageKeys.add(m._key);const all=getMsgs().map(x=>x._key===m._key?{...x,_hiddenForMe:true}:x);localStorage.setItem(messageCacheKey(),JSON.stringify(all));render();if(signedIn()&&partnerUid){try{await db.ref('hiddenMessages/'+me.uid+'/'+chatKey(me.uid,partnerUid)+'/'+m._key).set(true);}catch(e){console.warn(e);}}showToast('Message deleted for you');}
 async function deleteMessageEveryone(){const m=activeMessageAction;closeMessageActions();if(!m||!m._key||!partnerUid||!(m.from===me.uid||m.from===me.id))return;if(!confirm('Delete this message for everyone?'))return;try{await db.ref('messages/'+chatKey(me.uid,partnerUid)+'/'+m._key).remove();showToast('Message deleted for everyone');}catch(e){showToast('Delete failed: '+friendlyFirebaseError(e));}}
-document.addEventListener('click',e=>{if(msgActionPop.classList.contains('open')&&!msgActionPop.contains(e.target)&&!e.target.closest('.msg-menu-btn'))closeMessageActions();});msgEditAction.addEventListener('click',editActiveMessage);msgDeleteMeAction.addEventListener('click',deleteMessageForMe);msgDeleteEveryoneAction.addEventListener('click',deleteMessageEveryone);
+let messageLongPressTimer=null, messageLongPressTriggered=false, messageLongPressTarget=null;
+function startMessageLongPress(e){
+  const msg=e.target.closest('.msg');
+  if(!msg || msg.classList.contains('system')) return;
+  if(e.target.closest('button,a,input')) return;
+  messageLongPressTriggered=false;
+  messageLongPressTarget=msg;
+  clearTimeout(messageLongPressTimer);
+  messageLongPressTimer=setTimeout(()=>{
+    messageLongPressTriggered=true;
+    openMessageActions(msg);
+    if(navigator.vibrate) navigator.vibrate(18);
+  },520);
+}
+function cancelMessageLongPress(){clearTimeout(messageLongPressTimer);messageLongPressTimer=null;messageLongPressTarget=null;}
+messagesEl.addEventListener('pointerdown',startMessageLongPress);
+messagesEl.addEventListener('pointerup',cancelMessageLongPress);
+messagesEl.addEventListener('pointercancel',cancelMessageLongPress);
+messagesEl.addEventListener('pointermove',e=>{if(messageLongPressTarget && (Math.abs(e.movementX)>7 || Math.abs(e.movementY)>7)) cancelMessageLongPress();});
+messagesEl.addEventListener('contextmenu',e=>{
+  const msg=e.target.closest('.msg');
+  if(msg && !msg.classList.contains('system')){e.preventDefault();openMessageActions(msg);}
+});
+document.addEventListener('click',e=>{if(msgActionPop.classList.contains('open')&&!msgActionPop.contains(e.target))closeMessageActions();});
+msgEditAction.addEventListener('click',editActiveMessage);
+msgDeleteMeAction.addEventListener('click',deleteMessageForMe);
+msgDeleteEveryoneAction.addEventListener('click',deleteMessageEveryone);
 
 async function send(){
   if(!signedIn()){showToast('Please sign in with Google first');return;}
@@ -1470,6 +1605,7 @@ $('menuReset').addEventListener('click',async()=>{
   if(partnerTypingRef){try{partnerTypingRef.off();}catch{} partnerTypingRef=null;}
   if(partnerPresenceRef){try{partnerPresenceRef.off();}catch{} partnerPresenceRef=null;}
   if(presenceRef){try{await presenceRef.update({online:false,lastSeen:firebase.database.ServerValue.TIMESTAMP});}catch{}}
+  if(firebaseConnectionRef){try{firebaseConnectionRef.off();}catch{} firebaseConnectionRef=null;}
   partnerId=null;partnerUid=null;partnerName='Friend';LOCAL_ONLY=true;
   localStorage.removeItem(PARTNER_KEY);localStorage.setItem(LOCAL_ONLY_KEY,'true');render();setConnected(false);showToast('Chat selection reset. Your Firebase account and UID are kept.');closeDrawer();
 });
@@ -1495,6 +1631,8 @@ if(firebaseReady && auth){
         if(typingRef){try{typingRef.remove();}catch{} typingRef=null;}
         if(partnerTypingRef){try{partnerTypingRef.off();}catch{} partnerTypingRef=null;}
         if(partnerPresenceRef){try{partnerPresenceRef.off();}catch{} partnerPresenceRef=null;}
+        if(firebaseConnectionRef){try{firebaseConnectionRef.off();}catch{} firebaseConnectionRef=null;}
+        if(presenceRef){try{presenceRef.update({online:false,lastSeen:firebase.database.ServerValue.TIMESTAMP});}catch{}}
         localStorage.removeItem(ME_KEY);localStorage.removeItem(PARTNER_KEY);localStorage.setItem(LOCAL_ONLY_KEY,'true');
         drawerName.textContent='Guest User';drawerEmail.textContent='Not signed in';drawerMyId.textContent='—';qrMyId.textContent='—';googleLogoBtn.classList.remove('signed'); if(mainSignInBtn) mainSignInBtn.classList.remove('signed');
         topAvatar.textContent='?';drawerAvatar.textContent='?';setConnected(false);render();
