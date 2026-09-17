@@ -645,7 +645,8 @@
   .incoming-call-card{width:min(390px,100%);background:var(--card);border-radius:24px;padding:24px;box-shadow:0 30px 80px rgba(0,0,0,.35);text-align:center}
   .incoming-call-avatar{width:76px;height:76px;border-radius:50%;background:var(--brand);color:#fff;display:grid;place-items:center;margin:0 auto 14px;font-size:25px;font-weight:800;overflow:hidden}
   .incoming-call-avatar img{width:100%;height:100%;object-fit:cover}.incoming-call-card h3{font-size:19px;margin-bottom:5px}.incoming-call-card p{font-size:12.5px;color:var(--muted);margin-bottom:20px}
-  .incoming-actions{display:flex;gap:10px}.incoming-actions button{flex:1;border:0;border-radius:13px;padding:13px;font-weight:700;cursor:pointer}.incoming-reject{background:var(--red-soft);color:var(--red)}.incoming-accept{background:var(--brand);color:#fff}
+  .incoming-actions{display:flex;justify-content:space-around;gap:26px;margin-top:18px}.incoming-swipe{position:relative;width:108px;height:118px;border:0;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none}.incoming-swipe .swipe-track{position:absolute;left:50%;top:4px;transform:translateX(-50%);width:54px;height:76px;border-radius:28px;background:rgba(0,0,0,.06);border:1px solid var(--line);opacity:.9}.incoming-swipe .swipe-arrow{position:absolute;top:13px;left:50%;transform:translateX(-50%);font-size:18px;line-height:1;opacity:.7;transition:transform .18s ease,opacity .18s ease}.incoming-swipe .swipe-knob{position:absolute;left:50%;top:38px;transform:translate(-50%,0);width:48px;height:48px;border-radius:50%;display:grid;place-items:center;color:#fff;box-shadow:0 8px 22px rgba(0,0,0,.18);transition:transform .12s ease}.incoming-swipe .swipe-knob svg{width:22px;height:22px}.incoming-swipe .swipe-label{font-size:11px;font-weight:800;margin-top:2px}.incoming-reject .swipe-knob{background:#ef4444}.incoming-accept .swipe-knob{background:#20b26b}.incoming-reject .swipe-label{color:#ef4444}.incoming-accept .swipe-label{color:#20a965}.incoming-swipe.swiping .swipe-arrow{transform:translate(-50%,-5px);opacity:1}.incoming-swipe.swiping .swipe-knob{transition:none}.incoming-swipe.completed .swipe-knob{transform:translate(-50%,-52px)}
+  @media(max-width:600px){.incoming-call-card{padding:22px 18px}.incoming-actions{gap:34px}}
   @media(max-width:600px){.call-overlay{padding:0}.call-shell{width:100%;height:100%;border-radius:0}.call-head{height:60px}.call-controls{padding-bottom:calc(16px + env(safe-area-inset-bottom,0px))}#localVideo{width:125px;max-width:38%;right:10px;bottom:10px}.call-stage.swap-local #remoteVideo{width:125px;max-width:38%;right:10px;bottom:10px}.call-stage.swap-local #localVideo{width:100%;max-width:none;height:100%}}
 
   /* ===== CALL CAMERA SWITCH + DRAGGABLE PREVIEW ===== */
@@ -799,9 +800,17 @@
     <button class="incoming-camera-switch" id="incomingCameraSwitch" type="button" title="Switch camera before answering" aria-label="Switch camera before answering">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5V2l4 4-4 4V7a5 5 0 1 0 4.9 6"/><path d="M12 19v3l-4-4 4-4v3a5 5 0 1 0-4.9-6"/></svg>
     </button>
-    <div class="incoming-actions">
-      <button class="incoming-reject" id="incomingReject">Decline</button>
-      <button class="incoming-accept" id="incomingAccept">Accept</button>
+    <div class="incoming-actions" aria-label="Answer or decline call">
+      <button class="incoming-swipe incoming-reject" id="incomingReject" type="button" aria-label="Swipe up to decline">
+        <span class="swipe-track"></span><span class="swipe-arrow" aria-hidden="true">↑</span>
+        <span class="swipe-knob"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></span>
+        <span class="swipe-label">Swipe up to decline</span>
+      </button>
+      <button class="incoming-swipe incoming-accept" id="incomingAccept" type="button" aria-label="Swipe up to answer">
+        <span class="swipe-track"></span><span class="swipe-arrow" aria-hidden="true">↑</span>
+        <span class="swipe-knob"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg></span>
+        <span class="swipe-label">Swipe up to answer</span>
+      </button>
     </div>
   </div>
 </div>
@@ -1300,7 +1309,7 @@ function firebaseUid(uid){
   if(!uid) throw new Error('Missing Firebase UID');
   return String(uid);
 }
-function showToast(msg){ const t=$('toast'); $('toastMsg').textContent=msg; t.classList.add('show'); clearTimeout(t._timer); t._timer=setTimeout(()=>t.classList.remove('show'),3500); }
+function showToast(msg){ if(String(msg||'').trim()==='Could not establish the call') return; const t=$('toast'); $('toastMsg').textContent=msg; t.classList.add('show'); clearTimeout(t._timer); t._timer=setTimeout(()=>t.classList.remove('show'),3500); }
 function timeNow(){ return new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}); }
 function esc(s){ return String(s).replace(/[&<>"']/g, ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch])); }
 function initials(n){ return (n||'?').trim().split(/\s+/).map(w=>w[0]).slice(0,2).join('').toUpperCase(); }
@@ -2057,7 +2066,9 @@ if(firebaseReady && auth){
 */
 const RTC_CONFIG = {
   iceServers: [
-    { urls: 'stun:stun.l.google.com:19302' }
+    { urls: 'stun:stun.l.google.com:19302' },
+    { urls: 'stun:stun1.l.google.com:19302' },
+    { urls: 'stun:stun2.l.google.com:19302' }
     // Production: add your TURN server here, e.g.
     // { urls: 'turn:YOUR_TURN_HOST:3478', username: 'TURN_USER', credential: 'TURN_PASSWORD' }
   ]
@@ -2090,6 +2101,14 @@ let currentCallSignalingStatus = null;
 let preferredCameraFacing = 'user';
 let previewDrag = {active:false, moved:false, pointerId:null, target:null, startX:0, startY:0, baseLeft:0, baseTop:0};
 let previewPositions = {local:null, remote:null};
+let iceRestartTimer = null;
+let callFailureTimer = null;
+let iceRestartInProgress = false;
+let iceRestartAttempts = 0;
+let reconnectStartedAt = 0;
+let callHeartbeatTimer = null;
+let lastRemoteOfferSdp = '';
+let lastRemoteAnswerSdp = '';
 
 /* ===== CALL RING / RINGBACK ===== */
 let callToneContext = null, callToneTimer = null, callToneMode = null;
@@ -2228,10 +2247,68 @@ function closeCallUI(){
   if(!recordingBar.classList.contains('show')) inputBarMain.classList.remove('hide');
 }
 function startCallTimer(){
-  clearInterval(callTimer); callStartedAt=Date.now();
+  if(!callStartedAt) callStartedAt=Date.now();
+  clearInterval(callTimer);
   callTimer=setInterval(()=>{ if(callStartedAt) setCallStatus('Connected · '+fmtDur((Date.now()-callStartedAt)/1000)); },1000);
 }
 function stopCallTimer(){ clearInterval(callTimer); callTimer=null; callStartedAt=0; }
+function startCallHeartbeat(){
+  clearInterval(callHeartbeatTimer);
+  callHeartbeatTimer=setInterval(()=>{
+    if(currentCallRef && currentCallSignalingStatus==='active') currentCallRef.update({lastHeartbeat:firebase.database.ServerValue.TIMESTAMP}).catch(()=>{});
+  },15000);
+}
+function stopCallHeartbeat(){ clearInterval(callHeartbeatTimer); callHeartbeatTimer=null; }
+function clearReconnectTimers(){
+  clearTimeout(iceRestartTimer); iceRestartTimer=null;
+  clearTimeout(callFailureTimer); callFailureTimer=null;
+  iceRestartInProgress=false; iceRestartAttempts=0; reconnectStartedAt=0;
+}
+function scheduleCallFailureTimeout(){
+  if(callFailureTimer || !currentCallId || callEnding) return;
+  callFailureTimer=setTimeout(()=>{
+    callFailureTimer=null;
+    if(peerConnection && !callEnding && peerConnection.connectionState!=='connected') endWebRTCCall('failed');
+  },45000);
+}
+function scheduleIceRestart(){
+  if(iceRestartTimer || !peerConnection || !currentCallId || callEnding) return;
+  if(currentCallRole!=='caller') return;
+  if(!reconnectStartedAt) reconnectStartedAt=Date.now();
+  setCallStatus('Reconnecting…');
+  scheduleCallFailureTimeout();
+  iceRestartTimer=setTimeout(()=>{iceRestartTimer=null; restartIceConnection();},2000);
+}
+async function restartIceConnection(){
+  if(!peerConnection || !currentCallId || callEnding || currentCallRole!=='caller' || iceRestartInProgress) return;
+  iceRestartInProgress=true;
+  try{
+    iceRestartAttempts++;
+    const offer=await peerConnection.createOffer({iceRestart:true});
+    await peerConnection.setLocalDescription(offer);
+    if(currentCallRef) await currentCallRef.child('offer').set({type:offer.type,sdp:offer.sdp,iceRestart:true,revision:Date.now()});
+  }catch(e){
+    console.warn('ICE restart failed',e);
+    scheduleIceRestart();
+  }finally{ iceRestartInProgress=false; }
+}
+async function handleRemoteOffer(data){
+  if(!peerConnection || currentCallRole!=='callee' || !data?.offer) return;
+  const offer=data.offer;
+  if(!offer.sdp || offer.sdp===lastRemoteOfferSdp) return;
+  try{
+    lastRemoteOfferSdp=offer.sdp;
+    await peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
+    remoteDescriptionReady=true;
+    await flushRemoteCandidates();
+    const answer=await peerConnection.createAnswer();
+    await peerConnection.setLocalDescription(answer);
+    if(currentCallRef) await currentCallRef.update({answer:{type:answer.type,sdp:answer.sdp},status:'active'});
+  }catch(e){
+    console.error('remote offer',e);
+    setCallStatus('Reconnecting…');
+  }
+}
 
 function stopLocalMedia(){
   if(localStream){ try{localStream.getTracks().forEach(t=>t.stop());}catch{} localStream=null; }
@@ -2278,12 +2355,27 @@ function makePeerConnection(callId, role){
     const target=role==='caller'?currentCallerCandidatesRef:currentCalleeCandidatesRef;
     if(target) target.push(e.candidate.toJSON()).catch(err=>console.error('ICE write',err));
   };
+  pc.oniceconnectionstatechange=()=>{
+    const st=pc.iceConnectionState;
+    if(st==='connected'||st==='completed'){
+      clearTimeout(callFailureTimer); callFailureTimer=null; reconnectStartedAt=0; iceRestartAttempts=0;
+      if(currentCallSignalingStatus==='active'){setCallStatus('Connected');startCallTimer();}
+    }else if(st==='checking'){
+      if(currentCallSignalingStatus==='active') setCallStatus('Connecting…');
+    }else if(st==='disconnected'){
+      setCallStatus('Reconnecting…');
+      scheduleIceRestart();
+    }else if(st==='failed'){
+      setCallStatus('Reconnecting…');
+      scheduleIceRestart();
+    }
+  };
   pc.onconnectionstatechange=()=>{
     const st=pc.connectionState;
-    if(st==='connected'){setCallStatus('Connected');startCallTimer();}
+    if(st==='connected'){clearTimeout(callFailureTimer);callFailureTimer=null;setCallStatus('Connected');startCallTimer();}
     else if(st==='connecting') setCallStatus('Connecting…');
-    else if(st==='disconnected') setCallStatus('Connection interrupted…');
-    else if(st==='failed'){setCallStatus('Connection failed');setTimeout(()=>endWebRTCCall('failed'),1200);}
+    else if(st==='disconnected'){setCallStatus('Reconnecting…');scheduleIceRestart();}
+    else if(st==='failed'){setCallStatus('Reconnecting…');scheduleIceRestart();}
     else if(st==='closed') setCallStatus('Call ended');
   };
   return pc;
@@ -2350,11 +2442,28 @@ async function startWebRTCCall(type){
       const data=snap.val();if(!data)return;
       if(data.status==='active'){
         currentCallSignalingStatus='active';
+        startCallHeartbeat();
         stopCallTone();
         setCallStatus('Connecting…');
       }
-      if(data.answer && !remoteDescriptionReady && peerConnection){
-        (async()=>{try{currentCallSignalingStatus='active';stopCallTone();await peerConnection.setRemoteDescription(new RTCSessionDescription(data.answer));remoteDescriptionReady=true;await flushRemoteCandidates();setCallStatus('Connecting…');}catch(e){console.error('remote answer',e);showToast('Could not establish the call');endWebRTCCall('failed');}})();
+      if(data.answer && peerConnection){
+        const answerSdp=data.answer.sdp||'';
+        if(answerSdp && answerSdp!==lastRemoteAnswerSdp){
+          (async()=>{
+            try{
+              currentCallSignalingStatus='active'; stopCallTone();
+              lastRemoteAnswerSdp=answerSdp;
+              await peerConnection.setRemoteDescription(new RTCSessionDescription(data.answer));
+              remoteDescriptionReady=true;
+              await flushRemoteCandidates();
+              setCallStatus('Connecting…');
+            }catch(e){
+              console.error('remote answer',e);
+              setCallStatus('Reconnecting…');
+              scheduleIceRestart();
+            }
+          })();
+        }
       }
       if(data.status==='rejected'){stopCallTone();showToast('Call declined');endWebRTCCall('rejected');}
       else if(data.status==='ended' || data.status==='cancelled'){showToast('Call ended');endWebRTCCall('ended');}
@@ -2405,12 +2514,20 @@ async function acceptIncomingCall(){
     if(!call||call.status!=='ringing'||!call.offer)throw new Error('This call is no longer available');
     peerConnection=makePeerConnection(callId,'callee');addLocalTracks();
     openCallUI(currentCallType,'Connecting…',data.callerPicture||null);
+    lastRemoteOfferSdp=call.offer.sdp||'';
     await peerConnection.setRemoteDescription(new RTCSessionDescription(call.offer));remoteDescriptionReady=true;await flushRemoteCandidates();listenCallerCandidates();
     const answer=await peerConnection.createAnswer();await peerConnection.setLocalDescription(answer);
     await currentCallRef.update({answer:{type:answer.type,sdp:answer.sdp},status:'active',acceptedAt:firebase.database.ServerValue.TIMESTAMP});
     await markActiveCall(true);
-    callValueHandler=s=>{const d=s.val();if(d&&(d.status==='ended'||d.status==='cancelled'||d.status==='rejected')){showToast('Call ended');endWebRTCCall('ended');}};
+    callValueHandler=s=>{
+      const d=s.val();
+      if(!d)return;
+      if(d.status==='ended'||d.status==='cancelled'||d.status==='rejected'){showToast('Call ended');endWebRTCCall('ended');return;}
+      handleRemoteOffer(d);
+    };
     currentCallRef.on('value',callValueHandler);
+    startCallHeartbeat();
+    currentCallSignalingStatus='active';
     setStatus('','Ready');
   }catch(err){console.error('accept call',err);showToast(mediaErrorMessage(err));await endWebRTCCall('failed');}
 }
@@ -2423,6 +2540,8 @@ async function rejectIncomingCall(){
 async function endWebRTCCall(reason='ended',updateRemote=true){
   if(callEnding)return;callEnding=true;
   stopCallTone();
+  clearReconnectTimers();
+  stopCallHeartbeat();
   const id=currentCallId,ref=currentCallRef;
   clearCallListeners();stopCallTimer();closePeerConnection();stopLocalMedia();
   if(updateRemote&&ref&&id){
@@ -2430,7 +2549,7 @@ async function endWebRTCCall(reason='ended',updateRemote=true){
   }
   if(activeCallPath){try{await db.ref(activeCallPath).remove();}catch{}}
   activeCallPath=null;closeCallUI();
-  currentCallId=null;currentCallType=null;currentCallRole=null;currentCallSignalingStatus=null;currentCallRef=null;currentCallerCandidatesRef=null;currentCalleeCandidatesRef=null;pendingRemoteCandidates=[];remoteDescriptionReady=false;callEnding=false;
+  currentCallId=null;currentCallType=null;currentCallRole=null;currentCallSignalingStatus=null;currentCallRef=null;currentCallerCandidatesRef=null;currentCalleeCandidatesRef=null;pendingRemoteCandidates=[];remoteDescriptionReady=false;lastRemoteOfferSdp='';lastRemoteAnswerSdp='';callEnding=false;
   setStatus('',partnerUid?'Ready · '+partnerName:'Ready');
   if(id){clearTimeout(callCleanupTimer);callCleanupTimer=setTimeout(()=>{db.ref('calls/'+id).remove().catch(()=>{});},7000);}
 }
@@ -2534,8 +2653,44 @@ callCameraBtn.addEventListener('click',()=>{
   if(!localStream||currentCallType!=='video')return;const track=localStream.getVideoTracks()[0];if(!track)return;track.enabled=!track.enabled;const off=!track.enabled;callCameraBtn.classList.toggle('active',off);callCameraBtn.innerHTML=callIcon('camera',off);callCameraBtn.title=off?'Turn camera on':'Turn camera off';
 });
 callEndBtn.addEventListener('click',()=>endWebRTCCall('ended'));
-incomingAccept.addEventListener('click',acceptIncomingCall);
-incomingReject.addEventListener('click',rejectIncomingCall);
+// Incoming call controls: swipe upward on the green/red control to answer/decline.
+function setupIncomingSwipe(button, action){
+  if(!button)return;
+  let startY=0, active=false, triggered=false;
+  const threshold=42;
+  button.addEventListener('pointerdown',e=>{
+    if(triggered)return;
+    active=true; startY=e.clientY;
+    button.setPointerCapture?.(e.pointerId);
+    button.classList.add('swiping');
+  });
+  button.addEventListener('pointermove',e=>{
+    if(!active||triggered)return;
+    const dy=startY-e.clientY;
+    const lift=Math.max(0,Math.min(52,dy));
+    const knob=button.querySelector('.swipe-knob');
+    if(knob)knob.style.transform=`translate(-50%, ${-lift}px)`;
+    if(dy>=threshold){
+      triggered=true; active=false; button.classList.add('completed');
+      setTimeout(()=>action(),90);
+    }
+  });
+  const cancel=()=>{
+    if(!active)return; active=false; button.classList.remove('swiping');
+    const knob=button.querySelector('.swipe-knob');
+    if(knob)knob.style.transform='translate(-50%,0)';
+  };
+  button.addEventListener('pointerup',cancel);
+  button.addEventListener('pointercancel',cancel);
+  button.addEventListener('lostpointercapture',cancel);
+  // Tap remains available as an accessibility/fallback action.
+  button.addEventListener('click',()=>{
+    if(triggered){triggered=false;return;}
+    action();
+  });
+}
+setupIncomingSwipe(incomingAccept,acceptIncomingCall);
+setupIncomingSwipe(incomingReject,rejectIncomingCall);
 if(callStage){
   localVideo.addEventListener('click',e=>{e.stopPropagation();if(localVideo.dataset.dragged==='1')return;swapCallVideos();});
   remoteVideo.addEventListener('click',e=>{e.stopPropagation();if(remoteVideo.dataset.dragged==='1')return;swapCallVideos();});
