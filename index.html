@@ -75,6 +75,10 @@
     background: var(--gold); box-shadow: 0 0 0 3px rgba(224,177,0,.18);
     animation: pulseDot 1s ease-in-out infinite;
   }
+  .status-chip.typing .dot {
+    background: var(--gold); box-shadow: 0 0 0 3px rgba(224,177,0,.18);
+    animation: pulseDot .8s ease-in-out infinite;
+  }
   @keyframes pulseDot { 0%,100%{opacity:1} 50%{opacity:.3} }
   .messages {
     flex: 1; overflow-y: auto;
@@ -109,7 +113,7 @@
     display: block; text-align: right; font-weight: 500;
   }
   .msg.mine { align-self: flex-end; background: var(--brand); color: #fff; border-bottom-right-radius: 4px; }
-  .msg.mine .time { color: rgba(255,255,255,.75); }
+  .msg.mine .time { color: rgba(255,255,255,.75); display: inline-flex; align-items: center; gap: 3px; justify-content: flex-end; width: 100%; }
   .msg.theirs { align-self: flex-start; background: var(--card); color: var(--ink); border: 1px solid var(--line); border-bottom-left-radius: 4px; }
   .msg.system {
     align-self: center; background: #eef1f7; color: var(--ink-2);
@@ -131,6 +135,9 @@
   .msg.mine .file-chip { background: rgba(255,255,255,.18); }
   .msg .file-chip svg { width: 16px; height: 16px; flex-shrink: 0; }
   .msg .file-chip a { color: inherit; text-decoration: underline; }
+  /* Tick marks */
+  .msg .tick { font-size: 11px; font-weight: 700; letter-spacing: -1px; margin-left: 3px; color: rgba(255,255,255,.65); }
+  .msg .tick.read { color: #7dd3fc; }
   .attach-preview {
     display: none; padding: 10px 14px 0;
     background: var(--card); border-top: 1px solid var(--line);
@@ -315,6 +322,8 @@
   .drawer-item.qr { color: var(--brand); font-weight: 600; }
   .drawer-item.danger .ic { background: var(--red-soft); color: var(--red); }
   .drawer-item.danger { color: var(--red); }
+  .drawer-item.warn .ic { background: #fff4d6; color: #b07a00; }
+  .drawer-item.warn { color: #b07a00; }
   .drawer-divider { height: 1px; background: var(--line); margin: 8px 10px; }
   .drawer-foot {
     padding: 12px 18px 16px;
@@ -654,6 +663,10 @@
       <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></span>
       <span class="txt">Copy my Firebase UID<small>Share with a friend</small></span>
     </button>
+    <button class="drawer-item warn" id="menuClearChats">
+      <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/><path d="M9 6V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/></svg></span>
+      <span class="txt">Clear all chats<small>Delete all messages</small></span>
+    </button>
     <div class="drawer-divider"></div>
     <div class="drawer-section-label">More</div>
     <button class="drawer-item danger" id="menuReset">
@@ -679,8 +692,6 @@
 <script>
 /* ============================================================
    QR GENERATOR — built-in (no external library)
-   This is a compact QR code encoder supporting byte mode, ECC level L.
-   It's adapted from the classic public-domain qrcode.js approach.
    ============================================================ */
 (function(global){
   'use strict';
@@ -794,9 +805,7 @@
     return data;
   };
 
-  var QRMode = { MODE_8BIT_BYTE: 4 };
   var QRErrorCorrectLevel = { L: 1, M: 0, Q: 3, H: 2 };
-
   var QRMaskPattern = { PATTERN000:0, PATTERN001:1, PATTERN010:2, PATTERN011:3, PATTERN100:4, PATTERN101:5, PATTERN110:6, PATTERN111:7 };
 
   var QRUtil = {
@@ -919,10 +928,9 @@
     putBit: function(bit) { var bufIndex = Math.floor(this.length / 8); if (this.buffer.length <= bufIndex) this.buffer.push(0); if (bit) this.buffer[bufIndex] |= (0x80 >>> (this.length % 8)); this.length++; }
   };
 
-  // Auto-detect best type number for given data length
   function getTypeNumberForData(data) {
     var len = data.length;
-    var limits = [17,32,53,78,106,134,154,192,230,271,321,367,425,458,520,586,644,718,792,858,929,1003,1091,1171,1273,1367,1465,1528,1628,1732,1840,1952,2068,2188,2303,2431,2563,2699,2809,2953]; // approx limits for byte mode, ECC L
+    var limits = [17,32,53,78,106,134,154,192,230,271,321,367,425,458,520,586,644,718,792,858,929,1003,1091,1171,1273,1367,1465,1528,1628,1732,1840,1952,2068,2188,2303,2431,2563,2699,2809,2953];
     for (var i=0; i<limits.length; i++) if (len <= limits[i]) return i+1;
     throw new Error('Data too long for QR');
   }
@@ -993,6 +1001,9 @@ let pendingAttachment = null, LOCAL_ONLY = true;
 let scanStream = null, scanRAF = null, scanCanvas = null, scanCtx = null, scanActive = false;
 let requestQueue = [], requestModalEl = null;
 
+/* ===== NEW: typing state ===== */
+let typingRef = null, partnerTypingRef = null, typingTimeout = null, isPartnerTyping = false;
+
 const $ = id => document.getElementById(id);
 const messagesEl = $('messages'), emptyState = $('emptyState');
 const msgInput = $('msgInput'), sendBtn = $('sendBtn');
@@ -1016,7 +1027,6 @@ const imgModal = $('imgModal'), imgPreview = $('imgPreview'), imgClose = $('imgC
 const attachPreview = $('attachPreview'), apThumb = $('apThumb'), apName = $('apName'), apSize = $('apSize'), apRemove = $('apRemove');
 
 function firebaseUid(uid){
-  // Firebase Authentication UID is the ONLY ConvoLink identity.
   if(!uid) throw new Error('Missing Firebase UID');
   return String(uid);
 }
@@ -1027,8 +1037,6 @@ function initials(n){ return (n||'?').trim().split(/\s+/).map(w=>w[0]).slice(0,2
 function chatKey(a,b){ return [a,b].sort().join('__'); }
 function fmtBytes(b){ if(b<1024) return b+' B'; if(b<1024*1024) return (b/1024).toFixed(1)+' KB'; return (b/1024/1024).toFixed(1)+' MB'; }
 function signedIn(){
-  // Firebase Authentication is the source of truth. Do not depend on a
-  // possibly stale local `me` object for authentication checks.
   return !!(auth && auth.currentUser && auth.currentUser.uid);
 }
 function firebaseAuthenticated(){ return signedIn(); }
@@ -1085,16 +1093,45 @@ function paintMe(){
   if(mainSignInBtn) mainSignInBtn.classList.toggle('signed', signedIn());
 }
 function setConnected(on, name){
-  if(on){ statusChip.classList.remove('connecting'); statusChip.classList.add('online'); statusText.textContent='Connected'+(name?' · '+name:''); }
-  else { statusChip.classList.remove('connecting','online'); statusText.textContent=signedIn()?'Ready':'Sign in to connect'; }
+  if(on){ statusChip.classList.remove('connecting','typing'); statusChip.classList.add('online'); statusText.textContent='Connected'+(name?' · '+name:''); }
+  else { statusChip.classList.remove('connecting','online','typing'); statusText.textContent=signedIn()?'Ready':'Sign in to connect'; }
 }
-function setStatus(kind,text){ statusChip.classList.remove('online','connecting'); if(kind) statusChip.classList.add(kind); statusText.textContent=text; }
+function setStatus(kind,text){ statusChip.classList.remove('online','connecting','typing'); if(kind) statusChip.classList.add(kind); statusText.textContent=text; }
+
+/* ===== NEW: TYPING INDICATOR ===== */
+function setupTypingListeners(){
+  if(typingRef){ try{ typingRef.remove(); }catch{} typingRef=null; }
+  if(partnerTypingRef){ try{ partnerTypingRef.off(); }catch{} partnerTypingRef=null; }
+  isPartnerTyping=false;
+  if(!signedIn() || !partnerUid) return;
+  const key=chatKey(me.uid, partnerUid);
+  typingRef=db.ref(`typing/${key}/${me.uid}`);
+  partnerTypingRef=db.ref(`typing/${key}/${partnerUid}`);
+  partnerTypingRef.on('value', snap=>{
+    const v=snap.val();
+    const fresh = v && v.typing && (Date.now()-(v.at||0) < 8000);
+    isPartnerTyping=!!fresh;
+    if(isPartnerTyping){
+      statusChip.classList.remove('connecting','online');
+      statusChip.classList.add('typing');
+      statusText.textContent='typing…';
+    } else if(partnerUid){
+      statusChip.classList.remove('connecting','typing');
+      statusChip.classList.add('online');
+      statusText.textContent='Connected · '+partnerName;
+    }
+  });
+}
+function emitTyping(){
+  if(!signedIn() || !partnerUid || !typingRef) return;
+  const hasText=msgInput.value.trim().length>0;
+  if(hasText){ typingRef.set({typing:true, at:Date.now()}).catch(()=>{}); }
+  else { typingRef.remove().catch(()=>{}); }
+  clearTimeout(typingTimeout);
+  typingTimeout=setTimeout(()=>{ if(typingRef) typingRef.remove().catch(()=>{}); }, 2500);
+}
 
 async function ensureUserProfile(user){
-  // Firebase Authentication is the single source of identity.
-  // Firebase UID itself is the user's identity. No secondary Firebase UID is generated.
-  // the UI before touching Realtime Database. Database outages/rules must
-  // never make a successfully authenticated user look like a Guest.
   if(!user || !user.uid) throw new Error('Firebase user UID is missing');
 
   const firebaseId=firebaseUid(user.uid);
@@ -1116,8 +1153,6 @@ async function ensureUserProfile(user){
   setConnected(false);
   setStatus('connecting','Setting up your Firebase UID…');
 
-  // The Firebase UID is ready immediately. Database work below only syncs profile/presence.
-  // synchronization and is intentionally best-effort.
   try{
     const userRef=db.ref('users/'+user.uid);
     const profile={
@@ -1132,13 +1167,10 @@ async function ensureUserProfile(user){
     setStatus('','Ready');
   }catch(e){
     console.error('Firebase database sync:',e);
-    // Keep the Firebase-authenticated account and Firebase UID active even when
-    // database rules/setup are temporarily wrong.
     setStatus('','Ready');
     showToast('Firebase UID ready: '+firebaseId+' · Database sync needs setup');
   }
 
-  // These listeners are also best-effort; failure must not undo login.
   try{ await startPresence(); }catch(e){ console.error('presence setup:',e); }
   try{ await listenRequests(); }catch(e){ console.error('request listener:',e); }
   try{ await restoreConnection(); }catch(e){ console.error('restore connection:',e); }
@@ -1239,6 +1271,7 @@ async function selectPartner(p){
   partnerId=p.id; partnerUid=p.uid; partnerName=p.name||'Friend'; LOCAL_ONLY=false;
   localStorage.setItem(PARTNER_KEY,partnerId); localStorage.setItem(LOCAL_ONLY_KEY,'false');
   setConnected(true,partnerName); addSystem(`Connected with ${partnerName}`); render(); listenMessages();
+  setupTypingListeners();
 }
 async function restoreConnection(){
   if(!signedIn()) return;
@@ -1279,7 +1312,18 @@ connectInput.addEventListener('keydown',e=>{if(e.key==='Enter')connectConfirm.cl
 
 function messageCacheKey(){ return partnerUid ? MSG_KEY+'_'+chatKey(me.uid,partnerUid) : MSG_KEY+'_none'; }
 function getMsgs(){ try{const r=localStorage.getItem(messageCacheKey());return r?JSON.parse(r):[];}catch{return [];} }
-function saveMsg(m){const a=getMsgs();if(m._key&&a.some(x=>x._key===m._key))return;a.push(m);if(a.length>500)a.splice(0,a.length-500);localStorage.setItem(messageCacheKey(),JSON.stringify(a));}
+function saveMsg(m){
+  const a=getMsgs();
+  if(m._key && a.some(x=>x._key===m._key)){
+    // update in place (for status changes)
+    const i=a.findIndex(x=>x._key===m._key);
+    if(i>=0) a[i]={...a[i],...m};
+  } else {
+    a.push(m);
+  }
+  if(a.length>500)a.splice(0,a.length-500);
+  localStorage.setItem(messageCacheKey(),JSON.stringify(a));
+}
 function addSystem(text){const a=getMsgs();a.push({system:true,text,time:timeNow()});if(a.length>500)a.splice(0,a.length-500);localStorage.setItem(messageCacheKey(),JSON.stringify(a));}
 function render(){
   const all=getMsgs(); messagesEl.innerHTML='';
@@ -1288,33 +1332,79 @@ function render(){
   all.forEach(m=>{
     const div=document.createElement('div');
     if(m.system){div.className='msg system';div.textContent=m.text;}
-    else{const mine=m.from===me.id;div.className='msg '+(mine?'mine':'theirs');let inner='';
+    else{
+      const mine=(m.from===me.uid || m.from===me.id);
+      div.className='msg '+(mine?'mine':'theirs');
+      let inner='';
       if(m.media&&m.media.type==='image') inner+=`<img class="msg-media" src="${m.media.data}" data-full="${m.media.data}" />`;
       else if(m.media&&m.media.type==='file') inner+=`<div class="file-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg><a href="${m.media.data}" download="${esc(m.media.name)}">${esc(m.media.name)}</a></div>`;
-      if(m.text) inner+=esc(m.text);inner+=`<span class="time">${esc(m.time||'')}</span>`;div.innerHTML=inner;}
+      if(m.text) inner+=esc(m.text);
+      const tick = mine ? `<span class="tick ${m.status==='read'?'read':''}">${m.status==='read'?'✓✓':'✓'}</span>` : '';
+      inner+=`<span class="time">${esc(m.time||'')}${tick}</span>`;
+      div.innerHTML=inner;
+    }
     messagesEl.appendChild(div);
-  }); messagesEl.scrollTop=messagesEl.scrollHeight;
+  });
+  messagesEl.scrollTop=messagesEl.scrollHeight;
 }
 function listenMessages(){
   if(messageRef){messageRef.off();messageRef=null;}
   if(!signedIn()||!partnerUid)return;
-  const key=chatKey(me.uid,partnerUid);messageRef=db.ref('messages/'+key).limitToLast(200);
-  messageRef.on('child_added',snap=>{const m=snap.val();if(!m)return;saveMsg({_key:snap.key,from:m.from,fromName:m.fromName,text:m.text||'',time:m.time||timeNow(),media:m.media||null});render();});
+  const key=chatKey(me.uid,partnerUid);
+  messageRef=db.ref('messages/'+key).limitToLast(200);
+
+  messageRef.on('child_added',snap=>{
+    const m=snap.val(); if(!m) return;
+    saveMsg({_key:snap.key,from:m.from,fromName:m.fromName,text:m.text||'',time:m.time||timeNow(),media:m.media||null,status:m.status||'sent'});
+    render();
+    // Auto-mark partner's messages as read (if page visible)
+    if(m.from!==me.uid && m.status!=='read' && !document.hidden){
+      db.ref('messages/'+key+'/'+snap.key+'/status').set('read').catch(()=>{});
+    }
+  });
+
+  messageRef.on('child_changed',snap=>{
+    const m=snap.val(); if(!m) return;
+    saveMsg({_key:snap.key,from:m.from,fromName:m.fromName,text:m.text||'',time:m.time||timeNow(),media:m.media||null,status:m.status||'sent'});
+    render();
+  });
 }
+
+// Page visible होने पर सभी pending messages को read mark करें
+document.addEventListener('visibilitychange', ()=>{
+  if(document.hidden || !signedIn() || !partnerUid) return;
+  const key=chatKey(me.uid,partnerUid);
+  db.ref('messages/'+key).once('value').then(snap=>{
+    snap.forEach(child=>{
+      const m=child.val();
+      if(m && m.from!==me.uid && m.status!=='read'){
+        db.ref('messages/'+key+'/'+child.key+'/status').set('read').catch(()=>{});
+      }
+    });
+  }).catch(()=>{});
+});
+
 sendBtn.addEventListener('click',send);
 msgInput.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send();}});
+msgInput.addEventListener('input', emitTyping);
+
 async function send(){
   if(!signedIn()){showToast('Please sign in with Google first');return;}
   if(!partnerUid){showToast('Connect with a friend first');return;}
   const text=msgInput.value.trim();
+
+  // सेंड करते ही typing बंद
+  if(typingRef){ try{ typingRef.remove(); }catch{} }
+  clearTimeout(typingTimeout);
+
   if(pendingAttachment){
     const att=pendingAttachment;pendingAttachment=null;clearAttachmentPreview();msgInput.value='';
-    const m={from:me.uid,fromId:me.id,fromName:me.name,text:text||'',time:timeNow(),at:firebase.database.ServerValue.TIMESTAMP,media:{type:att.kind,name:att.name,data:att.dataUrl}};
+    const m={from:me.uid,fromId:me.id,fromName:me.name,text:text||'',time:timeNow(),at:firebase.database.ServerValue.TIMESTAMP,status:'sent',media:{type:att.kind,name:att.name,data:att.dataUrl}};
     try{await db.ref('messages/'+chatKey(me.uid,partnerUid)).push(m);showToast(att.kind==='image'?'Photo sent':'File sent');}catch(e){console.error(e);showToast('Upload failed: '+friendlyFirebaseError(e));}
     return;
   }
   if(!text)return;
-  const m={from:me.uid,fromId:me.id,fromName:me.name,text,time:timeNow(),at:firebase.database.ServerValue.TIMESTAMP};
+  const m={from:me.uid,fromId:me.id,fromName:me.name,text,time:timeNow(),at:firebase.database.ServerValue.TIMESTAMP,status:'sent'};
   msgInput.value='';
   try{await db.ref('messages/'+chatKey(me.uid,partnerUid)).push(m);}catch(e){console.error(e);msgInput.value=text;showToast('Message failed: '+friendlyFirebaseError(e));}
 }
@@ -1368,9 +1458,34 @@ async function copyMyId(){
 }
 drawerCopyId.addEventListener('click',async e=>{e.stopPropagation();await copyMyId();drawerCopyId.classList.add('done');setTimeout(()=>drawerCopyId.classList.remove('done'),1500);});
 $('menuCopyId').addEventListener('click',async()=>{await copyMyId();closeDrawer();});
+
+/* ===== NEW: Clear all chats ===== */
+$('menuClearChats').addEventListener('click', async ()=>{
+  closeDrawer();
+  if(!signedIn()){ showToast('Please sign in with Google first'); return; }
+  if(!confirm('Clear ALL chats? All messages will be permanently deleted.')) return;
+  try{
+    // 1) current chat के Firebase messages हटाएँ
+    if(partnerUid){
+      await db.ref('messages/'+chatKey(me.uid,partnerUid)).remove();
+      await db.ref('typing/'+chatKey(me.uid,partnerUid)).remove().catch(()=>{});
+    }
+    // 2) सभी local chat caches हटाएँ
+    Object.keys(localStorage).forEach(k=>{
+      if(k===MSG_KEY || k.startsWith(MSG_KEY+'_')) localStorage.removeItem(k);
+    });
+    render();
+    showToast('All chats cleared');
+  }catch(e){ console.error(e); showToast('Failed to clear: '+friendlyFirebaseError(e)); }
+});
+
 $('menuReset').addEventListener('click',async()=>{
   if(!me){showToast('Nothing to reset');return;}
-  stopScanner();if(requestRef)requestRef.off();if(messageRef)messageRef.off();
+  stopScanner();
+  if(requestRef)requestRef.off();
+  if(messageRef)messageRef.off();
+  if(typingRef){try{typingRef.remove();}catch{} typingRef=null;}
+  if(partnerTypingRef){try{partnerTypingRef.off();}catch{} partnerTypingRef=null;}
   if(presenceRef){try{await presenceRef.update({online:false,lastSeen:firebase.database.ServerValue.TIMESTAMP});}catch{}}
   partnerId=null;partnerUid=null;partnerName='Friend';LOCAL_ONLY=true;
   localStorage.removeItem(PARTNER_KEY);localStorage.setItem(LOCAL_ONLY_KEY,'true');render();setConnected(false);showToast('Chat selection reset. Your Firebase account and UID are kept.');closeDrawer();
@@ -1380,21 +1495,21 @@ if(firebaseReady && auth){
   authUnsub=auth.onAuthStateChanged(async user=>{
     try{
       if(user){
-        // Firebase Auth succeeded: create/restore the Firebase UID immediately.
         await ensureUserProfile(user);
         paintMe();setConnected(false);render();
         showToast('Signed in · Firebase UID ready');
       }else{
         me=null;partnerId=null;partnerUid=null;LOCAL_ONLY=true;
-        if(requestRef)requestRef.off();if(messageRef)messageRef.off();
+        if(requestRef)requestRef.off();
+        if(messageRef)messageRef.off();
+        if(typingRef){try{typingRef.remove();}catch{} typingRef=null;}
+        if(partnerTypingRef){try{partnerTypingRef.off();}catch{} partnerTypingRef=null;}
         localStorage.removeItem(ME_KEY);localStorage.removeItem(PARTNER_KEY);localStorage.setItem(LOCAL_ONLY_KEY,'true');
         drawerName.textContent='Guest User';drawerEmail.textContent='Not signed in';drawerMyId.textContent='—';qrMyId.textContent='—';googleLogoBtn.classList.remove('signed'); if(mainSignInBtn) mainSignInBtn.classList.remove('signed');
         topAvatar.textContent='?';drawerAvatar.textContent='?';setConnected(false);render();
       }
     }catch(e){
       console.error('auth state',e);
-      // Authentication succeeded even if Realtime Database is not configured
-      // correctly. Keep the Firebase UID, Firebase UID and profile active.
       if(user){
         const id=firebaseUid(user.uid);
         me={uid:user.uid,id,name:user.displayName||'Google User',email:user.email||'',picture:user.photoURL||null,provider:'firebase-google'};
