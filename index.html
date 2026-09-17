@@ -4,7 +4,6 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
 <title>ConvoLink — Chat</title>
-<script src="https://accounts.google.com/gsi/client" async defer></script>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   :root {
@@ -242,21 +241,18 @@
   }
   .drawer-head .avatar-lg img { width: 100%; height: 100%; object-fit: cover; }
   .google-logo-btn {
-    width: 44px; height: 44px; border-radius: 50%;
+    min-height: 42px; padding: 0 12px; border-radius: 22px;
     background: #fff; border: 1.5px solid rgba(255,255,255,.6);
-    display: flex; align-items: center; justify-content: center;
-    cursor: pointer; flex-shrink: 0;
-    position: relative; overflow: hidden;
-    box-shadow: 0 4px 12px rgba(0,0,0,.18);
+    display: flex; align-items: center; justify-content: center; gap: 7px;
+    cursor: pointer; flex-shrink: 0; position: relative; overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,.18); color: #202124; font-size: 12px; font-weight: 700;
   }
-  .google-logo-btn > svg { width: 22px; height: 22px; pointer-events: none; }
-  .google-logo-btn .real-gsi-mount {
-    position: absolute; inset: 0;
-    display: flex; align-items: center; justify-content: center;
-    opacity: 0.001; overflow: hidden;
-  }
-  .google-logo-btn .real-gsi-mount > div { transform: scale(2.2); transform-origin: center; }
-  .google-logo-btn.no-gsi .real-gsi-mount { display: none; }
+  .google-logo-btn > svg { width: 20px; height: 20px; pointer-events: none; flex-shrink: 0; }
+  .google-logo-btn .g-text { white-space: nowrap; pointer-events: none; }
+  .google-logo-btn.signed { background: rgba(255,255,255,.14); color: #fff; border-color: rgba(255,255,255,.25); }
+  .google-logo-btn.signed .g-text::after { content: 'Signed in'; }
+  .google-logo-btn.signed .g-text { font-size: 0; }
+  .google-logo-btn.signed .g-text::after { font-size: 12px; }
   .google-logo-btn.signed::after {
     content: ''; position: absolute; bottom: -1px; right: -1px;
     width: 12px; height: 12px; border-radius: 50%;
@@ -497,6 +493,9 @@
     .drawer { position: fixed; height: 90vh; max-height: 780px; border-radius: 22px 0 0 22px; top: 50%; transform: translate(-105%, -50%); }
     .drawer.open { transform: translate(0, -50%); }
   }
+  .main-signin{margin:10px auto 0;display:flex;align-items:center;justify-content:center;gap:8px;padding:9px 15px;border:1px solid rgba(47,85,164,.18);border-radius:22px;background:#fff;color:#202124;font-size:12px;font-weight:700;box-shadow:0 5px 16px rgba(0,0,0,.08);cursor:pointer}
+  .main-signin svg{width:18px;height:18px;flex:none}
+  .main-signin.signed{display:none}
 </style>
 </head>
 <body>
@@ -514,6 +513,11 @@
       <span id="statusText">Ready</span>
     </div>
   </div>
+
+  <button class="main-signin" id="mainSignInBtn" type="button">
+    <svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.611 20.083H42V20H24v8h11.303C33.654 32.657 29.223 36 24 36c-6.627 0-12-5.373-12-12S17.373 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 12.955 4 4 12.955 4 24s8.955 20 20 20 20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z"/><path fill="#4285F4" d="M24 44c5.166 0 9.86-1.977 13.409-5.192l-6.19-5.238A11.91 11.91 0 0 1 24 36c-5.202 0-9.619-3.317-11.283-7.946l-6.522 5.025C9.505 39.556 16.227 44 24 44z"/><path fill="#34A853" d="M6.306 14.691l6.571 4.819C14.655 15.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 16.318 4 9.656 8.337 6.306 14.691z"/></svg>
+    <span>Sign in with Google</span>
+  </button>
 
   <main class="messages" id="messages">
     <div class="empty" id="emptyState">
@@ -615,9 +619,8 @@
     <button class="close-btn" id="closeDrawer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
     <div class="avatar-row">
       <div class="avatar-lg" id="drawerAvatar">?</div>
-      <button class="google-logo-btn no-gsi" id="googleLogoBtn">
-        <svg viewBox="0 0 48 48"><path fill="#FFC107" d="M43.611 20.083H42V20H24v8h11.303c-1.649 4.657-6.08 8-11.303 8-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 12.955 4 4 12.955 4 24s8.955 20 20 20 20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z"/><path fill="#FF3D00" d="M6.306 14.691l6.571 4.819C14.655 15.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 16.318 4 9.656 8.337 6.306 14.691z"/><path fill="#4CAF50" d="M24 44c5.166 0 9.86-1.977 13.409-5.192l-6.19-5.238A11.91 11.91 0 0 1 24 36c-5.202 0-9.619-3.317-11.283-7.946l-6.522 5.025C9.505 39.556 16.227 44 24 44z"/><path fill="#1976D2" d="M43.611 20.083H42V20H24v8h11.303a12.04 12.04 0 0 1-4.087 5.571l.003-.002 6.19 5.238C36.971 39.205 44 34 44 24c0-1.341-.138-2.65-.389-3.917z"/></svg>
-        <span class="real-gsi-mount" id="realGsiMount"></span>
+      <button class="google-logo-btn" id="googleLogoBtn">
+        <svg viewBox="0 0 48 48"><path fill="#FFC107" d="M43.611 20.083H42V20H24v8h11.303c-1.649 4.657-6.08 8-11.303 8-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 12.955 4 4 12.955 4 24s8.955 20 20 20 20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z"/><path fill="#FF3D00" d="M6.306 14.691l6.571 4.819C14.655 15.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 16.318 4 9.656 8.337 6.306 14.691z"/><path fill="#4CAF50" d="M24 44c5.166 0 9.86-1.977 13.409-5.192l-6.19-5.238A11.91 11.91 0 0 1 24 36c-5.202 0-9.619-3.317-11.283-7.946l-6.522 5.025C9.505 39.556 16.227 44 24 44z"/><path fill="#1976D2" d="M43.611 20.083H42V20H24v8h11.303a12.04 12.04 0 0 1-4.087 5.571l.003-.002 6.19 5.238C36.971 39.205 44 34 44 24c0-1.341-.138-2.65-.389-3.917z"/></svg><span class="g-text">Sign in with Google</span>
       </button>
     </div>
     <div class="who">
@@ -655,7 +658,7 @@
     <div class="drawer-section-label">More</div>
     <button class="drawer-item danger" id="menuReset">
       <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></span>
-      <span class="txt">Reset session<small>New Chat ID</small></span>
+      <span class="txt">Reset chat<small>Keep your Firebase Chat ID</small></span>
     </button>
   </div>
   <div class="drawer-foot">Made with <b>ConvoLink</b> · v1.0</div>
@@ -1000,7 +1003,7 @@ const topAvatar = $('topAvatar'), drawerAvatar = $('drawerAvatar');
 const drawerName = $('drawerName'), drawerEmail = $('drawerEmail'), drawerMyId = $('drawerMyId');
 const drawerCopyId = $('drawerCopyId');
 const drawer = $('drawer'), drawerOverlay = $('drawerOverlay');
-const googleLogoBtn = $('googleLogoBtn');
+const googleLogoBtn = $('googleLogoBtn'), mainSignInBtn = $('mainSignInBtn');
 const connectModal = $('connectModal'), connectInput = $('connectInput'), connectConfirm = $('connectConfirm');
 const connectCancel = $('connectCancel'), connectCancelBtn = $('connectCancelBtn');
 const qrShowModal = $('qrShowModal'), qrShowClose = $('qrShowClose');
@@ -1019,7 +1022,7 @@ function esc(s){ return String(s).replace(/[&<>"']/g, ch=>({'&':'&amp;','<':'&lt
 function initials(n){ return (n||'?').trim().split(/\s+/).map(w=>w[0]).slice(0,2).join('').toUpperCase(); }
 function chatKey(a,b){ return [a,b].sort().join('__'); }
 function fmtBytes(b){ if(b<1024) return b+' B'; if(b<1024*1024) return (b/1024).toFixed(1)+' KB'; return (b/1024/1024).toFixed(1)+' MB'; }
-function signedIn(){ return !!(auth && auth.currentUser && me && me.provider==='google'); }
+function signedIn(){ return !!(auth && auth.currentUser && me && me.uid===auth.currentUser.uid); }
 function friendlyFirebaseError(e){
   const code=e && e.code ? e.code : '';
   if(code.includes('permission-denied')) return 'Firebase permission denied. Check Realtime Database Rules.';
@@ -1058,6 +1061,7 @@ function paintMe(){
   drawerMyId.textContent=me.id || '—';
   qrMyId.textContent=me.id || '—';
   googleLogoBtn.classList.toggle('signed', signedIn());
+  if(mainSignInBtn) mainSignInBtn.classList.toggle('signed', signedIn());
 }
 function setConnected(on, name){
   if(on){ statusChip.classList.remove('connecting'); statusChip.classList.add('online'); statusText.textContent='Connected'+(name?' · '+name:''); }
@@ -1075,6 +1079,18 @@ async function reserveChatId(uid, profile){
   throw new Error('Could not create a unique Chat ID');
 }
 async function ensureUserProfile(user){
+  // Paint the authenticated Google profile immediately so the UI never falls
+  // back to Guest User while the Realtime Database profile is being prepared.
+  const cachedRaw=localStorage.getItem(ME_KEY);
+  let cached=null;
+  try{ cached=cachedRaw?JSON.parse(cachedRaw):null; }catch{}
+  if(cached && cached.uid===user.uid){
+    me={...cached,uid:user.uid,name:user.displayName||cached.name||'Google User',email:user.email||cached.email||'',picture:user.photoURL||cached.picture||null,provider:'google'};
+  }else{
+    me={uid:user.uid,name:user.displayName||'Google User',email:user.email||'',picture:user.photoURL||null,provider:'google',id:null};
+  }
+  paintMe();
+
   const userRef=db.ref('users/'+user.uid);
   const snap=await userRef.once('value');
   let profile=snap.val();
@@ -1082,8 +1098,8 @@ async function ensureUserProfile(user){
     const id=await reserveChatId(user.uid, user);
     profile={ id, uid:user.uid, name:user.displayName||'Google User', email:user.email||'', picture:user.photoURL||null, provider:'google', createdAt:firebase.database.ServerValue.TIMESTAMP };
     await userRef.set(profile);
-  } else {
-    profile={...profile, uid:user.uid, name:user.displayName||profile.name||'Google User', email:user.email||profile.email||'', picture:user.photoURL||profile.picture||null, provider:'google'};
+  }else{
+    profile={...profile,uid:user.uid,name:user.displayName||profile.name||'Google User',email:user.email||profile.email||'',picture:user.photoURL||profile.picture||null,provider:'google'};
     await userRef.update({name:profile.name,email:profile.email,picture:profile.picture,provider:'google'});
     const idSnap=await db.ref('chatIds/'+profile.id).once('value');
     if(!idSnap.exists()) await db.ref('chatIds/'+profile.id).set(user.uid);
@@ -1093,7 +1109,7 @@ async function ensureUserProfile(user){
   paintMe();
   await startPresence();
   await listenRequests();
-  restoreConnection();
+  await restoreConnection();
   return profile;
 }
 
@@ -1108,6 +1124,7 @@ async function signInWithGoogle(){
   }catch(e){ console.error(e); setStatus('',signedIn()?'Ready':'Sign in to connect'); showToast(friendlyFirebaseError(e)); }
 }
 googleLogoBtn.addEventListener('click', signInWithGoogle);
+if(mainSignInBtn) mainSignInBtn.addEventListener('click', signInWithGoogle);
 
 async function startPresence(){
   if(!signedIn()) return;
@@ -1341,10 +1358,23 @@ if(firebaseReady && auth){
         me=null;partnerId=null;partnerUid=null;LOCAL_ONLY=true;
         if(requestRef)requestRef.off();if(messageRef)messageRef.off();
         localStorage.removeItem(ME_KEY);localStorage.removeItem(PARTNER_KEY);localStorage.setItem(LOCAL_ONLY_KEY,'true');
-        drawerName.textContent='Guest User';drawerEmail.textContent='Not signed in';drawerMyId.textContent='—';qrMyId.textContent='—';googleLogoBtn.classList.remove('signed');
+        drawerName.textContent='Guest User';drawerEmail.textContent='Not signed in';drawerMyId.textContent='—';qrMyId.textContent='—';googleLogoBtn.classList.remove('signed'); if(mainSignInBtn) mainSignInBtn.classList.remove('signed');
         topAvatar.textContent='?';drawerAvatar.textContent='?';setConnected(false);render();
       }
-    }catch(e){console.error('auth state',e);setStatus('','Sign in to connect');showToast('Account setup failed: '+friendlyFirebaseError(e));}
+    }catch(e){
+      console.error('auth state',e);
+      // Keep the real Firebase-authenticated Google profile visible even if
+      // the database rules/setup still need attention.
+      if(user){
+        me={uid:user.uid,id:me?.id||null,name:user.displayName||me?.name||'Google User',email:user.email||me?.email||'',picture:user.photoURL||me?.picture||null,provider:'google'};
+        localStorage.setItem(ME_KEY,JSON.stringify(me));
+        paintMe();
+        setStatus('',me.id?'Ready':'Database setup required');
+        showToast('Google signed in, but Firebase Database setup failed: '+friendlyFirebaseError(e));
+      }else{
+        setStatus('','Sign in to connect');
+      }
+    }
   });
 }else{setStatus('','Firebase unavailable');showToast('Firebase could not initialize');}
 
