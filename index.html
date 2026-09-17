@@ -619,10 +619,23 @@
   .call-head .call-peer-avatar img{width:100%;height:100%;object-fit:cover}
   .call-head .call-peer-info{min-width:0;flex:1}.call-peer-name{font-weight:700;font-size:14px}.call-peer-status{font-size:11px;opacity:.7;margin-top:2px}
   .call-stage{position:relative;flex:1;min-height:0;background:#05070c;display:flex;align-items:center;justify-content:center;overflow:hidden}
-  #remoteVideo{width:100%;height:100%;object-fit:cover;background:#05070c;display:block;cursor:pointer}
-  #localVideo{position:absolute;right:16px;bottom:16px;width:180px;max-width:32%;aspect-ratio:16/10;object-fit:cover;background:#18202d;border:2px solid rgba(255,255,255,.75);border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,.4);display:none;z-index:2;cursor:pointer;transition:all .25s ease}
-  .call-stage.swap-local #remoteVideo{position:absolute;right:16px;bottom:16px;width:180px;max-width:32%;height:auto;aspect-ratio:16/10;border:2px solid rgba(255,255,255,.75);border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,.4);z-index:2;transition:all .25s ease}
+  #remoteVideo{width:100%;height:100%;object-fit:cover;background:#05070c;display:block;cursor:pointer;transform:translate(0,0) scale(1);transform-origin:center center;transition:transform .18s ease}
+  #localVideo{position:absolute;right:16px;bottom:16px;width:220px;max-width:34%;aspect-ratio:16/11;object-fit:cover;background:#18202d;border:2px solid rgba(255,255,255,.8);border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.45);display:none;z-index:2;cursor:pointer;transform:translate(0,0) scale(1);transform-origin:center center;transition:width .25s ease,height .25s ease,transform .18s ease,box-shadow .25s ease}
+  #localVideo:hover{box-shadow:0 12px 34px rgba(0,0,0,.55)}
+  .call-stage.swap-local #remoteVideo{position:absolute;right:16px;bottom:16px;width:220px;max-width:34%;height:auto;aspect-ratio:16/11;border:2px solid rgba(255,255,255,.8);border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.45);z-index:2;transition:width .25s ease,transform .18s ease,box-shadow .25s ease}
   .call-stage.swap-local #localVideo{position:relative;inset:auto;width:100%;max-width:none;height:100%;aspect-ratio:auto;border:0;border-radius:0;box-shadow:none;z-index:1}
+  .call-crop-toggle{position:absolute;right:14px;top:14px;width:42px;height:42px;border-radius:12px;border:1px solid rgba(255,255,255,.2);background:rgba(8,12,22,.62);backdrop-filter:blur(8px);color:#fff;display:none;place-items:center;cursor:pointer;z-index:6;box-shadow:0 8px 24px rgba(0,0,0,.28)}
+  .call-crop-toggle.show{display:grid}
+  .call-crop-toggle svg{width:20px;height:20px}
+  .call-crop-panel{position:absolute;right:14px;top:64px;width:min(285px,calc(100% - 28px));padding:12px;border:1px solid rgba(255,255,255,.14);border-radius:16px;background:rgba(12,17,28,.9);backdrop-filter:blur(12px);z-index:7;display:none;color:#fff;box-shadow:0 16px 40px rgba(0,0,0,.35)}
+  .call-crop-panel.open{display:block}
+  .crop-title{font-size:11px;font-weight:700;opacity:.8;margin-bottom:8px}
+  .crop-zoom{width:100%;accent-color:#fff;margin:2px 0 10px}
+  .crop-grid{display:grid;grid-template-columns:repeat(3,42px);gap:7px;justify-content:center}
+  .crop-grid button,.crop-reset{width:42px;height:36px;border-radius:9px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.09);color:#fff;display:grid;place-items:center;cursor:pointer}
+  .crop-grid button svg,.crop-reset svg{width:16px;height:16px}
+  .crop-reset{width:100%;margin-top:8px;font-size:11px;font-weight:700;display:flex;gap:7px}
+  @media(max-width:600px){.call-overlay{padding:0}.call-shell{width:100%;height:100%;border-radius:0}.call-head{height:60px}.call-controls{padding-bottom:calc(16px + env(safe-area-inset-bottom,0px))}#localVideo{width:180px;max-width:50%;right:10px;bottom:10px;aspect-ratio:16/11}.call-stage.swap-local #remoteVideo{width:180px;max-width:50%;right:10px;bottom:10px;aspect-ratio:16/11}.call-stage.swap-local #localVideo{width:100%;max-width:none;height:100%}.call-crop-toggle{right:10px;top:10px}.call-crop-panel{right:10px;top:60px}}
   .call-audio-avatar{position:absolute;width:120px;height:120px;border-radius:50%;display:grid;place-items:center;background:#2b4a8b;color:#fff;font-size:36px;font-weight:800;box-shadow:0 0 0 14px rgba(43,74,139,.16)}
   .call-audio-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%}
   .call-status-center{position:absolute;left:20px;right:20px;bottom:18px;text-align:center;color:#fff;font-size:12px;opacity:.8;text-shadow:0 1px 4px #000}
@@ -634,6 +647,19 @@
   .incoming-call-avatar img{width:100%;height:100%;object-fit:cover}.incoming-call-card h3{font-size:19px;margin-bottom:5px}.incoming-call-card p{font-size:12.5px;color:var(--muted);margin-bottom:20px}
   .incoming-actions{display:flex;gap:10px}.incoming-actions button{flex:1;border:0;border-radius:13px;padding:13px;font-weight:700;cursor:pointer}.incoming-reject{background:var(--red-soft);color:var(--red)}.incoming-accept{background:var(--brand);color:#fff}
   @media(max-width:600px){.call-overlay{padding:0}.call-shell{width:100%;height:100%;border-radius:0}.call-head{height:60px}.call-controls{padding-bottom:calc(16px + env(safe-area-inset-bottom,0px))}#localVideo{width:125px;max-width:38%;right:10px;bottom:10px}.call-stage.swap-local #remoteVideo{width:125px;max-width:38%;right:10px;bottom:10px}.call-stage.swap-local #localVideo{width:100%;max-width:none;height:100%}}
+
+  /* ===== CALL CAMERA SWITCH + DRAGGABLE PREVIEW ===== */
+  .call-control.switch-camera{display:none;position:relative}
+  .call-control.switch-camera svg{width:21px;height:21px}
+  .incoming-camera-switch{margin:0 auto 14px;width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:#f5f6fa;color:var(--brand);display:grid;place-items:center;cursor:pointer}
+  .incoming-camera-switch svg{width:20px;height:20px}
+  #localVideo,#remoteVideo{touch-action:none}
+  .call-stage.dragging-preview #localVideo,.call-stage.dragging-preview #remoteVideo{transition:none!important}
+  @media(max-width:600px){
+    #localVideo,.call-stage.swap-local #remoteVideo{width:170px;max-width:48%;aspect-ratio:16/11}
+    .call-controls{gap:10px}
+  }
+  @media(min-width:601px){#localVideo,.call-stage.swap-local #remoteVideo{width:220px}}
 
   /* ===== DESKTOP FULL WIDTH FIX ===== */
   @media (min-width: 720px) {
@@ -737,11 +763,27 @@
     <div class="call-stage">
       <video id="remoteVideo" playsinline autoplay></video>
       <video id="localVideo" playsinline autoplay muted></video>
+      <button class="call-crop-toggle" id="callCropToggle" type="button" title="Adjust video crop" aria-label="Adjust video crop">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2v4a2 2 0 0 1-2 2H0"/><path d="M18 2v4a2 2 0 0 0 2 2h4"/><path d="M6 22v-4a2 2 0 0 0-2-2H0"/><path d="M18 22v-4a2 2 0 0 1 2-2h4"/><rect x="6" y="6" width="12" height="12" rx="1"/></svg>
+      </button>
+      <div class="call-crop-panel" id="callCropPanel">
+        <div class="crop-title">Manual crop / framing</div>
+        <input class="crop-zoom" id="cropZoom" type="range" min="1" max="2.5" step="0.05" value="1" aria-label="Video zoom">
+        <div class="crop-grid">
+          <span></span><button type="button" data-crop-dir="up" title="Move up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 19V5"/><path d="m6 11 6-6 6 6"/></svg></button><span></span>
+          <button type="button" data-crop-dir="left" title="Move left"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M19 12H5"/><path d="m11 18-6-6 6-6"/></svg></button>
+          <button type="button" data-crop-dir="center" title="Center"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="8"/></svg></button>
+          <button type="button" data-crop-dir="right" title="Move right"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg></button>
+          <span></span><button type="button" data-crop-dir="down" title="Move down"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14"/><path d="m18 13-6 6-6-6"/></svg></button><span></span>
+        </div>
+        <button class="crop-reset" id="cropReset" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v6h6"/></svg>Reset framing</button>
+      </div>
       <div class="call-audio-avatar" id="callAudioAvatar">?</div>
       <div class="call-status-center" id="callStatusCenter">Connecting…</div>
     </div>
     <div class="call-controls">
       <button class="call-control" id="callMuteBtn" title="Mute microphone" aria-label="Mute microphone"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg></button>
+      <button class="call-control switch-camera" id="callSwitchCameraBtn" title="Switch camera" aria-label="Switch camera"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5V2l4 4-4 4V7a5 5 0 1 0 4.9 6"/><path d="M12 19v3l-4-4 4-4v3a5 5 0 1 0-4.9-6"/></svg></button>
       <button class="call-control" id="callCameraBtn" title="Turn camera off" aria-label="Turn camera off"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg></button>
       <button class="call-control end" id="callEndBtn" title="End call" aria-label="End call"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 1 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 1 2.81.7A2 2 0 0 1 22 16.92z"/></svg></button>
     </div>
@@ -754,6 +796,9 @@
     <div class="incoming-call-avatar" id="incomingCallAvatar">?</div>
     <h3 id="incomingCallName">Incoming call</h3>
     <p id="incomingCallType">Voice call</p>
+    <button class="incoming-camera-switch" id="incomingCameraSwitch" type="button" title="Switch camera before answering" aria-label="Switch camera before answering">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5V2l4 4-4 4V7a5 5 0 1 0 4.9 6"/><path d="M12 19v3l-4-4 4-4v3a5 5 0 1 0-4.9-6"/></svg>
+    </button>
     <div class="incoming-actions">
       <button class="incoming-reject" id="incomingReject">Decline</button>
       <button class="incoming-accept" id="incomingAccept">Accept</button>
@@ -1244,7 +1289,9 @@ const remoteVideo = $('remoteVideo'), localVideo = $('localVideo');
 const callStage = document.querySelector('.call-stage');
 const callPeerAvatar = $('callPeerAvatar'), callPeerName = $('callPeerName'), callPeerStatus = $('callPeerStatus');
 const callAudioAvatar = $('callAudioAvatar'), callStatusCenter = $('callStatusCenter');
-const callMuteBtn = $('callMuteBtn'), callCameraBtn = $('callCameraBtn'), callEndBtn = $('callEndBtn');
+const callMuteBtn = $('callMuteBtn'), callCameraBtn = $('callCameraBtn'), callSwitchCameraBtn = $('callSwitchCameraBtn'), callEndBtn = $('callEndBtn');
+const incomingCameraSwitch = $('incomingCameraSwitch');
+const callCropToggle = $('callCropToggle'), callCropPanel = $('callCropPanel'), cropZoom = $('cropZoom'), cropReset = $('cropReset');
 const incomingCallAvatar = $('incomingCallAvatar'), incomingCallName = $('incomingCallName'), incomingCallType = $('incomingCallType');
 const incomingAccept = $('incomingAccept'), incomingReject = $('incomingReject');
 
@@ -2040,6 +2087,9 @@ let callEnding = false;
 let callCleanupTimer = null;
 let activeCallPath = null;
 let currentCallSignalingStatus = null;
+let preferredCameraFacing = 'user';
+let previewDrag = {active:false, moved:false, pointerId:null, target:null, startX:0, startY:0, baseLeft:0, baseTop:0};
+let previewPositions = {local:null, remote:null};
 
 /* ===== CALL RING / RINGBACK ===== */
 let callToneContext = null, callToneTimer = null, callToneMode = null;
@@ -2102,11 +2152,58 @@ function setCallMode(type){
   callAudioAvatar.style.display=video?'none':'grid';
   callCameraBtn.style.display=video?'grid':'none';
   callCameraBtn.disabled=!video;
+  if(callSwitchCameraBtn){callSwitchCameraBtn.style.display=video?'grid':'none';callSwitchCameraBtn.disabled=!video;}
   if(callStage) callStage.classList.remove('swap-local');
+}
+let cropState={remote:{zoom:1,x:0,y:0},local:{zoom:1,x:0,y:0}};
+function activeCropVideo(){
+  if(!callStage || currentCallType!=='video') return null;
+  return callStage.classList.contains('swap-local') ? 'local' : 'remote';
+}
+function renderCrop(){
+  const active=activeCropVideo();
+  if(!active) return;
+  const st=cropState[active];
+  const el=active==='local'?localVideo:remoteVideo;
+  el.style.transform=`translate(${st.x}px,${st.y}px) scale(${st.zoom})`;
+  if(cropZoom) cropZoom.value=String(st.zoom);
+}
+function resetCrop(which){
+  if(which) cropState[which]={zoom:1,x:0,y:0};
+  else { cropState.remote={zoom:1,x:0,y:0}; cropState.local={zoom:1,x:0,y:0}; }
+  renderCrop();
+}
+function moveCrop(dir){
+  const active=activeCropVideo(); if(!active) return;
+  const st=cropState[active]; const step=18;
+  if(dir==='up') st.y-=step;
+  if(dir==='down') st.y+=step;
+  if(dir==='left') st.x-=step;
+  if(dir==='right') st.x+=step;
+  if(dir==='center'){st.x=0;st.y=0;}
+  renderCrop();
+}
+function applyPreviewPosition(which){
+  const el=which==='local'?localVideo:remoteVideo;
+  if(!el) return;
+  const pos=previewPositions[which];
+  if(pos){el.style.left=pos.left+'px';el.style.top=pos.top+'px';el.style.right='auto';el.style.bottom='auto';}
+  else {el.style.left='';el.style.top='';el.style.right='';el.style.bottom='';}
+}
+function clearFullVideoPosition(which){
+  const el=which==='local'?localVideo:remoteVideo;
+  if(!el) return;
+  el.style.left='';el.style.top='';el.style.right='';el.style.bottom='';
 }
 function swapCallVideos(){
   if(currentCallType!=='video' || !callStage) return;
+  const wasLocalPreview=callStage.classList.contains('swap-local');
+  const nextLocalFull=wasLocalPreview; // after toggle, local becomes full only when previous state was swap-local
   callStage.classList.toggle('swap-local');
+  clearFullVideoPosition(nextLocalFull?'local':'remote');
+  const nextPreview=nextLocalFull?'remote':'local';
+  applyPreviewPosition(nextPreview);
+  renderCrop();
 }
 function openCallUI(type, status, picture){
   setCallMode(type); setCallPeerVisual(partnerName, picture||null); setCallStatus(status||'Connecting…');
@@ -2118,9 +2215,15 @@ function closeCallUI(){
   callModal.classList.remove('open');
   incomingCallModal.classList.remove('open');
   if(callStage) callStage.classList.remove('swap-local');
+  [localVideo,remoteVideo].forEach(v=>{v.style.left='';v.style.top='';v.style.right='';v.style.bottom='';delete v.dataset.dragged;});
+  previewPositions={local:null,remote:null};
+  resetCrop();
+  if(callCropPanel) callCropPanel.classList.remove('open');
+  if(callCropToggle) { callCropToggle.classList.remove('active'); callCropToggle.classList.remove('show'); }
   remoteVideo.srcObject=null; localVideo.srcObject=null;
   callPeerAvatar.textContent='?'; callAudioAvatar.textContent='?';
   callMuteBtn.classList.remove('active'); callCameraBtn.classList.remove('active');
+  if(callSwitchCameraBtn){callSwitchCameraBtn.classList.remove('active');callSwitchCameraBtn.style.display='none';}
   callMuteBtn.innerHTML=callIcon('mute',false); callCameraBtn.innerHTML=callIcon('camera',false);
   if(!recordingBar.classList.contains('show')) inputBarMain.classList.remove('hide');
 }
@@ -2147,7 +2250,7 @@ async function getCallMedia(type){
   if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) throw new Error('getUserMedia is not supported');
   return navigator.mediaDevices.getUserMedia({
     audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true},
-    video:type==='video'?{facingMode:{ideal:'user'},width:{ideal:1280},height:{ideal:720}}:false
+    video:type==='video'?{facingMode:{ideal:preferredCameraFacing},width:{ideal:1280},height:{ideal:720}}:false
   });
 }
 function mediaErrorMessage(err){
@@ -2267,6 +2370,7 @@ function showIncomingCall(callId,data){
   const name=data.callerName||'ConvoLink user';
   incomingCallName.textContent=name;
   incomingCallType.textContent=(data.type==='video'?'Video':'Voice')+' call';
+  if(incomingCameraSwitch) incomingCameraSwitch.style.display=data.type==='video'?'grid':'none';
   if(data.callerPicture) incomingCallAvatar.innerHTML='<img src="'+esc(data.callerPicture)+'" alt="">'; else incomingCallAvatar.textContent=initials(name);
   incomingCallModal.classList.add('open');
   startCallTone('incoming');
@@ -2330,6 +2434,99 @@ async function endWebRTCCall(reason='ended',updateRemote=true){
   setStatus('',partnerUid?'Ready · '+partnerName:'Ready');
   if(id){clearTimeout(callCleanupTimer);callCleanupTimer=setTimeout(()=>{db.ref('calls/'+id).remove().catch(()=>{});},7000);}
 }
+async function switchCallCamera(){
+  if(currentCallType!=='video' || !localStream) return;
+  const oldTrack=localStream.getVideoTracks()[0];
+  if(!oldTrack) return;
+  const currentFacing=oldTrack.getSettings ? oldTrack.getSettings().facingMode : preferredCameraFacing;
+  const nextFacing=(currentFacing==='environment' || preferredCameraFacing==='environment')?'user':'environment';
+  try{
+    const nextStream=await navigator.mediaDevices.getUserMedia({
+      audio:false,
+      video:{facingMode:{exact:nextFacing},width:{ideal:1280},height:{ideal:720}}
+    });
+    const newTrack=nextStream.getVideoTracks()[0];
+    if(!newTrack) throw new Error('No camera track returned');
+    const sender=peerConnection?.getSenders().find(x=>x.track && x.track.kind==='video');
+    if(sender) await sender.replaceTrack(newTrack);
+    localStream.removeTrack(oldTrack);
+    localStream.addTrack(newTrack);
+    try{oldTrack.stop();}catch{}
+    preferredCameraFacing=nextFacing;
+    localVideo.srcObject=localStream;
+    localVideo.muted=true;
+    if(callSwitchCameraBtn){callSwitchCameraBtn.classList.add('active');setTimeout(()=>callSwitchCameraBtn.classList.remove('active'),220);}
+    showToast(nextFacing==='environment'?'Back camera':'Front camera');
+  }catch(err){
+    console.warn('switch camera exact failed',err);
+    try{
+      const devices=await navigator.mediaDevices.enumerateDevices();
+      const cams=devices.filter(d=>d.kind==='videoinput');
+      if(cams.length<2) throw err;
+      const currentId=oldTrack.getSettings?.().deviceId;
+      const nextDevice=cams.find(d=>d.deviceId!==currentId)||cams[0];
+      const nextStream=await navigator.mediaDevices.getUserMedia({video:{deviceId:{exact:nextDevice.deviceId},width:{ideal:1280},height:{ideal:720}},audio:false});
+      const newTrack=nextStream.getVideoTracks()[0];
+      const sender=peerConnection?.getSenders().find(x=>x.track && x.track.kind==='video');
+      if(sender) await sender.replaceTrack(newTrack);
+      localStream.removeTrack(oldTrack);localStream.addTrack(newTrack);try{oldTrack.stop();}catch{}
+      preferredCameraFacing=nextFacing;
+      localVideo.srcObject=localStream;localVideo.muted=true;
+      showToast('Camera switched');
+    }catch(e){
+      console.error('camera switch',e);
+      showToast('Could not switch camera. Check camera permission.');
+    }
+  }
+}
+function prepareIncomingCameraSwitch(){
+  if(!incomingCallData || incomingCallData.data?.type!=='video') return;
+  preferredCameraFacing=preferredCameraFacing==='user'?'environment':'user';
+  showToast(preferredCameraFacing==='environment'?'Back camera selected':'Front camera selected');
+}
+function previewElement(){
+  if(!callStage || currentCallType!=='video') return null;
+  return callStage.classList.contains('swap-local')?remoteVideo:localVideo;
+}
+function clampPreviewPosition(el,left,top){
+  if(!callStage || !el) return;
+  const rect=callStage.getBoundingClientRect();
+  const maxLeft=Math.max(0,rect.width-el.offsetWidth);
+  const maxTop=Math.max(0,rect.height-el.offsetHeight);
+  left=Math.max(0,Math.min(left,maxLeft));top=Math.max(0,Math.min(top,maxTop));
+  el.style.left=left+'px';el.style.top=top+'px';el.style.right='auto';el.style.bottom='auto';
+}
+function beginPreviewDrag(e){
+  const target=previewElement();
+  if(!target || e.target!==target) return;
+  const r=target.getBoundingClientRect();
+  previewDrag={active:true,moved:false,pointerId:e.pointerId,target,startX:e.clientX,startY:e.clientY,baseLeft:r.left-callStage.getBoundingClientRect().left,baseTop:r.top-callStage.getBoundingClientRect().top};
+  target.setPointerCapture?.(e.pointerId);callStage.classList.add('dragging-preview');
+}
+function movePreviewDrag(e){
+  if(!previewDrag.active || e.pointerId!==previewDrag.pointerId) return;
+  const dx=e.clientX-previewDrag.startX,dy=e.clientY-previewDrag.startY;
+  if(Math.abs(dx)+Math.abs(dy)>6) previewDrag.moved=true;
+  clampPreviewPosition(previewDrag.target,previewDrag.baseLeft+dx,previewDrag.baseTop+dy);
+}
+function endPreviewDrag(e){
+  if(!previewDrag.active || e.pointerId!==previewDrag.pointerId) return;
+  const moved=previewDrag.moved;previewDrag.active=false;callStage.classList.remove('dragging-preview');
+  if(moved){
+    const which=previewDrag.target===localVideo?'local':'remote';
+    previewPositions[which]={left:parseFloat(previewDrag.target.style.left)||0,top:parseFloat(previewDrag.target.style.top)||0};
+    previewDrag.target.dataset.dragged='1';
+    setTimeout(()=>delete previewDrag.target.dataset.dragged,80);
+  }
+}
+if(callSwitchCameraBtn) callSwitchCameraBtn.addEventListener('click',e=>{e.stopPropagation();switchCallCamera();});
+if(incomingCameraSwitch) incomingCameraSwitch.addEventListener('click',e=>{e.stopPropagation();prepareIncomingCameraSwitch();});
+if(callStage){
+  callStage.addEventListener('pointerdown',beginPreviewDrag);
+  callStage.addEventListener('pointermove',movePreviewDrag);
+  callStage.addEventListener('pointerup',endPreviewDrag);
+  callStage.addEventListener('pointercancel',endPreviewDrag);
+}
 callMuteBtn.addEventListener('click',()=>{
   if(!localStream)return;const track=localStream.getAudioTracks()[0];if(!track)return;track.enabled=!track.enabled;const muted=!track.enabled;callMuteBtn.classList.toggle('active',muted);callMuteBtn.innerHTML=callIcon('mute',muted);callMuteBtn.title=muted?'Unmute microphone':'Mute microphone';
 });
@@ -2340,8 +2537,26 @@ callEndBtn.addEventListener('click',()=>endWebRTCCall('ended'));
 incomingAccept.addEventListener('click',acceptIncomingCall);
 incomingReject.addEventListener('click',rejectIncomingCall);
 if(callStage){
-  localVideo.addEventListener('click',e=>{e.stopPropagation();swapCallVideos();});
-  remoteVideo.addEventListener('click',e=>{e.stopPropagation();swapCallVideos();});
+  localVideo.addEventListener('click',e=>{e.stopPropagation();if(localVideo.dataset.dragged==='1')return;swapCallVideos();});
+  remoteVideo.addEventListener('click',e=>{e.stopPropagation();if(remoteVideo.dataset.dragged==='1')return;swapCallVideos();});
+}
+if(callCropToggle){
+  callCropToggle.addEventListener('click',e=>{
+    e.stopPropagation();
+    callCropPanel.classList.toggle('open');
+    callCropToggle.classList.toggle('active',callCropPanel.classList.contains('open'));
+  });
+}
+if(cropZoom){
+  cropZoom.addEventListener('input',()=>{
+    const active=activeCropVideo(); if(!active) return;
+    cropState[active].zoom=parseFloat(cropZoom.value)||1;
+    renderCrop();
+  });
+}
+document.querySelectorAll('[data-crop-dir]').forEach(btn=>btn.addEventListener('click',e=>{e.stopPropagation();moveCrop(btn.dataset.cropDir);}));
+if(cropReset){
+  cropReset.addEventListener('click',e=>{e.stopPropagation();const active=activeCropVideo();resetCrop(active);});
 }
 $('voiceCallBtn').addEventListener('click',()=>startWebRTCCall('voice'));
 $('videoCallBtn').addEventListener('click',()=>startWebRTCCall('video'));
