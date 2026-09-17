@@ -2089,6 +2089,7 @@ let callerCandidateHandler = null;
 let calleeCandidateHandler = null;
 let incomingCallsRef = null;
 let incomingCallHandler = null;
+let incomingCallChangedHandler = null;
 let incomingCallData = null;
 let pendingRemoteCandidates = [];
 let remoteDescriptionReady = false;
@@ -2497,6 +2498,19 @@ function listenForIncomingCalls(){
     showIncomingCall(snap.key,data);
   };
   incomingCallsRef.on('child_added',incomingCallHandler);
+  incomingCallChangedHandler=async snap=>{
+    const data=snap.val();
+    if(!data) return;
+    const status=data.status;
+    if(status!=='ended' && status!=='cancelled' && status!=='rejected' && status!=='expired' && status!=='busy') return;
+    if(incomingCallData && incomingCallData.callId===snap.key){
+      incomingCallData=null;
+      incomingCallModal.classList.remove('open');
+      stopCallTone();
+      if(status==='ended' || status==='cancelled') showToast('Caller ended the call');
+    }
+  };
+  incomingCallsRef.on('child_changed',incomingCallChangedHandler);
 }
 async function acceptIncomingCall(){
   const incoming=incomingCallData;if(!incoming)return;
