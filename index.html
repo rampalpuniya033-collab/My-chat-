@@ -560,22 +560,6 @@
   </div>
 </div>
 
-<!-- Connection Request Modal -->
-<div class="modal-overlay" id="requestModal">
-  <div class="modal" style="max-width:360px;text-align:center;">
-    <button class="m-close" id="requestClose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-    <div style="width:52px;height:52px;border-radius:16px;background:var(--brand-soft);display:grid;place-items:center;margin:4px auto 12px;color:var(--brand);">
-      <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></svg>
-    </div>
-    <h3 id="requestTitle" style="font-size:17px;font-weight:750;color:var(--ink);margin-bottom:6px;">Connection Request</h3>
-    <div id="requestText" style="font-size:13px;color:var(--muted);line-height:1.55;margin-bottom:18px;">Someone wants to connect with you.</div>
-    <div style="display:flex;gap:10px;">
-      <button id="requestReject" style="flex:1;padding:12px;border-radius:12px;font-size:13.5px;font-weight:700;cursor:pointer;background:#f5f6fa;color:var(--ink-2);border:1px solid var(--line);">Decline</button>
-      <button id="requestAccept" style="flex:1;padding:12px;border-radius:12px;font-size:13.5px;font-weight:700;cursor:pointer;background:var(--brand);color:#fff;border:none;">Accept</button>
-    </div>
-  </div>
-</div>
-
 <!-- QR Show Modal -->
 <div class="modal-overlay" id="qrShowModal">
   <div class="modal qr-modal" style="max-width:380px;">
@@ -685,7 +669,6 @@
 <!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-database-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
 <!-- jsQR (for scanner) -->
 <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
 
@@ -989,8 +972,6 @@ const firebaseConfig = {
 };
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
-const auth = firebase.auth();
-try { auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL); } catch(e) {}
 
 const QR_PREFIX = "CONVOLINK:";
 let me = null, partnerId = null, partnerName = 'Friend';
@@ -1018,7 +999,6 @@ const drawer = $('drawer'), drawerOverlay = $('drawerOverlay');
 const googleLogoBtn = $('googleLogoBtn'), realGsiMount = $('realGsiMount');
 const connectModal = $('connectModal'), connectInput = $('connectInput'), connectConfirm = $('connectConfirm');
 const connectCancel = $('connectCancel'), connectCancelBtn = $('connectCancelBtn');
-const requestModal = $('requestModal'), requestText = $('requestText'), requestAccept = $('requestAccept'), requestReject = $('requestReject'), requestClose = $('requestClose');
 const qrShowModal = $('qrShowModal'), qrShowClose = $('qrShowClose');
 const qrCanvas = $('qrCanvas'), qrMyId = $('qrMyId'), qrCopyId = $('qrCopyId'), qrDownload = $('qrDownload');
 const qrScanModal = $('qrScanModal'), qrScanClose = $('qrScanClose');
@@ -1049,147 +1029,101 @@ connectCancel.addEventListener('click', closeConnectModal);
 connectCancelBtn.addEventListener('click', closeConnectModal);
 connectModal.addEventListener('click', e=>{ if(e.target===connectModal) closeConnectModal(); });
 
-async function stableChatId(uid){
-  try{
-    const bytes=new TextEncoder().encode(uid);
-    const hash=await crypto.subtle.digest('SHA-256',bytes);
-    const a=Array.from(new Uint8Array(hash)).map(b=>b.toString(16).padStart(2,'0')).join('').toUpperCase();
-    return 'CL-'+a.slice(0,8)+'-'+a.slice(8,12);
-  }catch(e){
-    let h=2166136261; for(let i=0;i<uid.length;i++){ h^=uid.charCodeAt(i); h=Math.imul(h,16777619); }
-    return 'CL-'+(h>>>0).toString(16).padStart(8,'0').toUpperCase()+'-'+uid.slice(-4).toUpperCase();
-  }
-}
-
-window.handleGoogleResponse = async function(response){
-  try{
-    if(!response || !response.credential) throw new Error('Missing Google credential');
-    const credential=firebase.auth.GoogleAuthProvider.credential(response.credential);
-    const result=await auth.signInWithCredential(credential);
-    await applyFirebaseUser(result.user);
-    showToast('Signed in as '+(result.user.displayName||result.user.email||'Google User'));
-  }catch(e){ console.error(e); showToast('Google sign-in failed: '+(e.code||'check Firebase settings')); }
+window.handleGoogleResponse = function(response){
+  try { const payload = JSON.parse(atob(response.credential.split('.')[1])); applyGoogleUser({ name: payload.name||'Google User', email: payload.email||'', picture: payload.picture||null }); showToast('Signed in as '+(payload.name||payload.email)); }
+  catch(e){ console.error(e); showToast('Google sign-in failed'); }
 };
-
-async function applyFirebaseUser(u){
-  if(!u) return;
-  if(presenceRef){ try{ await presenceRef.remove(); }catch(e){} }
-  const id=await stableChatId(u.uid);
-  me={id,name:u.displayName||'Google User',email:u.email||'',picture:u.photoURL||null,provider:'google',uid:u.uid};
-  localStorage.setItem(ME_KEY,JSON.stringify(me));
-  paintMe();
-  await registerPresence();
-  const savedPartner=localStorage.getItem(PARTNER_KEY);
-  if(savedPartner && savedPartner!==me.id){
-    const c=await db.ref('connections/'+me.id).once('value');
-    const cv=c.val();
-    if(cv && cv.partnerId===savedPartner){ partnerId=savedPartner; partnerName=cv.partnerName||'Friend'; LOCAL_ONLY=false; setConnected(true,partnerName); listenMessages(); }
-  }
-  render();
-}
-
-function initGoogle(){
-  if(!window.google||!google.accounts||!google.accounts.id) return false;
-  if(gsiReady) return true;
-  google.accounts.id.initialize({client_id:GOOGLE_CLIENT_ID,callback:window.handleGoogleResponse,auto_select:false,cancel_on_tap_outside:true,ux_mode:'popup'});
-  google.accounts.id.renderButton(realGsiMount,{type:'icon',theme:'outline',size:'large',shape:'circle',logo_alignment:'center'});
-  gsiReady=true; googleLogoBtn.classList.remove('no-gsi'); return true;
-}
+function applyGoogleUser(u){ if(presenceRef) presenceRef.remove(); const newId=genId(); me={id:newId,name:u.name,email:u.email,picture:u.picture,provider:'google'}; localStorage.setItem(ME_KEY,JSON.stringify(me)); paintMe(); closeDrawer(); registerPresence(); if(qrShowModal.classList.contains('open')) drawMyQR(); }
+function initGoogle(){ if(!window.google||!google.accounts||!google.accounts.id) return false; if(gsiReady) return true; google.accounts.id.initialize({client_id:GOOGLE_CLIENT_ID,callback:window.handleGoogleResponse,auto_select:false,cancel_on_tap_outside:true,ux_mode:'popup'}); google.accounts.id.renderButton(realGsiMount,{type:'icon',theme:'outline',size:'large',shape:'circle',logo_alignment:'center'}); gsiReady=true; googleLogoBtn.classList.remove('no-gsi'); return true; }
 function tryInitGoogle(){ if(initGoogle()) return; let t=0; const iv=setInterval(()=>{ t++; if(initGoogle()||t>20) clearInterval(iv); },250); }
 tryInitGoogle();
-googleLogoBtn.addEventListener('click', ()=>{
-  if(gsiReady){ try{ google.accounts.id.prompt(); }catch(e){} return; }
-  showToast('Connecting to Google…'); setTimeout(()=>{ if(!initGoogle()) showToast('Could not reach Google — check internet'); else try{google.accounts.id.prompt();}catch(e){} },400);
-});
+googleLogoBtn.addEventListener('click', ()=>{ if(!gsiReady){ showToast('Connecting to Google…'); setTimeout(()=>{ if(window.google&&google.accounts&&google.accounts.id){ initGoogle(); try{ google.accounts.id.prompt(); }catch{} } else { showToast('Could not reach Google — check internet'); } },400); } });
 
 function paintMe(){
   const ini=initials(me.name);
-  if(me.picture){ topAvatar.innerHTML=`<img src="${esc(me.picture)}" alt="">`; drawerAvatar.innerHTML=`<img src="${esc(me.picture)}" alt="">`; }
+  if(me.picture){ topAvatar.innerHTML=`<img src="${me.picture}" alt="">`; drawerAvatar.innerHTML=`<img src="${me.picture}" alt="">`; }
   else { topAvatar.textContent=ini; drawerAvatar.textContent=ini; }
   drawerName.textContent=me.name;
   drawerEmail.textContent=me.email||'Not signed in';
   drawerMyId.textContent=me.id;
   qrMyId.textContent=me.id;
-  if(me.provider==='google'&&me.email) googleLogoBtn.classList.add('signed'); else googleLogoBtn.classList.remove('signed');
+  if(me.provider==='google'&&me.email) googleLogoBtn.classList.add('signed');
+  else googleLogoBtn.classList.remove('signed');
 }
+function initMe(){ const s=localStorage.getItem(ME_KEY); if(s){ try{ me=JSON.parse(s); return; }catch{} } me={id:genId(),name:'Guest User',email:null,picture:null,provider:'guest'}; localStorage.setItem(ME_KEY,JSON.stringify(me)); }
 
-async function registerPresence(){
-  if(!me || !auth.currentUser) return;
-  if(presenceRef){ try{presenceRef.off(); await presenceRef.remove();}catch(e){} }
-  presenceRef=db.ref('users/'+me.id);
-  await presenceRef.set({id:me.id,uid:me.uid,name:me.name,picture:me.picture,email:me.email,online:true,lastSeen:firebase.database.ServerValue.TIMESTAMP});
-  presenceRef.onDisconnect().update({online:false,lastSeen:firebase.database.ServerValue.TIMESTAMP});
-
-  if(incomingReqRef) incomingReqRef.off();
-  incomingReqRef=db.ref('requests/'+me.id);
-  incomingReqRef.on('child_added', async snap=>{
+function registerPresence(){
+  if(presenceRef) presenceRef.remove();
+  presenceRef = db.ref('users/'+me.id);
+  presenceRef.set({ id:me.id, name:me.name, picture:me.picture, email:me.email, online:true, lastSeen:firebase.database.ServerValue.TIMESTAMP });
+  presenceRef.onDisconnect().update({ online:false, lastSeen:firebase.database.ServerValue.TIMESTAMP });
+  incomingReqRef = db.ref('incoming/'+me.id);
+  incomingReqRef.on('value', snap=>{
     const data=snap.val(); if(!data||!data.from) return;
-    const requestKey=snap.key;
-    const from=data.from;
-    if(from===me.id) return;
-    requestText.textContent=(data.fromName||'Someone')+' wants to connect with you.';
-    requestModal.dataset.key=requestKey;
-    requestModal.dataset.from=from;
-    requestModal.dataset.fromName=data.fromName||'Friend';
-    requestModal.classList.add('open');
-  });
-
-  const acceptedRef=db.ref('accepted/'+me.id);
-  acceptedRef.off();
-  acceptedRef.on('child_added', snap=>{
-    const data=snap.val(); if(!data||!data.partnerId) return;
-    partnerId=data.partnerId; partnerName=data.partnerName||'Friend';
+    const {from, fromName}=data;
+    partnerId=from; partnerName=fromName||'Friend';
     LOCAL_ONLY=false; localStorage.setItem(PARTNER_KEY,partnerId); localStorage.setItem(LOCAL_ONLY_KEY,'false');
-    setConnected(true,partnerName); render(); listenMessages(); showToast('Connection accepted. Start chatting');
-    snap.ref.remove();
+    db.ref('connections/'+me.id).set({ partnerId:from, partnerName:fromName||'Friend', at:firebase.database.ServerValue.TIMESTAMP });
+    incomingReqRef.remove();
+    db.ref('accepted/'+from).set({ partnerId:me.id, partnerName:me.name, at:firebase.database.ServerValue.TIMESTAMP });
+    setConnected(true, partnerName);
+    addSystem(`⚡ ${partnerName} connected with you`);
+    render();
+    listenMessages();
+    showToast(`${partnerName} connected!`);
+  });
+  db.ref('accepted/'+me.id).on('value', snap=>{
+    const data=snap.val(); if(!data) return;
+    const {partnerId:pId, partnerName:pName}=data;
+    partnerId=pId; partnerName=pName||'Friend';
+    LOCAL_ONLY=false; localStorage.setItem(PARTNER_KEY,partnerId); localStorage.setItem(LOCAL_ONLY_KEY,'false');
+    db.ref('accepted/'+me.id).remove();
+    setConnected(true, partnerName);
+    addSystem(`Connected with ${partnerName} 🎉`);
+    render();
+    listenMessages();
+    showToast('Connected! Start chatting');
   });
 }
-
-async function acceptRequest(){
-  const from=requestModal.dataset.from, key=requestModal.dataset.key, fromName=requestModal.dataset.fromName||'Friend';
-  if(!from) return;
-  try{
-    const targetSnap=await db.ref('users/'+from).once('value');
-    const target=targetSnap.val();
-    if(!target){ showToast('User is no longer available'); requestModal.classList.remove('open'); return; }
-    await db.ref('connections/'+me.id).set({partnerId:from,partnerName:fromName,at:firebase.database.ServerValue.TIMESTAMP});
-    await db.ref('connections/'+from).set({partnerId:me.id,partnerName:me.name,at:firebase.database.ServerValue.TIMESTAMP});
-    await db.ref('accepted/'+from+'/'+me.id).set({partnerId:me.id,partnerName:me.name,at:firebase.database.ServerValue.TIMESTAMP});
-    await db.ref('accepted/'+me.id+'/'+from).set({partnerId:from,partnerName:fromName,at:firebase.database.ServerValue.TIMESTAMP});
-    await db.ref('requests/'+me.id+'/'+key).remove();
-    partnerId=from; partnerName=fromName; LOCAL_ONLY=false;
-    localStorage.setItem(PARTNER_KEY,partnerId); localStorage.setItem(LOCAL_ONLY_KEY,'false');
-    requestModal.classList.remove('open'); setConnected(true,partnerName); render(); listenMessages(); showToast('Connected with '+partnerName);
-  }catch(e){ console.error(e); showToast('Could not accept request'); }
+function listenMessages(){
+  if(messageRef) messageRef.off();
+  if(!partnerId) return;
+  const key=chatKey(me.id,partnerId);
+  messageRef=db.ref('messages/'+key).limitToLast(200);
+  messageRef.on('child_added', snap=>{
+    const m=snap.val(); if(!m) return;
+    const ex=getMsgs();
+    if(ex.some(x=>x._key===snap.key)) return;
+    saveMsg({ _key:snap.key, from:m.from, fromName:m.fromName, text:m.text||'', time:m.time||timeNow(), media:m.media||null });
+    render();
+  });
 }
-async function rejectRequest(){
-  const key=requestModal.dataset.key;
-  if(key && me) try{ await db.ref('requests/'+me.id+'/'+key).remove(); }catch(e){}
-  requestModal.classList.remove('open');
-}
-requestAccept.addEventListener('click',acceptRequest); requestReject.addEventListener('click',rejectRequest); requestClose.addEventListener('click',rejectRequest);
-
 async function connectToId(id, opts){
   opts=opts||{}; id=(id||'').trim().toUpperCase();
-  if(!auth.currentUser || !me || me.provider!=='google'){ showToast('Sign in with Google first'); return; }
   if(!id){ showToast('Please enter a Chat ID'); return; }
   if(id===me.id){ showToast("That's your own ID!"); return; }
-  if(!/^CL-[A-Z0-9]{8}-[A-Z0-9]{4}$/.test(id)){ showToast('Invalid Chat ID format'); return; }
+  if(!id.startsWith('CL-')){ showToast('Invalid Chat ID format'); return; }
   if(id===partnerId){ showToast('Already connected'); return; }
-  setStatus('connecting','Sending request…');
-  try{
-    const snap=await db.ref('users/'+id).once('value'); const target=snap.val();
+  setStatus('connecting','Connecting…');
+  try {
+    const snap=await db.ref('users/'+id).once('value');
+    const target=snap.val();
     if(!target){ showToast('User not found — check the ID'); setStatus('','Ready'); return; }
-    if(target.uid===me.uid){ showToast("That's your own ID!"); setStatus('','Ready'); return; }
-    const existing=await db.ref('connections/'+me.id).once('value');
-    if(existing.val() && existing.val().partnerId===id){ showToast('Already connected'); setStatus('online','Connected'); return; }
-    await db.ref('requests/'+id+'/'+me.id).set({from:me.id,fromName:me.name,fromPicture:me.picture,at:firebase.database.ServerValue.TIMESTAMP});
+    if(!target.online){ showToast(`${target.name||'User'} is offline`); setStatus('','Ready'); return; }
+    await db.ref('incoming/'+id).set({ from:me.id, fromName:me.name, fromPicture:me.picture, at:firebase.database.ServerValue.TIMESTAMP });
+    partnerId=id; partnerName=target.name||'Friend';
+    LOCAL_ONLY=false; localStorage.setItem(PARTNER_KEY,partnerId); localStorage.setItem(LOCAL_ONLY_KEY,'false');
+    await db.ref('connections/'+me.id).set({ partnerId:id, partnerName:partnerName, at:firebase.database.ServerValue.TIMESTAMP });
+    setConnected(true, partnerName);
+    addSystem(`Connected with ${partnerName}`);
+    render();
+    listenMessages();
+    showToast('Connected! Start chatting');
     if(opts.fromQR) closeScanModal(); else closeConnectModal();
-    setStatus('connecting','Request sent'); showToast('Connection request sent to '+(target.name||'user'));
-  }catch(e){ console.error(e); showToast('Connection request failed'); setStatus('','Ready'); }
+  } catch(e){ console.error(e); showToast('Connection failed'); setStatus('','Ready'); }
 }
 connectConfirm.addEventListener('click', ()=>connectToId(connectInput.value));
-connectInput.addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); connectConfirm.click(); } });
+connectInput.addEventListener('keydown', e=>{ if(e.key==='Enter') connectConfirm.click(); });
 
 function setConnected(on, name){
   if(on){ statusChip.classList.remove('connecting'); statusChip.classList.add('online'); statusText.textContent='Connected'+(name?' · '+name:''); }
@@ -1414,21 +1348,16 @@ $('menuReset').addEventListener('click', ()=>{
   if(incomingReqRef) incomingReqRef.off();
   if(messageRef) messageRef.off();
   stopScanner();
-  try{ auth.signOut(); }catch(e){}
   [ME_KEY, PARTNER_KEY, MSG_KEY, LOCAL_ONLY_KEY].forEach(k=>localStorage.removeItem(k));
   location.reload();
 });
 
-window.addEventListener('load',()=>{
-  initMe(); tryInitGoogle(); render(); setConnected(false);
-  auth.onAuthStateChanged(async user=>{
-    if(user){
-      try{ await applyFirebaseUser(user); }catch(e){ console.error(e); showToast('Account setup failed'); }
-    }else{
-      me={id:'CL-LOGIN-REQUIRED',name:'Guest User',email:null,picture:null,provider:'guest'};
-      partnerId=null; partnerName='Friend'; LOCAL_ONLY=true; paintMe(); setConnected(false); render();
-    }
-  });
+window.addEventListener('load', ()=>{
+  initMe(); paintMe(); tryInitGoogle(); registerPresence();
+  const sp=localStorage.getItem(PARTNER_KEY), sl=localStorage.getItem(LOCAL_ONLY_KEY);
+  if(sp && sp!==me.id && sl==='false'){ partnerId=sp; LOCAL_ONLY=false; setConnected(true,'Friend'); listenMessages(); }
+  else { LOCAL_ONLY=true; setConnected(false); }
+  render();
 });
 </script>
 </body>
