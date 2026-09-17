@@ -1039,8 +1039,23 @@ function esc(s){ return String(s).replace(/[&<>"']/g, ch=>({'&':'&amp;','<':'&lt
 function initials(n){ return (n||'?').trim().split(/\s+/).map(w=>w[0]).slice(0,2).join('').toUpperCase(); }
 function chatKey(a,b){ return [a,b].sort().join('__'); }
 function fmtBytes(b){ if(b<1024) return b+' B'; if(b<1024*1024) return (b/1024).toFixed(1)+' KB'; return (b/1024/1024).toFixed(1)+' MB'; }
-function signedIn(){ return !!(auth && auth.currentUser && me && me.uid===auth.currentUser.uid && me.id); }
-function firebaseAuthenticated(){ return !!(auth && auth.currentUser && me && me.uid===auth.currentUser.uid); }
+function signedIn(){
+  // Firebase Authentication is the source of truth. Do not depend on a
+  // possibly stale local `me` object for authentication checks.
+  return !!(auth && auth.currentUser && auth.currentUser.uid);
+}
+function firebaseAuthenticated(){ return signedIn(); }
+function getFirebaseChatId(){
+  const user=auth && auth.currentUser;
+  if(!user || !user.uid) return null;
+  const id=firebaseChatId(user.uid);
+  if(!me || me.uid!==user.uid || me.id!==id){
+    me={uid:user.uid,id,name:user.displayName||'Google User',email:user.email||'',picture:user.photoURL||null,provider:'google'};
+    localStorage.setItem(ME_KEY,JSON.stringify(me));
+    paintMe();
+  }
+  return id;
+}
 function friendlyFirebaseError(e){
   const code=e && e.code ? e.code : '';
   if(code.includes('permission-denied')) return 'Firebase permission denied. Check Realtime Database Rules.';
@@ -1061,6 +1076,7 @@ drawerOverlay.addEventListener('click', closeDrawer);
 function openConnectModal(){
   closeDrawer();
   if(!signedIn()){ showToast('Please sign in with Google first'); return; }
+  getFirebaseChatId();
   connectModal.classList.add('open'); setTimeout(()=>connectInput.focus(),250);
 }
 function closeConnectModal(){ connectModal.classList.remove('open'); connectInput.value=''; }
@@ -1095,44 +1111,59 @@ async function reserveChatId(uid, profile){
   throw new Error('Firebase Chat ID collision. Please try again.');
 }
 async function ensureUserProfile(user){
-  // Paint the authenticated Google profile immediately so the UI never falls
-  // back to Guest User while the Realtime Database profile is being prepared.
+  // Firebase Authentication is the single source of identity.
+  // Create the permanent Chat ID immediately from Firebase UID and update
+  // the UI before touching Realtime Database. Database outages/rules must
+  // never make a successfully authenticated user look like a Guest.
+  if(!user || !user.uid) throw new Error('Firebase user UID is missing');
+
+  const firebaseId=firebaseChatId(user.uid);
   const cachedRaw=localStorage.getItem(ME_KEY);
   let cached=null;
   try{ cached=cachedRaw?JSON.parse(cachedRaw):null; }catch{}
-  // Firebase Authentication is the source of identity. Generate the Chat ID
-  // immediately and deterministically from the Firebase UID, before any
-  // Realtime Database read/write. This prevents the UI from falling back to
-  // Guest User when Database Rules/setup temporarily blocks a write.
-  const firebaseId=firebaseChatId(user.uid);
-  if(cached && cached.uid===user.uid){
-    me={...cached,uid:user.uid,id:firebaseId,name:user.displayName||cached.name||'Google User',email:user.email||cached.email||'',picture:user.photoURL||cached.picture||null,provider:'google'};
-  }else{
-    me={uid:user.uid,id:firebaseId,name:user.displayName||'Google User',email:user.email||'',picture:user.photoURL||null,provider:'google'};
-  }
-  localStorage.setItem(ME_KEY,JSON.stringify(me));
-  paintMe();
 
-  const userRef=db.ref('users/'+user.uid);
-  const snap=await userRef.once('value');
-  let profile=snap.val();
-  if(!profile || !profile.id){
-    const id=await reserveChatId(user.uid, user);
-    profile={ id, uid:user.uid, name:user.displayName||'Google User', email:user.email||'', picture:user.photoURL||null, provider:'google', createdAt:firebase.database.ServerValue.TIMESTAMP };
-    await userRef.set(profile);
-  }else{
-    profile={...profile,uid:user.uid,name:user.displayName||profile.name||'Google User',email:user.email||profile.email||'',picture:user.photoURL||profile.picture||null,provider:'google'};
-    await userRef.update({name:profile.name,email:profile.email,picture:profile.picture,provider:'google'});
-    const idSnap=await db.ref('chatIds/'+profile.id).once('value');
-    if(!idSnap.exists()) await db.ref('chatIds/'+profile.id).set(user.uid);
-  }
-  me=profile;
+  me={
+    ...(cached && cached.uid===user.uid ? cached : {}),
+    uid:user.uid,
+    id:firebaseId,
+    name:user.displayName||cached?.name||'Google User',
+    email:user.email||cached?.email||'',
+    picture:user.photoURL||cached?.picture||null,
+    provider:'google'
+  };
   localStorage.setItem(ME_KEY,JSON.stringify(me));
   paintMe();
-  await startPresence();
-  await listenRequests();
-  await restoreConnection();
-  return profile;
+  setConnected(false);
+  setStatus('connecting','Setting up your Chat ID…');
+
+  // The ID is ready NOW. Everything below is Firebase Realtime Database
+  // synchronization and is intentionally best-effort.
+  try{
+    const userRef=db.ref('users/'+user.uid);
+    const profile={
+      id:firebaseId, uid:user.uid, name:me.name, email:me.email,
+      picture:me.picture, provider:'google',
+      updatedAt:firebase.database.ServerValue.TIMESTAMP
+    };
+    await userRef.update(profile);
+    await db.ref('chatIds/'+firebaseId).set(user.uid);
+    me={...me};
+    localStorage.setItem(ME_KEY,JSON.stringify(me));
+    paintMe();
+    setStatus('','Ready');
+  }catch(e){
+    console.error('Firebase database sync:',e);
+    // Keep the Firebase-authenticated account and Chat ID active even when
+    // database rules/setup are temporarily wrong.
+    setStatus('','Ready');
+    showToast('Chat ID created: '+firebaseId+' · Database sync needs setup');
+  }
+
+  // These listeners are also best-effort; failure must not undo login.
+  try{ await startPresence(); }catch(e){ console.error('presence setup:',e); }
+  try{ await listenRequests(); }catch(e){ console.error('request listener:',e); }
+  try{ await restoreConnection(); }catch(e){ console.error('restore connection:',e); }
+  return me;
 }
 
 async function signInWithGoogle(){
@@ -1331,7 +1362,7 @@ function drawMyQR(){
   try{const ok=QRLite.toCanvas(qrCanvas,QR_PREFIX+me.id,{width:240,margin:4,color:{dark:'#1f2430',light:'#ffffff'}});if(!ok)showToast('QR generation failed');}
   catch(e){console.error(e);showToast('QR generation failed');}
 }
-$('menuShowQR').addEventListener('click',()=>{closeDrawer();if(!signedIn()){showToast('Please sign in with Google first');return;}qrShowModal.classList.add('open');setTimeout(drawMyQR,60);});
+$('menuShowQR').addEventListener('click',()=>{closeDrawer();if(!signedIn()){showToast('Please sign in with Google first');return;}getFirebaseChatId();qrShowModal.classList.add('open');setTimeout(drawMyQR,60);});
 qrShowClose.addEventListener('click',()=>qrShowModal.classList.remove('open'));qrShowModal.addEventListener('click',e=>{if(e.target===qrShowModal)qrShowModal.classList.remove('open');});
 async function copyText(text){try{await navigator.clipboard.writeText(text);}catch{const ta=document.createElement('textarea');ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);}}
 qrCopyId.addEventListener('click',async()=>{if(!me?.id)return;await copyText(me.id);showToast('Chat ID copied');});
@@ -1357,7 +1388,11 @@ function closeScanModal(){stopScanner();qrScanModal.classList.remove('open');sca
 $('menuScanQR').addEventListener('click',openScanModal);qrScanClose.addEventListener('click',closeScanModal);scanCancelBtn.addEventListener('click',closeScanModal);scanRetryBtn.addEventListener('click',()=>{stopScanner();setTimeout(startScanner,250);});qrScanModal.addEventListener('click',e=>{if(e.target===qrScanModal)closeScanModal();});fallbackPickBtn.addEventListener('click',()=>qrImageInput.click());
 qrImageInput.addEventListener('change',e=>{const f=e.target.files&&e.target.files[0];qrImageInput.value='';if(!f)return;scannerStatus.textContent='Reading image…';scannerStatus.className='scanner-status';const rd=new FileReader();rd.onload=()=>{const img=new Image();img.onload=()=>{const c=document.createElement('canvas');c.width=img.naturalWidth;c.height=img.naturalHeight;const ctx=c.getContext('2d',{willReadFrequently:true});ctx.drawImage(img,0,0);const data=ctx.getImageData(0,0,c.width,c.height);if(typeof jsQR==='undefined'){scannerStatus.textContent='QR reader not loaded';scannerStatus.classList.add('error');return;}const code=jsQR(data.data,c.width,c.height,{inversionAttempts:'attemptBoth'});if(code?.data)handleScanned(code.data);else{scannerStatus.textContent='No QR code found in that image.';scannerStatus.classList.add('error');}};img.onerror=()=>{scannerStatus.textContent='Could not read the image.';scannerStatus.classList.add('error');};img.src=rd.result;};rd.readAsDataURL(f);});
 
-async function copyMyId(){if(!me?.id){showToast('Sign in with Google first');return;}await copyText(me.id);showToast('Chat ID copied');}
+async function copyMyId(){
+  const id=(signedIn() ? (me?.id || getFirebaseChatId()) : null);
+  if(!id){showToast('Please sign in with Google first');return;}
+  await copyText(id);showToast('Chat ID copied');
+}
 drawerCopyId.addEventListener('click',async e=>{e.stopPropagation();await copyMyId();drawerCopyId.classList.add('done');setTimeout(()=>drawerCopyId.classList.remove('done'),1500);});
 $('menuCopyId').addEventListener('click',async()=>{await copyMyId();closeDrawer();});
 $('menuReset').addEventListener('click',async()=>{
@@ -1372,10 +1407,10 @@ if(firebaseReady && auth){
   authUnsub=auth.onAuthStateChanged(async user=>{
     try{
       if(user){
-        setStatus('connecting','Loading account…');
+        // Firebase Auth succeeded: create/restore the Chat ID immediately.
         await ensureUserProfile(user);
         paintMe();setConnected(false);render();
-        showToast('Signed in as '+(user.displayName||user.email||'Google user'));
+        showToast('Signed in · Chat ID '+me.id);
       }else{
         me=null;partnerId=null;partnerUid=null;LOCAL_ONLY=true;
         if(requestRef)requestRef.off();if(messageRef)messageRef.off();
