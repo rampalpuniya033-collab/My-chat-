@@ -554,9 +554,9 @@
   <div class="modal" style="max-width:360px;">
     <button class="m-close" id="connectCancel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
     <h3 style="text-align:center;font-size:16px;font-weight:700;color:var(--ink);margin-bottom:6px;">Connect to a friend</h3>
-    <div style="text-align:center;font-size:12.5px;color:var(--muted);line-height:1.55;margin-bottom:18px;">Paste your friend's Chat ID below.</div>
-    <input type="text" id="connectInput" placeholder="CL-XXXX-XXXX" autocomplete="off" spellcheck="false"
-      style="width:100%;padding:13px 14px;background:#f5f6fa;border:1.5px solid var(--line);border-radius:12px;color:var(--ink);font-size:14px;outline:none;font-family:'SF Mono','Menlo',monospace;letter-spacing:1px;font-weight:600;text-align:center;text-transform:uppercase;margin-bottom:16px;" />
+    <div style="text-align:center;font-size:12.5px;color:var(--muted);line-height:1.55;margin-bottom:18px;">Paste your friend's Firebase UID below.</div>
+    <input type="text" id="connectInput" placeholder="Paste Firebase UID" autocomplete="off" spellcheck="false"
+      style="width:100%;padding:13px 14px;background:#f5f6fa;border:1.5px solid var(--line);border-radius:12px;color:var(--ink);font-size:14px;outline:none;font-family:'SF Mono','Menlo',monospace;letter-spacing:1px;font-weight:600;text-align:center;margin-bottom:16px;" />
     <div style="display:flex;gap:10px;">
       <button id="connectCancelBtn" style="flex:1;padding:12px;border-radius:12px;font-size:13.5px;font-weight:700;cursor:pointer;background:#f5f6fa;color:var(--ink-2);border:1px solid var(--line);">Cancel</button>
       <button id="connectConfirm" style="flex:1;padding:12px;border-radius:12px;font-size:13.5px;font-weight:700;cursor:pointer;background:var(--brand);color:#fff;border:none;">Connect</button>
@@ -572,11 +572,11 @@
     <div class="qr-sub">Friend can scan this to connect with you.</div>
     <div class="qr-wrap"><canvas id="qrCanvas" width="240" height="240"></canvas></div>
     <div class="qr-id-box">
-      <div class="lbl">Your Chat ID</div>
+      <div class="lbl">Your Firebase UID</div>
       <div class="v" id="qrMyId">—</div>
     </div>
     <div class="qr-actions">
-      <button class="secondary" id="qrCopyId">Copy ID</button>
+      <button class="secondary" id="qrCopyId">Copy UID</button>
       <button class="primary-btn" id="qrDownload">Save QR</button>
     </div>
   </div>
@@ -628,7 +628,7 @@
       <div class="email" id="drawerEmail">Not signed in</div>
     </div>
     <div class="myid-mini">
-      <span class="lbl">My ID</span>
+      <span class="lbl">My Firebase UID</span>
       <span class="v" id="drawerMyId">—</span>
       <button class="cbtn" id="drawerCopyId"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
     </div>
@@ -646,19 +646,19 @@
     </button>
     <button class="drawer-item primary" id="menuConnect">
       <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></span>
-      <span class="txt">Connect by Chat ID<small>Paste manually</small></span>
+      <span class="txt">Connect by Firebase UID<small>Paste manually</small></span>
     </button>
     <div class="drawer-divider"></div>
     <div class="drawer-section-label">Chat</div>
     <button class="drawer-item" id="menuCopyId">
       <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></span>
-      <span class="txt">Copy my Chat ID<small>Share with a friend</small></span>
+      <span class="txt">Copy my Firebase UID<small>Share with a friend</small></span>
     </button>
     <div class="drawer-divider"></div>
     <div class="drawer-section-label">More</div>
     <button class="drawer-item danger" id="menuReset">
       <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></span>
-      <span class="txt">Reset chat<small>Keep your Firebase Chat ID</small></span>
+      <span class="txt">Reset chat<small>Keep your Firebase account</small></span>
     </button>
   </div>
   <div class="drawer-foot">Made with <b>ConvoLink</b> · v1.0</div>
@@ -1015,23 +1015,10 @@ const scannerFallback = $('scannerFallback'), fallbackMsg = $('fallbackMsg'), fa
 const imgModal = $('imgModal'), imgPreview = $('imgPreview'), imgClose = $('imgClose');
 const attachPreview = $('attachPreview'), apThumb = $('apThumb'), apName = $('apName'), apSize = $('apSize'), apRemove = $('apRemove');
 
-function firebaseChatId(uid){
-  // The Chat ID is derived ONLY from the Firebase Authentication UID.
-  // No Math.random/local-only ID generation is used anymore.
+function firebaseUid(uid){
+  // Firebase Authentication UID is the ONLY ConvoLink identity.
   if(!uid) throw new Error('Missing Firebase UID');
-  const c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-  let h1=2166136261, h2=2246822519;
-  for(let i=0;i<uid.length;i++){
-    const n=uid.charCodeAt(i);
-    h1^=n; h1=Math.imul(h1,16777619);
-    h2^=n; h2=Math.imul(h2,3266489917);
-  }
-  h1^=h1>>>16; h2^=h2>>>13;
-  let x=(BigInt(h1>>>0)<<32n)|BigInt(h2>>>0);
-  let out='';
-  for(let i=0;i<12;i++){ out=c[Number(x&31n)]; x>>=5n; }
-  out=out.split('').reverse().join('');
-  return `CL-${out.slice(0,6)}-${out.slice(6,12)}`;
+  return String(uid);
 }
 function showToast(msg){ const t=$('toast'); $('toastMsg').textContent=msg; t.classList.add('show'); clearTimeout(t._timer); t._timer=setTimeout(()=>t.classList.remove('show'),3500); }
 function timeNow(){ return new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}); }
@@ -1045,12 +1032,12 @@ function signedIn(){
   return !!(auth && auth.currentUser && auth.currentUser.uid);
 }
 function firebaseAuthenticated(){ return signedIn(); }
-function getFirebaseChatId(){
+function getFirebaseUid(){
   const user=auth && auth.currentUser;
   if(!user || !user.uid) return null;
-  const id=firebaseChatId(user.uid);
+  const id=firebaseUid(user.uid);
   if(!me || me.uid!==user.uid || me.id!==id){
-    me={uid:user.uid,id,name:user.displayName||'Google User',email:user.email||'',picture:user.photoURL||null,provider:'google'};
+    me={uid:user.uid,id,name:user.displayName||'Google User',email:user.email||'',picture:user.photoURL||null,provider:'firebase-google'};
     localStorage.setItem(ME_KEY,JSON.stringify(me));
     paintMe();
   }
@@ -1076,7 +1063,7 @@ drawerOverlay.addEventListener('click', closeDrawer);
 function openConnectModal(){
   closeDrawer();
   if(!signedIn()){ showToast('Please sign in with Google first'); return; }
-  getFirebaseChatId();
+  getFirebaseUid();
   connectModal.classList.add('open'); setTimeout(()=>connectInput.focus(),250);
 }
 function closeConnectModal(){ connectModal.classList.remove('open'); connectInput.value=''; }
@@ -1092,8 +1079,8 @@ function paintMe(){
   else { topAvatar.textContent=ini; drawerAvatar.textContent=ini; }
   drawerName.textContent=me.name || 'Google User';
   drawerEmail.textContent=me.email || 'Not signed in';
-  drawerMyId.textContent=me.id || '—';
-  qrMyId.textContent=me.id || '—';
+  drawerMyId.textContent=me.uid || '—';
+  qrMyId.textContent=me.uid || '—';
   googleLogoBtn.classList.toggle('signed', signedIn());
   if(mainSignInBtn) mainSignInBtn.classList.toggle('signed', signedIn());
 }
@@ -1103,21 +1090,14 @@ function setConnected(on, name){
 }
 function setStatus(kind,text){ statusChip.classList.remove('online','connecting'); if(kind) statusChip.classList.add(kind); statusText.textContent=text; }
 
-async function reserveChatId(uid, profile){
-  const id=firebaseChatId(uid);
-  const ref=db.ref('chatIds/'+id);
-  const result=await ref.transaction(current=>current===null ? uid : (current===uid ? uid : undefined));
-  if(result.committed && result.snapshot.val()===uid) return id;
-  throw new Error('Firebase Chat ID collision. Please try again.');
-}
 async function ensureUserProfile(user){
   // Firebase Authentication is the single source of identity.
-  // Create the permanent Chat ID immediately from Firebase UID and update
+  // Firebase UID itself is the user's identity. No secondary Firebase UID is generated.
   // the UI before touching Realtime Database. Database outages/rules must
   // never make a successfully authenticated user look like a Guest.
   if(!user || !user.uid) throw new Error('Firebase user UID is missing');
 
-  const firebaseId=firebaseChatId(user.uid);
+  const firebaseId=firebaseUid(user.uid);
   const cachedRaw=localStorage.getItem(ME_KEY);
   let cached=null;
   try{ cached=cachedRaw?JSON.parse(cachedRaw):null; }catch{}
@@ -1129,34 +1109,33 @@ async function ensureUserProfile(user){
     name:user.displayName||cached?.name||'Google User',
     email:user.email||cached?.email||'',
     picture:user.photoURL||cached?.picture||null,
-    provider:'google'
+    provider:'firebase-google'
   };
   localStorage.setItem(ME_KEY,JSON.stringify(me));
   paintMe();
   setConnected(false);
-  setStatus('connecting','Setting up your Chat ID…');
+  setStatus('connecting','Setting up your Firebase UID…');
 
-  // The ID is ready NOW. Everything below is Firebase Realtime Database
+  // The Firebase UID is ready immediately. Database work below only syncs profile/presence.
   // synchronization and is intentionally best-effort.
   try{
     const userRef=db.ref('users/'+user.uid);
     const profile={
       id:firebaseId, uid:user.uid, name:me.name, email:me.email,
-      picture:me.picture, provider:'google',
+      picture:me.picture, provider:'firebase-google',
       updatedAt:firebase.database.ServerValue.TIMESTAMP
     };
     await userRef.update(profile);
-    await db.ref('chatIds/'+firebaseId).set(user.uid);
     me={...me};
     localStorage.setItem(ME_KEY,JSON.stringify(me));
     paintMe();
     setStatus('','Ready');
   }catch(e){
     console.error('Firebase database sync:',e);
-    // Keep the Firebase-authenticated account and Chat ID active even when
+    // Keep the Firebase-authenticated account and Firebase UID active even when
     // database rules/setup are temporarily wrong.
     setStatus('','Ready');
-    showToast('Chat ID created: '+firebaseId+' · Database sync needs setup');
+    showToast('Firebase UID ready: '+firebaseId+' · Database sync needs setup');
   }
 
   // These listeners are also best-effort; failure must not undo login.
@@ -1263,42 +1242,34 @@ async function selectPartner(p){
 }
 async function restoreConnection(){
   if(!signedIn()) return;
-  const savedId=localStorage.getItem(PARTNER_KEY);
-  if(!savedId) { LOCAL_ONLY=true; setConnected(false); return; }
+  const savedUid=localStorage.getItem(PARTNER_KEY);
+  if(!savedUid || savedUid===me.uid || savedUid.startsWith('CL-')) { LOCAL_ONLY=true; setConnected(false); return; }
   try{
-    const uidSnap=await db.ref('chatIds/'+savedId).once('value');
-    const uid=uidSnap.val();
-    if(uid && uid!==me.uid){
-      const c=await db.ref(`connections/${me.uid}/${uid}`).once('value');
-      if(c.exists()) await selectPartner(c.val());
-      else { localStorage.removeItem(PARTNER_KEY); localStorage.setItem(LOCAL_ONLY_KEY,'true'); LOCAL_ONLY=true; setConnected(false); }
-    } else { localStorage.removeItem(PARTNER_KEY); LOCAL_ONLY=true; setConnected(false); }
+    const c=await db.ref(`connections/${me.uid}/${savedUid}`).once('value');
+    if(c.exists()) await selectPartner(c.val());
+    else { localStorage.removeItem(PARTNER_KEY); localStorage.setItem(LOCAL_ONLY_KEY,'true'); LOCAL_ONLY=true; setConnected(false); }
   }catch(e){ console.error('restore',e); showToast(friendlyFirebaseError(e)); }
 }
 
-async function connectToId(id, opts){
-  opts=opts||{}; id=(id||'').trim().toUpperCase();
+async function connectToId(uid, opts){
+  opts=opts||{}; uid=String(uid||'').trim();
   if(!signedIn()){ showToast('Please sign in with Google first'); return; }
-  if(!id){ showToast('Please enter a Chat ID'); return; }
-  if(id===me.id){ showToast("That's your own ID!"); return; }
-  if(!/^CL-[A-Z0-9]{4}-[A-Z0-9]{4}$/.test(id)){ showToast('Invalid Chat ID format'); return; }
-  if(id===partnerId){ showToast('Already connected'); return; }
-  setStatus('connecting','Sending request…');
+  if(!uid){ showToast('Please enter a Firebase UID'); return; }
+  if(uid===me.uid){ showToast("That's your own Firebase UID!"); return; }
+  if(uid===partnerUid){ showToast('Already connected'); return; }
+  setStatus('connecting','Checking Firebase UID…');
   try{
-    const idSnap=await db.ref('chatIds/'+id).once('value');
-    const targetUid=idSnap.val();
-    if(!targetUid){ showToast('User not found — check the ID'); setStatus('','Ready'); return; }
-    if(targetUid===me.uid){ showToast("That's your own ID!"); setStatus('','Ready'); return; }
-    const targetSnap=await db.ref('users/'+targetUid).once('value');
+    const targetSnap=await db.ref('users/'+uid).once('value');
     const target=targetSnap.val();
-    if(!target){ showToast('User profile not found'); setStatus('','Ready'); return; }
-    const existing=await db.ref(`connections/${me.uid}/${targetUid}`).once('value');
-    if(existing.exists()){ await selectPartner(target); showToast('Already connected'); if(opts.fromQR) closeScanModal(); else closeConnectModal(); return; }
-    const pendingSnap=await db.ref(`requests/${targetUid}`).orderByChild('fromUid').equalTo(me.uid).once('value');
+    if(!target){ showToast('User not found — check the Firebase UID'); setStatus('','Ready'); return; }
+    const existing=await db.ref(`connections/${me.uid}/${uid}`).once('value');
+    if(existing.exists()){ await selectPartner(existing.val()); showToast('Already connected'); if(opts.fromQR) closeScanModal(); else closeConnectModal(); return; }
+    const pendingSnap=await db.ref(`requests/${uid}`).orderByChild('fromUid').equalTo(me.uid).once('value');
     if(pendingSnap.exists()){ showToast('Connection request already sent'); setStatus('','Ready'); if(opts.fromQR) closeScanModal(); else closeConnectModal(); return; }
-    const requestKey=db.ref(`requests/${targetUid}`).push().key;
-    const request={requestId:requestKey,fromUid:me.uid,fromId:me.id,fromName:me.name,fromEmail:me.email||'',fromPicture:me.picture||null,toUid:targetUid,toId:id,createdAt:firebase.database.ServerValue.TIMESTAMP,status:'pending'};
-    await db.ref(`requests/${targetUid}/${requestKey}`).set(request);
+    const requestRefLocal=db.ref(`requests/${uid}`);
+    const requestKey=requestRefLocal.push().key;
+    const request={requestId:requestKey,fromUid:me.uid,fromId:me.uid,fromName:me.name,fromEmail:me.email||'',fromPicture:me.picture||null,toUid:uid,createdAt:firebase.database.ServerValue.TIMESTAMP,status:'pending'};
+    await requestRefLocal.child(requestKey).set(request);
     setStatus('','Ready'); showToast(`Request sent to ${target.name||'your friend'}`);
     if(opts.fromQR) closeScanModal(); else closeConnectModal();
   }catch(e){ console.error('connectToId',e); setStatus('','Ready'); showToast('Connection failed: '+friendlyFirebaseError(e)); }
@@ -1359,14 +1330,16 @@ imgClose.addEventListener('click',()=>imgModal.classList.remove('open'));imgModa
 
 function drawMyQR(){
   if(!signedIn()){showToast('Please sign in with Google first');return;}
-  try{const ok=QRLite.toCanvas(qrCanvas,QR_PREFIX+me.id,{width:240,margin:4,color:{dark:'#1f2430',light:'#ffffff'}});if(!ok)showToast('QR generation failed');}
+  const uid=getFirebaseUid();
+  if(!uid){showToast('Firebase UID is not available');return;}
+  try{const ok=QRLite.toCanvas(qrCanvas,QR_PREFIX+uid,{width:240,margin:4,color:{dark:'#1f2430',light:'#ffffff'}});if(!ok)showToast('QR generation failed');}
   catch(e){console.error(e);showToast('QR generation failed');}
 }
-$('menuShowQR').addEventListener('click',()=>{closeDrawer();if(!signedIn()){showToast('Please sign in with Google first');return;}getFirebaseChatId();qrShowModal.classList.add('open');setTimeout(drawMyQR,60);});
+$('menuShowQR').addEventListener('click',()=>{closeDrawer();if(!signedIn()){showToast('Please sign in with Google first');return;}getFirebaseUid();qrShowModal.classList.add('open');setTimeout(drawMyQR,60);});
 qrShowClose.addEventListener('click',()=>qrShowModal.classList.remove('open'));qrShowModal.addEventListener('click',e=>{if(e.target===qrShowModal)qrShowModal.classList.remove('open');});
 async function copyText(text){try{await navigator.clipboard.writeText(text);}catch{const ta=document.createElement('textarea');ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);}}
-qrCopyId.addEventListener('click',async()=>{if(!me?.id)return;await copyText(me.id);showToast('Chat ID copied');});
-qrDownload.addEventListener('click',()=>{try{const url=qrCanvas.toDataURL('image/png');const a=document.createElement('a');a.href=url;a.download='convolink-'+me.id+'.png';document.body.appendChild(a);a.click();document.body.removeChild(a);showToast('QR saved');}catch(e){showToast('Could not save QR');}});
+qrCopyId.addEventListener('click',async()=>{const uid=getFirebaseUid();if(!uid)return;await copyText(uid);showToast('Firebase UID copied');});
+qrDownload.addEventListener('click',()=>{try{const url=qrCanvas.toDataURL('image/png');const a=document.createElement('a');a.href=url;a.download='convolink-uid.png';document.body.appendChild(a);a.click();document.body.removeChild(a);showToast('QR saved');}catch(e){showToast('Could not save QR');}});
 
 async function startScanner(){
   stopScanner();scannerFallback.classList.remove('show');scannerStatus.className='scanner-status';scannerStatus.textContent='Opening camera…';
@@ -1380,7 +1353,7 @@ async function startScanner(){
   setTimeout(()=>{scannerStatus.textContent='Point camera at the QR code…';scanActive=true;scanLoop();},300);
 }
 function scanLoop(){if(!scanActive||!scanStream)return;if(scanVideo.readyState===scanVideo.HAVE_ENOUGH_DATA){const w=scanVideo.videoWidth,h=scanVideo.videoHeight;if(w&&h){scanCanvas.width=w;scanCanvas.height=h;scanCtx.drawImage(scanVideo,0,0,w,h);try{const imgData=scanCtx.getImageData(0,0,w,h);if(typeof jsQR!=='undefined'){const code=jsQR(imgData.data,w,h,{inversionAttempts:'attemptBoth'});if(code?.data){handleScanned(code.data);return;}}}catch(e){}}}scanRAF=requestAnimationFrame(scanLoop);}
-function handleScanned(text){let id=String(text||'').trim();if(id.startsWith(QR_PREFIX))id=id.slice(QR_PREFIX.length);id=id.trim().toUpperCase();if(!/^CL-[A-Z0-9]{4}-[A-Z0-9]{4}$/.test(id)){scannerStatus.textContent='This is not a ConvoLink QR code.';scannerStatus.classList.add('error');return;}scannerStatus.textContent='QR found: '+id;scannerStatus.className='scanner-status ok';if(navigator.vibrate)navigator.vibrate(60);scanActive=false;stopScanner();setTimeout(()=>connectToId(id,{fromQR:true}),350);}
+function handleScanned(text){let uid=String(text||'').trim();if(uid.startsWith(QR_PREFIX))uid=uid.slice(QR_PREFIX.length).trim();if(!uid || uid.length<10 || uid.length>256){scannerStatus.textContent='This is not a valid Firebase UID QR code.';scannerStatus.classList.add('error');return;}scannerStatus.textContent='Firebase UID found';scannerStatus.className='scanner-status ok';if(navigator.vibrate)navigator.vibrate(60);scanActive=false;stopScanner();setTimeout(()=>connectToId(uid,{fromQR:true}),350);}
 function stopScanner(){scanActive=false;if(scanRAF){cancelAnimationFrame(scanRAF);scanRAF=null;}if(scanStream){scanStream.getTracks().forEach(t=>t.stop());scanStream=null;}if(scanVideo){try{scanVideo.srcObject=null;}catch{}}}
 function showFallback(msg){fallbackMsg.textContent=msg;scannerFallback.classList.add('show');}
 function openScanModal(){closeDrawer();if(!signedIn()){showToast('Please sign in with Google first');return;}qrScanModal.classList.add('open');setTimeout(startScanner,300);}
@@ -1389,9 +1362,9 @@ $('menuScanQR').addEventListener('click',openScanModal);qrScanClose.addEventList
 qrImageInput.addEventListener('change',e=>{const f=e.target.files&&e.target.files[0];qrImageInput.value='';if(!f)return;scannerStatus.textContent='Reading image…';scannerStatus.className='scanner-status';const rd=new FileReader();rd.onload=()=>{const img=new Image();img.onload=()=>{const c=document.createElement('canvas');c.width=img.naturalWidth;c.height=img.naturalHeight;const ctx=c.getContext('2d',{willReadFrequently:true});ctx.drawImage(img,0,0);const data=ctx.getImageData(0,0,c.width,c.height);if(typeof jsQR==='undefined'){scannerStatus.textContent='QR reader not loaded';scannerStatus.classList.add('error');return;}const code=jsQR(data.data,c.width,c.height,{inversionAttempts:'attemptBoth'});if(code?.data)handleScanned(code.data);else{scannerStatus.textContent='No QR code found in that image.';scannerStatus.classList.add('error');}};img.onerror=()=>{scannerStatus.textContent='Could not read the image.';scannerStatus.classList.add('error');};img.src=rd.result;};rd.readAsDataURL(f);});
 
 async function copyMyId(){
-  const id=(signedIn() ? (me?.id || getFirebaseChatId()) : null);
+  const id=(signedIn() ? (me?.uid || getFirebaseUid()) : null);
   if(!id){showToast('Please sign in with Google first');return;}
-  await copyText(id);showToast('Chat ID copied');
+  await copyText(id);showToast('Firebase UID copied');
 }
 drawerCopyId.addEventListener('click',async e=>{e.stopPropagation();await copyMyId();drawerCopyId.classList.add('done');setTimeout(()=>drawerCopyId.classList.remove('done'),1500);});
 $('menuCopyId').addEventListener('click',async()=>{await copyMyId();closeDrawer();});
@@ -1400,17 +1373,17 @@ $('menuReset').addEventListener('click',async()=>{
   stopScanner();if(requestRef)requestRef.off();if(messageRef)messageRef.off();
   if(presenceRef){try{await presenceRef.update({online:false,lastSeen:firebase.database.ServerValue.TIMESTAMP});}catch{}}
   partnerId=null;partnerUid=null;partnerName='Friend';LOCAL_ONLY=true;
-  localStorage.removeItem(PARTNER_KEY);localStorage.setItem(LOCAL_ONLY_KEY,'true');render();setConnected(false);showToast('Chat selection reset. Your Google account and Chat ID are kept.');closeDrawer();
+  localStorage.removeItem(PARTNER_KEY);localStorage.setItem(LOCAL_ONLY_KEY,'true');render();setConnected(false);showToast('Chat selection reset. Your Firebase account and UID are kept.');closeDrawer();
 });
 
 if(firebaseReady && auth){
   authUnsub=auth.onAuthStateChanged(async user=>{
     try{
       if(user){
-        // Firebase Auth succeeded: create/restore the Chat ID immediately.
+        // Firebase Auth succeeded: create/restore the Firebase UID immediately.
         await ensureUserProfile(user);
         paintMe();setConnected(false);render();
-        showToast('Signed in · Chat ID '+me.id);
+        showToast('Signed in · Firebase UID ready');
       }else{
         me=null;partnerId=null;partnerUid=null;LOCAL_ONLY=true;
         if(requestRef)requestRef.off();if(messageRef)messageRef.off();
@@ -1421,15 +1394,15 @@ if(firebaseReady && auth){
     }catch(e){
       console.error('auth state',e);
       // Authentication succeeded even if Realtime Database is not configured
-      // correctly. Keep the Firebase UID, permanent Chat ID and profile active.
+      // correctly. Keep the Firebase UID, Firebase UID and profile active.
       if(user){
-        const id=firebaseChatId(user.uid);
-        me={uid:user.uid,id,name:user.displayName||'Google User',email:user.email||'',picture:user.photoURL||null,provider:'google'};
+        const id=firebaseUid(user.uid);
+        me={uid:user.uid,id,name:user.displayName||'Google User',email:user.email||'',picture:user.photoURL||null,provider:'firebase-google'};
         localStorage.setItem(ME_KEY,JSON.stringify(me));
         paintMe();
         setConnected(false);
         setStatus('', 'Ready');
-        showToast('Google signed in. Database sync needs setup: '+friendlyFirebaseError(e));
+        showToast('Google signed in. Firebase UID ready. Database sync needs setup: '+friendlyFirebaseError(e));
       }else{
         setStatus('','Sign in to connect');
       }
