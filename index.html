@@ -1344,6 +1344,12 @@ function listenPartnerPresence() {
   partnerPresenceRef.on('value', snap => {
     partnerOnline = snap.val() === true;
     updateStatusDisplay();
+
+    // WhatsApp-style outgoing call state: offline = Calling, online = Ringing.
+    // Only change this while the caller is still waiting for the friend to answer.
+    if (currentCallRole === 'caller' && currentCallSignalingStatus === 'ringing' && currentCallRef) {
+      setCallStatus(partnerOnline ? 'Ringing…' : 'Calling…');
+    }
   });
 }
 
@@ -2030,6 +2036,40 @@ let callStartedAt = 0;
 let callEnding = false;
 let callCleanupTimer = null;
 let activeCallPath = null;
+let currentCallSignalingStatus = null;
+
+/* ===== CALL RING / RINGBACK ===== */
+let callToneContext = null, callToneTimer = null, callToneMode = null;
+function stopCallTone(){
+  if(callToneTimer){clearInterval(callToneTimer);callToneTimer=null;}
+  if(callToneContext){try{callToneContext.close();}catch{} callToneContext=null;}
+  callToneMode=null;
+}
+function startCallTone(mode){
+  stopCallTone();
+  callToneMode=mode;
+  try{
+    const AC=window.AudioContext||window.webkitAudioContext;
+    if(!AC)return;
+    callToneContext=new AC();
+    const beep=()=>{
+      if(!callToneContext)return;
+      const now=callToneContext.currentTime;
+      const osc=callToneContext.createOscillator();
+      const gain=callToneContext.createGain();
+      osc.type='sine';
+      osc.frequency.value=mode==='ringback'?440:620;
+      gain.gain.setValueAtTime(0.0001,now);
+      gain.gain.exponentialRampToValueAtTime(0.09,now+0.02);
+      gain.gain.exponentialRampToValueAtTime(0.0001,now+0.42);
+      osc.connect(gain).connect(callToneContext.destination);
+      osc.start(now);osc.stop(now+0.45);
+    };
+    beep();
+    callToneTimer=setInterval(beep,mode==='ringback'?2200:1400);
+    if(callToneContext.state==='suspended')callToneContext.resume().catch(()=>{});
+  }catch(e){console.warn('call tone',e);}
+}
 
 function callIcon(kind, active){
   if(kind==='mute') return active
@@ -2054,8 +2094,8 @@ function setCallMode(type){
   callCameraBtn.style.display=video?'grid':'none';
   callCameraBtn.disabled=!video;
 }
-function openCallUI(type, status){
-  setCallMode(type); setCallPeerVisual(partnerName, null); setCallStatus(status||'Connecting…');
+function openCallUI(type, status, picture){
+  setCallMode(type); setCallPeerVisual(partnerName, picture||null); setCallStatus(status||'Connecting…');
   callModal.classList.add('open');
   inputBarMain.classList.add('hide');
   recordingBar.classList.remove('show');
@@ -2178,6 +2218,7 @@ async function startWebRTCCall(type){
     currentCallerCandidatesRef=currentCallRef.child('callerCandidates');
     currentCalleeCandidatesRef=currentCallRef.child('calleeCandidates');
     await currentCallRef.set({callerUid:me.uid,callerName:me.name||'Google User',callerPicture:me.picture||null,calleeUid:partnerUid,calleeName:partnerName,type,status:'ringing',createdAt:firebase.database.ServerValue.TIMESTAMP,expiresAt:Date.now()+60000});
+    currentCallSignalingStatus='ringing';
     await markActiveCall(true);
     peerConnection=makePeerConnection(currentCallId,'caller');addLocalTracks();
     openCallUI(type,'Calling '+partnerName+'…');
@@ -2185,12 +2226,19 @@ async function startWebRTCCall(type){
     await peerConnection.setLocalDescription(offer);
     await currentCallRef.child('offer').set({type:offer.type,sdp:offer.sdp});
     listenCalleeCandidates();
+    startCallTone('ringback');
+    setCallStatus(partnerOnline ? 'Ringing…' : 'Calling…');
     callValueHandler=snap=>{
       const data=snap.val();if(!data)return;
-      if(data.answer && !remoteDescriptionReady && peerConnection){
-        (async()=>{try{await peerConnection.setRemoteDescription(new RTCSessionDescription(data.answer));remoteDescriptionReady=true;await flushRemoteCandidates();setCallStatus('Connecting…');}catch(e){console.error('remote answer',e);showToast('Could not establish the call');endWebRTCCall('failed');}})();
+      if(data.status==='active'){
+        currentCallSignalingStatus='active';
+        stopCallTone();
+        setCallStatus('Connecting…');
       }
-      if(data.status==='rejected'){showToast('Call declined');endWebRTCCall('rejected');}
+      if(data.answer && !remoteDescriptionReady && peerConnection){
+        (async()=>{try{currentCallSignalingStatus='active';stopCallTone();await peerConnection.setRemoteDescription(new RTCSessionDescription(data.answer));remoteDescriptionReady=true;await flushRemoteCandidates();setCallStatus('Connecting…');}catch(e){console.error('remote answer',e);showToast('Could not establish the call');endWebRTCCall('failed');}})();
+      }
+      if(data.status==='rejected'){stopCallTone();showToast('Call declined');endWebRTCCall('rejected');}
       else if(data.status==='ended' || data.status==='cancelled'){showToast('Call ended');endWebRTCCall('ended');}
     };
     currentCallRef.on('value',callValueHandler);
@@ -2206,6 +2254,7 @@ function showIncomingCall(callId,data){
   incomingCallType.textContent=(data.type==='video'?'Video':'Voice')+' call';
   if(data.callerPicture) incomingCallAvatar.innerHTML='<img src="'+esc(data.callerPicture)+'" alt="">'; else incomingCallAvatar.textContent=initials(name);
   incomingCallModal.classList.add('open');
+  startCallTone('incoming');
 }
 function listenForIncomingCalls(){
   if(!signedIn()||!db)return;
@@ -2225,6 +2274,7 @@ async function acceptIncomingCall(){
   const incoming=incomingCallData;if(!incoming)return;
   incomingCallModal.classList.remove('open');incomingCallData=null;
   const callId=incoming.callId,data=incoming.data;
+  stopCallTone();
   if(currentCallId||peerConnection){showToast('You are already on a call');return;}
   currentCallId=callId;currentCallType=data.type==='video'?'video':'voice';currentCallRole='callee';callEnding=false;pendingRemoteCandidates=[];remoteDescriptionReady=false;
   partnerUid=data.callerUid;partnerName=data.callerName||'Friend';partnerId=data.callerUid;
@@ -2235,7 +2285,7 @@ async function acceptIncomingCall(){
     const snap=await currentCallRef.once('value');const call=snap.val();
     if(!call||call.status!=='ringing'||!call.offer)throw new Error('This call is no longer available');
     peerConnection=makePeerConnection(callId,'callee');addLocalTracks();
-    openCallUI(currentCallType,'Connecting…');
+    openCallUI(currentCallType,'Connecting…',data.callerPicture||null);
     await peerConnection.setRemoteDescription(new RTCSessionDescription(call.offer));remoteDescriptionReady=true;await flushRemoteCandidates();listenCallerCandidates();
     const answer=await peerConnection.createAnswer();await peerConnection.setLocalDescription(answer);
     await currentCallRef.update({answer:{type:answer.type,sdp:answer.sdp},status:'active',acceptedAt:firebase.database.ServerValue.TIMESTAMP});
@@ -2247,11 +2297,13 @@ async function acceptIncomingCall(){
 }
 async function rejectIncomingCall(){
   const incoming=incomingCallData;if(!incoming)return;
+  stopCallTone();
   incomingCallData=null;incomingCallModal.classList.remove('open');
   try{await db.ref('calls/'+incoming.callId+'/status').set('rejected');}catch(e){console.warn(e);}
 }
 async function endWebRTCCall(reason='ended',updateRemote=true){
   if(callEnding)return;callEnding=true;
+  stopCallTone();
   const id=currentCallId,ref=currentCallRef;
   clearCallListeners();stopCallTimer();closePeerConnection();stopLocalMedia();
   if(updateRemote&&ref&&id){
@@ -2259,7 +2311,7 @@ async function endWebRTCCall(reason='ended',updateRemote=true){
   }
   if(activeCallPath){try{await db.ref(activeCallPath).remove();}catch{}}
   activeCallPath=null;closeCallUI();
-  currentCallId=null;currentCallType=null;currentCallRole=null;currentCallRef=null;currentCallerCandidatesRef=null;currentCalleeCandidatesRef=null;pendingRemoteCandidates=[];remoteDescriptionReady=false;callEnding=false;
+  currentCallId=null;currentCallType=null;currentCallRole=null;currentCallSignalingStatus=null;currentCallRef=null;currentCallerCandidatesRef=null;currentCalleeCandidatesRef=null;pendingRemoteCandidates=[];remoteDescriptionReady=false;callEnding=false;
   setStatus('',partnerUid?'Ready · '+partnerName:'Ready');
   if(id){clearTimeout(callCleanupTimer);callCleanupTimer=setTimeout(()=>{db.ref('calls/'+id).remove().catch(()=>{});},7000);}
 }
