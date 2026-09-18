@@ -587,11 +587,27 @@ html,body{background:linear-gradient(145deg,#f7f9fc 0%,#eef3f9 100%);color:var(-
 .home-call-view.active{display:block}
 .app.calls-home .chat-list,.app.calls-home .home-empty-chat{display:none!important}
 .app.calls-home .home-call-view{display:block}
-.call-history-head{display:flex;align-items:center;justify-content:space-between;padding:13px 5px 8px}
+.call-history-head{display:flex;align-items:center;justify-content:space-between;padding:13px 5px 8px;gap:8px}
 .call-history-title{font-size:13px;font-weight:800;color:var(--ink)}
 .call-history-clear{border:0;background:transparent;color:#d94a54;font:700 10.5px inherit;cursor:pointer;padding:6px}
+.call-history-select-tools{display:none;align-items:center;gap:7px;margin-left:auto}
+.call-history-select-tools.show{display:flex}
+.call-history-select-all{border:1px solid var(--line);background:var(--card);color:var(--ink-2);border-radius:9px;padding:6px 8px;font:700 10px inherit;cursor:pointer}
+.call-history-delete-selected{border:0;background:#d94a54;color:#fff;border-radius:9px;padding:7px 9px;font:800 10px inherit;cursor:pointer;display:none}
+.call-history-delete-selected.show{display:block}
 .call-history-list{display:flex;flex-direction:column}
-.call-history-row{width:100%;display:flex;align-items:center;gap:11px;padding:12px 8px;border:0;border-bottom:1px solid rgba(225,231,239,.75);background:transparent;text-align:left;font:inherit}
+.call-history-row{position:relative;width:100%;display:flex;align-items:center;gap:11px;padding:12px 8px;border:0;border-bottom:1px solid rgba(225,231,239,.75);background:transparent;text-align:left;font:inherit;touch-action:pan-y;user-select:none}
+.call-history-row.selected{background:#edf3ff}
+.call-history-check{width:22px;height:22px;border-radius:7px;border:1.5px solid #aeb8c8;background:var(--card);display:none;place-items:center;flex:none;color:#fff}
+.call-history-selecting .call-history-check{display:grid}
+.call-history-check.checked{background:var(--brand);border-color:var(--brand)}
+.call-history-check svg{width:14px;height:14px;stroke-width:2.7}
+.call-history-avatar-wrap{position:relative;flex:none}
+.call-history-actions{display:flex;align-items:center;gap:5px;flex:none}
+.call-history-action{width:36px;height:36px;border-radius:50%;border:1px solid #dce3ef;background:var(--card);color:var(--brand);display:grid;place-items:center;cursor:pointer}
+.call-history-action:active{transform:scale(.94)}
+.call-history-action svg{width:18px;height:18px}
+.call-history-row.selected .call-history-actions{display:none}
 .call-history-avatar{width:48px;height:48px;border-radius:50%;background:#e8eef9;color:var(--brand);display:grid;place-items:center;flex:none;font-size:15px;font-weight:800;overflow:hidden}
 .call-history-avatar img{width:100%;height:100%;object-fit:cover}
 .call-history-body{flex:1;min-width:0}
@@ -691,7 +707,11 @@ html,body{background:linear-gradient(145deg,#f7f9fc 0%,#eef3f9 100%);color:var(-
     </div>
     <section class="home-call-view" id="homeCallView" aria-label="Calls">
       <div class="call-history-head">
-        <span class="call-history-title">Call history</span>
+        <span class="call-history-title" id="callHistoryTitle">Call history</span>
+        <div class="call-history-select-tools" id="callHistorySelectTools">
+          <button class="call-history-select-all" id="callHistorySelectAllBtn" type="button">Select all</button>
+          <button class="call-history-delete-selected" id="callHistoryDeleteSelectedBtn" type="button">Delete</button>
+        </div>
         <button class="call-history-clear" id="clearCallHistoryBtn" type="button">Clear</button>
       </div>
       <div class="call-history-list" id="callHistoryList"></div>
@@ -750,7 +770,7 @@ html,body{background:linear-gradient(145deg,#f7f9fc 0%,#eef3f9 100%);color:var(-
     <button class="tool-btn mic" id="micBtn" title="Record voice message"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg></button>
     <button class="send-btn" id="sendBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
     <input type="file" id="fileInput" class="hidden-file" accept="*/*" />
-    <input type="file" id="cameraInput" class="hidden-file" accept="image/*" capture="environment" />
+    <input type="file" id="cameraInput" class="hidden-file" accept="image/*" />
     <input type="file" id="qrImageInput" class="hidden-file" accept="image/*" />
   </div>
 
@@ -1241,7 +1261,7 @@ const callCropToggle = $('callCropToggle'), callCropPanel = $('callCropPanel'), 
 const incomingCallAvatar = $('incomingCallAvatar'), incomingCallName = $('incomingCallName'), incomingCallType = $('incomingCallType');
 const incomingAccept = $('incomingAccept'), incomingReject = $('incomingReject');
 const homeView=$('homeView'), chatList=$('chatList'), chatEmpty=$('chatEmpty'), homeSearch=$('homeSearch'), homeChatCount=$('homeChatCount'), homeNewChatBtn=$('homeNewChatBtn'), homeBackBtn=$('homeBackBtn');
-const homeCallView=$('homeCallView'), callHistoryList=$('callHistoryList'), callHistoryEmpty=$('callHistoryEmpty'), clearCallHistoryBtn=$('clearCallHistoryBtn');
+const homeCallView=$('homeCallView'), callHistoryList=$('callHistoryList'), callHistoryEmpty=$('callHistoryEmpty'), clearCallHistoryBtn=$('clearCallHistoryBtn'), callHistoryTitle=$('callHistoryTitle'), callHistorySelectTools=$('callHistorySelectTools'), callHistorySelectAllBtn=$('callHistorySelectAllBtn'), callHistoryDeleteSelectedBtn=$('callHistoryDeleteSelectedBtn');
 const connectChoiceModal=$('connectChoiceModal'), choiceMyQr=$('choiceMyQr'), choiceScanQr=$('choiceScanQr'), choiceUid=$('choiceUid'), connectChoiceCancel=$('connectChoiceCancel');
 
 
@@ -1450,26 +1470,147 @@ function callHistoryStatusLabel(h){
   if(h.direction==='incoming')return 'Incoming';
   return 'Outgoing';
 }
+let callHistoryItems=[];
+let callHistorySelecting=false;
+let selectedCallHistory=new Set();
+let callHistoryPressTimer=null;
+let callHistoryPressMoved=false;
+let callHistoryIgnoreClickKey='';
+
+function updateCallHistorySelectionUI(){
+  callHistorySelecting=!!callHistorySelecting;
+  if(callHistoryList) callHistoryList.classList.toggle('call-history-selecting',callHistorySelecting);
+  if(callHistorySelectTools) callHistorySelectTools.classList.toggle('show',callHistorySelecting);
+  if(clearCallHistoryBtn) clearCallHistoryBtn.style.display=callHistorySelecting?'none':'';
+  const count=selectedCallHistory.size;
+  if(callHistoryDeleteSelectedBtn){
+    callHistoryDeleteSelectedBtn.classList.toggle('show',count>0);
+    callHistoryDeleteSelectedBtn.textContent=count>0?`Delete (${count})`:'Delete';
+  }
+  if(callHistorySelectAllBtn){
+    callHistorySelectAllBtn.textContent=(callHistoryItems.length && selectedCallHistory.size===callHistoryItems.length)?'Unselect all':'Select all';
+  }
+  if(callHistoryTitle) callHistoryTitle.textContent=callHistorySelecting ? `${selectedCallHistory.size} selected` : 'Call history';
+}
+function exitCallHistorySelection(){
+  callHistorySelecting=false;selectedCallHistory.clear();renderCallHistory(callHistoryItems);
+}
+function toggleCallHistoryItem(key){
+  if(!key)return;
+  if(selectedCallHistory.has(key)) selectedCallHistory.delete(key); else selectedCallHistory.add(key);
+  renderCallHistory(callHistoryItems);
+}
+function startCallHistoryLongPress(e,row,key){
+  if(e.target.closest('.call-history-action'))return;
+  if(e.pointerType==='mouse' && e.button!==0)return;
+  callHistoryPressMoved=false;
+  clearTimeout(callHistoryPressTimer);
+  callHistoryPressTimer=setTimeout(()=>{
+    callHistoryPressTimer=null;
+    if(callHistoryPressMoved)return;
+    if(!callHistorySelecting) callHistorySelecting=true;
+    callHistoryIgnoreClickKey=key||'';
+    toggleCallHistoryItem(key);
+    if(navigator.vibrate)navigator.vibrate(20);
+  },520);
+}
+function cancelCallHistoryLongPress(){clearTimeout(callHistoryPressTimer);callHistoryPressTimer=null;}
+async function ensureCallHistoryPartner(h){
+  if(!signedIn()||!db||!h?.peerUid)return false;
+  const uid=String(h.peerUid);
+  if(uid===me.uid)return false;
+  let p=chatProfiles.get(uid);
+  if(!p){
+    try{
+      const snap=await db.ref('users/'+uid).once('value');
+      const u=snap.val()||{};
+      p={id:u.id||uid,uid,name:u.name||h.name||'Friend',email:u.email||'',picture:u.picture||h.picture||null,online:!!u.online,latest:null,unread:0};
+    }catch(e){
+      p={id:uid,uid,name:h.name||'Friend',email:'',picture:h.picture||null,online:false,latest:null,unread:0};
+    }
+    chatProfiles.set(uid,p);
+  }else{
+    p={...p,name:p.name||h.name||'Friend',picture:p.picture||h.picture||null};
+    chatProfiles.set(uid,p);
+  }
+  partnerId=p.id||uid;partnerUid=uid;partnerName=p.name||h.name||'Friend';partnerOnline=!!p.online;LOCAL_ONLY=false;
+  localStorage.setItem(PARTNER_KEY,partnerId);
+  localStorage.setItem(LOCAL_ONLY_KEY,'false');
+  return true;
+}
+async function callFromHistory(h,type){
+  if(!h||!h.peerUid){showToast('This call record has no caller ID');return;}
+  if(callHistorySelecting){toggleCallHistoryItem(h._key);return;}
+  if(currentCallId||peerConnection){showToast('A call is already active');return;}
+  const ok=await ensureCallHistoryPartner(h);
+  if(!ok){showToast('Could not find this contact');return;}
+  // Keep the Home screen intact; starting a callback should open the normal call UI only.
+  await startWebRTCCall(type||h.type||'voice');
+}
 function renderCallHistory(items=[]){
   if(!callHistoryList||!callHistoryEmpty)return;
+  callHistoryItems=Array.isArray(items)?items:[];
+  const validKeys=new Set(callHistoryItems.map(x=>x._key).filter(Boolean));
+  selectedCallHistory.forEach(k=>{if(!validKeys.has(k))selectedCallHistory.delete(k);});
   callHistoryList.innerHTML='';
-  if(!items.length){callHistoryEmpty.style.display='block';return;}
+  if(!callHistoryItems.length){
+    callHistoryEmpty.style.display='block';
+    updateCallHistorySelectionUI();
+    return;
+  }
   callHistoryEmpty.style.display='none';
-  items.forEach(h=>{
-    const row=document.createElement('div'); row.className='call-history-row';
+  callHistoryItems.forEach(h=>{
+    const row=document.createElement('div'); row.className='call-history-row'+(selectedCallHistory.has(h._key)?' selected':''); row.dataset.key=h._key||'';
     const avatar=h.picture?`<img src="${esc(h.picture)}" alt="">`:esc(initials(h.name||'Friend'));
     const dur=h.durationSec!=null?` · ${fmtDur(h.durationSec)}`:'';
     const statusClass=(h.status==='missed'||h.status==='rejected')?'missed':h.direction;
     const icon=h.type==='video'
       ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>'
-      : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.7 19.7 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.7 19.7 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 2 .7 2.8.2.8 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3c.5-.5 1.3-.7 2.1-.5.9.3 1.8.5 2.8.7A2 2 0 0 1 22 16.9Z"/></svg>';
-    row.innerHTML=`<div class="call-history-avatar">${avatar}</div><div class="call-history-body">
-      <div class="call-history-top"><span class="call-history-name">${esc(h.name||'Friend')}</span><span class="call-history-icon">${icon}</span><span class="call-history-kind">${esc(callHistoryKind(h.type))}</span></div>
-      <div class="call-history-meta"><span class="call-history-status ${statusClass}">${esc(callHistoryStatusLabel(h))}</span><span>${esc(formatCallDate(h.startedAt))}</span><span>${esc(formatCallTime(h.startedAt))}${dur}</span></div>
-    </div>`;
+      : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.7 19.7 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.7 19.7 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 2 .7 2.8.2.8 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3c.5-.5 1.3-.7 2.1-.7A12 12 0 0 0 22 16.9Z"/></svg>';
+    const callSvg='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.7 19.7 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.7 19.7 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 2 .7 2.8.2.8 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3c.5-.5 1.3-.7 2.1-.7A12 12 0 0 0 22 16.9Z"/></svg>';
+    const videoSvg='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>';
+    row.innerHTML=`<span class="call-history-check ${selectedCallHistory.has(h._key)?'checked':''}">${selectedCallHistory.has(h._key)?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m5 12 4 4L19 6"/></svg>':''}</span>
+      <div class="call-history-avatar-wrap"><div class="call-history-avatar">${avatar}</div></div>
+      <div class="call-history-body"><div class="call-history-top"><span class="call-history-name">${esc(h.name||'Friend')}</span><span class="call-history-icon">${icon}</span><span class="call-history-kind">${esc(callHistoryKind(h.type))}</span></div>
+      <div class="call-history-meta"><span class="call-history-status ${statusClass}">${esc(callHistoryStatusLabel(h))}</span><span>${esc(formatCallDate(h.startedAt))}</span><span>${esc(formatCallTime(h.startedAt))}${dur}</span></div></div>
+      <div class="call-history-actions"><button class="call-history-action call-history-voice" type="button" title="Voice call" aria-label="Voice call">${callSvg}</button><button class="call-history-action call-history-video" type="button" title="Video call" aria-label="Video call">${videoSvg}</button></div>`;
+    row.addEventListener('pointerdown',e=>startCallHistoryLongPress(e,row,h._key));
+    row.addEventListener('pointermove',()=>{callHistoryPressMoved=true;cancelCallHistoryLongPress();});
+    row.addEventListener('pointerup',cancelCallHistoryLongPress);
+    row.addEventListener('pointercancel',cancelCallHistoryLongPress);
+    row.addEventListener('click',e=>{
+      if(callHistoryIgnoreClickKey===h._key){callHistoryIgnoreClickKey='';return;}
+      const action=e.target.closest('.call-history-action');
+      if(action){
+        e.stopPropagation();
+        if(action.classList.contains('call-history-video')) callFromHistory(h,'video'); else callFromHistory(h,'voice');
+        return;
+      }
+      if(callHistorySelecting) toggleCallHistoryItem(h._key);
+    });
     callHistoryList.appendChild(row);
   });
+  updateCallHistorySelectionUI();
 }
+async function deleteSelectedCallHistory(){
+  if(!signedIn()||!me||!db||!selectedCallHistory.size)return;
+  const keys=[...selectedCallHistory];
+  try{
+    const updates={}; keys.forEach(k=>{updates[`callHistory/${me.uid}/${k}`]=null;});
+    await db.ref().update(updates);
+    selectedCallHistory.clear();callHistorySelecting=false;
+    await loadCallHistory();
+    showToast(`${keys.length} call ${keys.length===1?'record':'records'} deleted for you`);
+  }catch(e){console.error('delete selected call history',e);showToast('Could not delete selected calls');}
+}
+if(callHistorySelectAllBtn) callHistorySelectAllBtn.addEventListener('click',()=>{
+  if(!callHistorySelecting)callHistorySelecting=true;
+  if(callHistoryItems.length && selectedCallHistory.size===callHistoryItems.length) selectedCallHistory.clear();
+  else callHistoryItems.forEach(h=>{if(h._key)selectedCallHistory.add(h._key);});
+  renderCallHistory(callHistoryItems);
+});
+if(callHistoryDeleteSelectedBtn) callHistoryDeleteSelectedBtn.addEventListener('click',deleteSelectedCallHistory);
+
 async function loadCallHistory(){
   if(!signedIn()||!db||!me){renderCallHistory([]);return;}
   try{
