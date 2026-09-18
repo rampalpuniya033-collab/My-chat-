@@ -528,6 +528,109 @@ html,body{background:linear-gradient(145deg,#f7f9fc 0%,#eef3f9 100%);color:var(-
 @media(max-width:600px){.msg-action-pop{min-width:180px}.voice-player{min-width:205px}.voice-wave span{width:2.7px}}
 
 
+
+/* ===== WHATSAPP-STYLE MULTI-CHAT HOME ===== */
+.home-view{display:none;flex:1;min-height:0;overflow:hidden;flex-direction:column;background:linear-gradient(180deg,#f7f9fc 0%,#eef3f8 100%)}
+.app.home-mode .home-view{display:flex}
+.app.home-mode .messages,.app.home-mode .input-bar,.app.home-mode .recording-bar,.app.home-mode .attach-preview{display:none!important}
+.app.home-mode .main-signin{display:flex}
+.app.home-mode .topbar .call-actions{display:none}
+.home-head{padding:13px 14px 8px;flex-shrink:0}
+.home-search{height:48px;border:1px solid #e1e7ef;background:#fff;border-radius:24px;display:flex;align-items:center;gap:10px;padding:0 15px;box-shadow:0 4px 14px rgba(24,39,75,.055)}
+.home-search svg{width:20px;height:20px;color:#7f8b9d;flex:none}
+.home-search input{flex:1;min-width:0;border:0;outline:0;background:transparent;color:var(--ink);font:500 14px inherit}
+.home-search input::placeholder{color:#8994a5}
+.home-section-row{display:flex;align-items:center;justify-content:space-between;padding:13px 5px 8px}
+.home-section-title{font-size:13px;font-weight:800;color:var(--ink);letter-spacing:.1px}
+.home-section-count{font-size:10px;font-weight:700;color:var(--muted)}
+.chat-list{flex:1;min-height:0;overflow:auto;padding:0 9px 12px}
+.chat-list::-webkit-scrollbar{width:4px}.chat-list::-webkit-scrollbar-thumb{background:#d5dce7;border-radius:10px}
+.chat-row{width:100%;display:flex;align-items:center;gap:12px;padding:11px 9px;border:0;border-bottom:1px solid rgba(225,231,239,.75);background:transparent;text-align:left;cursor:pointer;font:inherit;transition:background .15s,transform .15s}
+.chat-row:hover{background:rgba(255,255,255,.72)}.chat-row:active{transform:scale(.992)}
+.chat-avatar{width:54px;height:54px;border-radius:50%;background:#e8eef9;color:var(--brand);display:grid;place-items:center;flex:none;font-size:17px;font-weight:800;overflow:hidden;position:relative;border:1px solid #dce4f1}
+.chat-avatar img{width:100%;height:100%;object-fit:cover}
+.chat-online{position:absolute;right:0;bottom:1px;width:13px;height:13px;border-radius:50%;background:#18ad69;border:3px solid #f5f8fb;display:none}
+.chat-avatar.online .chat-online{display:block}
+.chat-row-body{flex:1;min-width:0}
+.chat-row-top{display:flex;align-items:center;gap:8px}
+.chat-name{font-size:14.5px;font-weight:750;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1}
+.chat-time{font-size:10.5px;color:#8b95a5;white-space:nowrap}
+.chat-row-bottom{display:flex;align-items:center;gap:7px;margin-top:5px}
+.chat-preview{font-size:12.5px;color:#778295;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1}
+.chat-unread{min-width:21px;height:21px;padding:0 6px;border-radius:11px;background:#18ad69;color:#fff;font-size:10px;font-weight:800;display:grid;place-items:center}
+.chat-unread.hidden{display:none!important}
+.chat-empty{padding:50px 25px;text-align:center;color:var(--muted)}
+.chat-empty .home-empty-icon{width:60px;height:60px;border-radius:20px;background:#eaf1ff;color:var(--brand);display:grid;place-items:center;margin:0 auto 13px}
+.chat-empty svg{width:26px;height:26px}.chat-empty h3{font-size:14px;color:var(--ink);margin-bottom:5px}.chat-empty p{font-size:12px;line-height:1.5}
+.home-fab{position:absolute;right:18px;bottom:77px;width:56px;height:56px;border-radius:18px;background:linear-gradient(145deg,#3157a6,#234589);border:0;color:#fff;display:grid;place-items:center;box-shadow:0 12px 28px rgba(49,87,166,.30);cursor:pointer;z-index:4;transition:transform .15s}
+.home-fab:active{transform:scale(.92)}.home-fab svg{width:25px;height:25px}
+.home-nav{height:66px;flex-shrink:0;background:rgba(255,255,255,.94);backdrop-filter:blur(16px);border-top:1px solid #e2e8f0;display:grid;grid-template-columns:repeat(2,1fr);padding:4px 8px calc(4px + env(safe-area-inset-bottom,0px));z-index:3}
+.home-nav-btn{border:0;background:transparent;color:#788396;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font:600 10px inherit;cursor:pointer;border-radius:12px}
+.home-nav-btn svg{width:21px;height:21px;stroke-width:2}.home-nav-btn.active{color:#3157a6}.home-nav-btn.active .nav-icon{background:#e7efff;border-radius:15px;padding:4px;width:36px;height:28px;display:grid;place-items:center}.nav-icon{display:grid;place-items:center;width:36px;height:28px}
+.app.chat-mode .home-view{display:none}
+.app.chat-mode .main-signin{display:none}
+.home-back{display:none}
+.app.chat-mode .home-back{display:flex}
+.home-mode .home-back{display:none!important}
+.chat-mode .home-back{display:flex}
+.app.chat-mode .menu-btn:not(.home-back){display:none}
+.app.chat-mode .topbar .call-actions{display:flex}
+@media(min-width:720px){
+ .home-view{max-width:1100px;width:100%;margin:0 auto;border-left:1px solid #e5eaf1;border-right:1px solid #e5eaf1}
+ .home-head{padding:18px 28px 10px}.chat-list{padding:0 20px 18px}.chat-row{padding:13px 12px}
+ .home-fab{right:28px;bottom:92px}.home-nav{max-width:1100px;margin:0 auto}
+}
+
+
+/* ===== HOME CONNECTION SHEET + CALL HISTORY ===== */
+.home-call-view{display:none;flex:1;min-height:0;overflow:auto;padding:0 10px 12px}
+.home-call-view.active{display:block}
+.app.calls-home .chat-list,.app.calls-home .home-empty-chat{display:none!important}
+.app.calls-home .home-call-view{display:block}
+.call-history-head{display:flex;align-items:center;justify-content:space-between;padding:13px 5px 8px}
+.call-history-title{font-size:13px;font-weight:800;color:var(--ink)}
+.call-history-clear{border:0;background:transparent;color:#d94a54;font:700 10.5px inherit;cursor:pointer;padding:6px}
+.call-history-list{display:flex;flex-direction:column}
+.call-history-row{width:100%;display:flex;align-items:center;gap:11px;padding:12px 8px;border:0;border-bottom:1px solid rgba(225,231,239,.75);background:transparent;text-align:left;font:inherit}
+.call-history-avatar{width:48px;height:48px;border-radius:50%;background:#e8eef9;color:var(--brand);display:grid;place-items:center;flex:none;font-size:15px;font-weight:800;overflow:hidden}
+.call-history-avatar img{width:100%;height:100%;object-fit:cover}
+.call-history-body{flex:1;min-width:0}
+.call-history-top{display:flex;align-items:center;gap:7px}
+.call-history-name{font-size:13.5px;font-weight:750;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--ink)}
+.call-history-kind{font-size:10.5px;font-weight:700;color:var(--muted);white-space:nowrap}
+.call-history-meta{display:flex;align-items:center;gap:7px;margin-top:4px;font-size:10.5px;color:#8791a2;white-space:nowrap}
+.call-history-status{font-weight:700}
+.call-history-status.outgoing,.call-history-status.incoming{color:#18ad69}
+.call-history-status.missed,.call-history-status.rejected{color:#df4b55}
+.call-history-icon{width:18px;height:18px;flex:none;color:var(--brand)}
+.call-history-empty{padding:55px 25px;text-align:center;color:var(--muted)}
+.call-history-empty .home-empty-icon{width:60px;height:60px;border-radius:20px;background:#eaf1ff;color:var(--brand);display:grid;place-items:center;margin:0 auto 13px}
+.call-history-empty svg{width:32px;height:32px;stroke-width:2.3}.call-history-empty h3{font-size:14px;color:var(--ink);margin-bottom:5px}.call-history-empty p{font-size:12px;line-height:1.5}
+.connect-sheet{width:min(390px,100%);background:var(--card);border-radius:24px;padding:20px 16px 16px;box-shadow:0 28px 75px rgba(0,0,0,.28)}
+.connect-sheet h3{text-align:center;font-size:18px;margin-bottom:5px}.connect-sheet p{text-align:center;font-size:12px;color:var(--muted);margin-bottom:16px}
+.connect-sheet-grid{display:grid;grid-template-columns:1fr;gap:9px}
+.connect-choice{display:flex;align-items:center;gap:12px;width:100%;padding:12px;border:1px solid var(--line);border-radius:14px;background:#fafbfd;color:var(--ink);font:700 13px inherit;text-align:left;cursor:pointer}
+.connect-choice .choice-ic{width:42px;height:42px;border-radius:12px;background:var(--blue-soft);color:var(--brand);display:grid;place-items:center;flex:none}
+.connect-choice .choice-ic.gold{background:#fff5dc;color:#b67c00}.connect-choice svg{width:20px;height:20px}.connect-choice small{display:block;color:var(--muted);font-size:10.5px;font-weight:500;margin-top:2px}
+.connect-sheet-cancel{width:100%;margin-top:11px;padding:11px;border:1px solid var(--line);border-radius:12px;background:#f3f5f8;color:var(--ink-2);font:700 13px inherit;cursor:pointer}
+
+
+/* Clear All Chats is a chat-only action. */
+.home-mode #menuClearChats{display:none!important}
+.chat-mode #menuClearChats{display:flex}
+
+
+/* Chat-only Clear All Chats action */
+.chat-clear-action{
+  display:none;align-items:center;gap:7px;margin:0 12px 8px auto;
+  width:max-content;padding:8px 11px;border:1px solid #eadb9f;
+  border-radius:10px;background:#fff8e7;color:#9a7200;
+  font:700 11.5px inherit;cursor:pointer;
+}
+.chat-clear-action svg{width:16px;height:16px;flex:none}
+.chat-mode .chat-clear-action{display:flex}
+.home-mode .chat-clear-action{display:none!important}
+
 </style>
 </head>
 <body>
@@ -535,6 +638,7 @@ html,body{background:linear-gradient(145deg,#f7f9fc 0%,#eef3f9 100%);color:var(-
 <div class="app">
   <header class="topbar">
     <button class="menu-btn" id="menuBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+    <button class="menu-btn home-back" id="homeBackBtn" title="Back to chats" aria-label="Back to chats"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/><path d="M9 12h11"/></svg></button>
     <div class="title" id="headerTitle">
       <span class="title-main" id="headerTitleMain">ConvoLink</span>
       <span class="title-status" id="headerTitleStatus">Ready</span>
@@ -567,7 +671,60 @@ html,body{background:linear-gradient(145deg,#f7f9fc 0%,#eef3f9 100%);color:var(-
     <span>Sign in with Google</span>
   </button>
 
-  <main class="messages" id="messages">
+  <section class="home-view" id="homeView" aria-label="Chats home">
+    <div class="home-head">
+      <div class="home-search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-4-4"></path></svg>
+        <input id="homeSearch" type="search" placeholder="Search chats" autocomplete="off">
+      </div>
+      <div class="home-section-row">
+        <span class="home-section-title">Chats</span>
+        <span class="home-section-count" id="homeChatCount">0 chats</span>
+      </div>
+    </div>
+    <div class="chat-list" id="chatList">
+      <div class="chat-empty" id="chatEmpty">
+        <div class="home-empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5C21 16.2 17 20 12 20c-1.3 0-2.6-.25-3.7-.72L4 21l1.1-3.98C3.75 15.5 3 13.58 3 11.5 3 6.8 7 3 12 3s9 3.8 9 8.5Z"></path></svg></div>
+        <h3>Your chats will appear here</h3>
+        <p>Connect with friends using the + button. Each friend gets a separate chat profile here, just like a normal chat list.</p>
+      </div>
+    </div>
+    <section class="home-call-view" id="homeCallView" aria-label="Calls">
+      <div class="call-history-head">
+        <span class="call-history-title">Call history</span>
+        <button class="call-history-clear" id="clearCallHistoryBtn" type="button">Clear</button>
+      </div>
+      <div class="call-history-list" id="callHistoryList"></div>
+      <div class="call-history-empty" id="callHistoryEmpty">
+        <div class="home-empty-icon">
+          <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="24" cy="24" r="18"></circle>
+            <path d="M24 14v11l7 4"></path>
+            <path d="M13 31.5a13 13 0 0 0 7.5 7"></path>
+            <path d="M35 31.5a13 13 0 0 1-3.5 4.1"></path>
+          </svg>
+        </div>
+        <h3>No calls yet</h3>
+        <p>Your incoming and outgoing voice/video call details will appear here with date, time and duration.</p>
+      </div>
+    </section>
+    <button class="home-fab" id="homeNewChatBtn" type="button" title="Add friend" aria-label="Add friend">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg>
+    </button>
+    <nav class="home-nav" aria-label="Main navigation">
+      <button class="home-nav-btn active" type="button" data-home-tab="chats"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 11.5C21 16.2 17 20 12 20c-1.3 0-2.6-.25-3.7-.72L4 21l1.1-3.98C3.75 15.5 3 13.58 3 11.5 3 6.8 7 3 12 3s9 3.8 9 8.5Z"></path></svg></span><span>Chats</span></button>
+      <button class="home-nav-btn" type="button" data-home-tab="calls"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.7 19.7 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.7 19.7 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 2 .7 2.8.2.8 0 1.6-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3c.5-.5 1.3-.7 2.1-.5.9.3 1.8.5 2.8.7A2 2 0 0 1 22 16.9Z"></path></svg></span><span>Calls</span></button>
+    </nav>
+  </section>
+
+  <button class="chat-clear-action" id="chatClearAllBtn" type="button" title="Clear all messages">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+    <path d="M9 6V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/>
+  </svg>
+  <span>Clear all chats</span>
+</button>
+<main class="messages" id="messages">
     <div class="empty" id="emptyState">
       <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5C21 16.1944 16.9706 20 12 20C10.663 20 9.396 19.7444 8.253 19.283L4 21L5.085 17.025C3.774 15.526 3 13.598 3 11.5C3 6.80558 7.02944 3 12 3C16.9706 3 21 6.80558 21 11.5Z"/></svg></div>
       <h3>Start chatting</h3>
@@ -670,6 +827,50 @@ html,body{background:linear-gradient(145deg,#f7f9fc 0%,#eef3f9 100%);color:var(-
   </div>
 </div>
 
+<!-- New connection choices -->
+<div class="modal-overlay" id="connectChoiceModal">
+  <div class="connect-sheet">
+    <h3>Connect with a friend</h3>
+    <p>Choose how you want to connect.</p>
+    <div class="connect-sheet-grid">
+      <button class="connect-choice" id="choiceMyQr" type="button">
+        <span class="choice-ic gold"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM14 18h2"/></svg></span>
+        <span>My QR Code<small>Show your QR code to a friend</small></span>
+      </button>
+      <button class="connect-choice" id="choiceScanQr" type="button">
+        <span class="choice-ic gold"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><path d="M3 12h18"/></svg></span>
+        <span>Scan QR Code<small>Scan your friend's QR code</small></span>
+      </button>
+      <button class="connect-choice" id="choiceUid" type="button">
+        <span class="choice-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></span>
+        <span>Connect by Friend UID<small>Enter your friend's Firebase UID</small></span>
+      </button>
+    </div>
+    <button class="connect-sheet-cancel" id="connectChoiceCancel" type="button">Cancel</button>
+  </div>
+</div>
+
+
+<!-- App confirmation: Clear all chats -->
+<div class="modal-overlay" id="clearChatsConfirmModal">
+  <div class="modal" style="max-width:360px;text-align:center;">
+    <button class="m-close" id="clearChatsConfirmClose" type="button">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <div style="width:56px;height:56px;margin:4px auto 12px;border-radius:18px;background:#fff5d9;color:#ad7a00;display:grid;place-items:center;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M9 6V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/></svg>
+    </div>
+    <h3 style="font-size:17px;margin-bottom:7px;">Clear all chats?</h3>
+    <p style="font-size:12.5px;color:var(--muted);line-height:1.55;margin-bottom:18px;">
+      All messages in this chat will be permanently deleted. This action cannot be undone.
+    </p>
+    <div style="display:flex;gap:10px;">
+      <button id="clearChatsCancel" type="button" style="flex:1;padding:12px;border-radius:12px;font-size:13px;font-weight:700;cursor:pointer;background:#f5f6fa;color:var(--ink-2);border:1px solid var(--line);">Cancel</button>
+      <button id="clearChatsConfirm" type="button" style="flex:1;padding:12px;border-radius:12px;font-size:13px;font-weight:700;cursor:pointer;background:#d9a900;color:#fff;border:none;">Delete all</button>
+    </div>
+  </div>
+</div>
+
 <!-- Connect Modal -->
 <div class="modal-overlay" id="connectModal">
   <div class="modal" style="max-width:360px;">
@@ -755,41 +956,12 @@ html,body{background:linear-gradient(145deg,#f7f9fc 0%,#eef3f9 100%);color:var(-
       <div class="name" id="drawerName">Guest User</div>
       <div class="email" id="drawerEmail">Not signed in</div>
     </div>
-    <div class="myid-mini">
-      <span class="lbl">My Firebase UID</span>
-      <span class="v" id="drawerMyId">—</span>
-      <button class="cbtn" id="drawerCopyId"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
-    </div>
   </div>
 
   <div class="drawer-body">
     <div class="drawer-section-label">Profile</div>
     <button class="drawer-item primary" id="menuProfile"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c.9-3.3 3.2-5 7-5s6.1 1.7 7 5"/></svg></span><span class="txt">My Profile<small>Photo, name, UID and sharing</small></span></button>
-    <div class="drawer-divider"></div>
-    <div class="drawer-section-label">Connect</div>
-    <button class="drawer-item qr" id="menuShowQR">
-      <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><line x1="14" y1="14" x2="14" y2="14.01"/><line x1="18" y1="14" x2="21" y2="14"/><line x1="14" y1="18" x2="14" y2="21"/><line x1="18" y1="18" x2="21" y2="18"/></svg></span>
-      <span class="txt">My QR Code<small>Show to a friend</small></span>
-    </button>
-    <button class="drawer-item qr" id="menuScanQR">
-      <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><line x1="3" y1="12" x2="21" y2="12"/></svg></span>
-      <span class="txt">Scan QR Code<small>Connect instantly</small></span>
-    </button>
-    <button class="drawer-item primary" id="menuConnect">
-      <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></span>
-      <span class="txt">Connect by Firebase UID<small>Paste manually</small></span>
-    </button>
-    <div class="drawer-divider"></div>
-    <div class="drawer-section-label">Chat</div>
-    <button class="drawer-item" id="menuCopyId">
-      <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></span>
-      <span class="txt">Copy my Firebase UID<small>Share with a friend</small></span>
-    </button>
-    <button class="drawer-item warn" id="menuClearChats">
-      <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/><path d="M9 6V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/></svg></span>
-      <span class="txt">Clear all chats<small>Delete all messages</small></span>
-    </button>
-    <div class="drawer-divider"></div>
+    <div class="drawer-divider"></div><div class="drawer-divider"></div>
     <div class="drawer-section-label">Account</div>
     <button class="drawer-item logout" id="menuLogout">
       <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></span>
@@ -1002,6 +1174,9 @@ let requestQueue = [], requestModalEl = null;
 /* ===== AUTO-CONNECT LISTENER ===== */
 let connectionsListenerRef = null;
 let knownConnectionUids = new Set();
+let chatProfiles = new Map();
+let homeMode = true;
+let homeSearchTerm = '';
 
 /* ===== PRESENCE & TYPING ===== */
 let typingRef = null, partnerTypingRef = null, typingTimeout = null, isPartnerTyping = false;
@@ -1018,6 +1193,9 @@ let currentAudio = null, currentPlayerEl = null;
 let currentVoiceSpeed = 1, activeMessageAction = null, pendingConnectTarget = null;
 let hiddenMessageKeys = new Set();
 let callSpeakerOn = false;
+let callHistoryWritten=false;
+let callPeerPicture=null;
+
 
 const $ = id => document.getElementById(id);
 const messagesEl = $('messages'), emptyState = $('emptyState');
@@ -1058,6 +1236,10 @@ const incomingCameraSwitch = $('incomingCameraSwitch');
 const callCropToggle = $('callCropToggle'), callCropPanel = $('callCropPanel'), cropZoom = $('cropZoom'), cropReset = $('cropReset');
 const incomingCallAvatar = $('incomingCallAvatar'), incomingCallName = $('incomingCallName'), incomingCallType = $('incomingCallType');
 const incomingAccept = $('incomingAccept'), incomingReject = $('incomingReject');
+const homeView=$('homeView'), chatList=$('chatList'), chatEmpty=$('chatEmpty'), homeSearch=$('homeSearch'), homeChatCount=$('homeChatCount'), homeNewChatBtn=$('homeNewChatBtn'), homeBackBtn=$('homeBackBtn');
+const homeCallView=$('homeCallView'), callHistoryList=$('callHistoryList'), callHistoryEmpty=$('callHistoryEmpty'), clearCallHistoryBtn=$('clearCallHistoryBtn');
+const connectChoiceModal=$('connectChoiceModal'), choiceMyQr=$('choiceMyQr'), choiceScanQr=$('choiceScanQr'), choiceUid=$('choiceUid'), connectChoiceCancel=$('connectChoiceCancel');
+
 
 function firebaseUid(uid){ if(!uid) throw new Error('Missing Firebase UID'); return String(uid); }
 function showToast(msg){ if(String(msg||'').trim()==='Could not establish the call') return; const t=$('toast'); $('toastMsg').textContent=msg; t.classList.add('show'); clearTimeout(t._timer); t._timer=setTimeout(()=>t.classList.remove('show'),3500); }
@@ -1145,11 +1327,197 @@ function friendlyFirebaseError(e){
   return e && e.message ? e.message : 'Firebase operation failed.';
 }
 
+
+function showChatsHome(){
+  document.querySelector('.app')?.classList.remove('calls-home');
+  homeCallView?.classList.remove('active');
+  if(homeNewChatBtn) homeNewChatBtn.style.display='grid';
+  renderChatList();
+}
+function showCallsHome(){
+  document.querySelector('.app')?.classList.add('calls-home');
+  homeCallView?.classList.add('active');
+  if(homeNewChatBtn) homeNewChatBtn.style.display='none';
+  renderCallHistory();
+}
+function setHomeMode(on=true){
+  homeMode=!!on;
+  if(homeBackBtn){
+    homeBackBtn.setAttribute('aria-hidden', homeMode ? 'true' : 'false');
+    homeBackBtn.tabIndex = homeMode ? -1 : 0;
+  }
+  document.querySelector('.app')?.classList.toggle('home-mode',homeMode);
+  document.querySelector('.app')?.classList.toggle('chat-mode',!homeMode);
+  if(homeMode){
+    updateHeaderStatus(signedIn()?'Ready':'Sign in to connect',false);
+    if(headerTitleMain) headerTitleMain.textContent='ConvoLink';
+    showChatsHome();
+    document.querySelectorAll('[data-home-tab]').forEach(x=>x.classList.toggle('active',x.dataset.homeTab==='chats'));
+  }else if(partnerUid){
+    updateHeaderStatus(partnerOnline?'online':'offline',false);
+    if(headerTitleMain) headerTitleMain.textContent=partnerName||'Friend';
+  }
+}
+function previewFromMessage(m){
+  if(!m) return 'No messages yet';
+  if(m.media?.type==='image') return 'Photo';
+  if(m.media?.type==='voice') return 'Voice message';
+  if(m.media?.type==='file') return m.media.name||'File';
+  return String(m.text||'').replace(/\s+/g,' ').trim() || 'Message';
+}
+function chatTime(m){
+  if(!m) return '';
+  if(m.at && !isNaN(Number(m.at))) return new Date(Number(m.at)).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+  return m.time||'';
+}
+async function loadLatestForProfile(p){
+  try{
+    const snap=await db.ref('messages/'+chatKey(me.uid,p.uid)).orderByChild('at').limitToLast(1).once('value');
+    let latest=null;snap.forEach(c=>latest={...c.val(),_key:c.key});
+    p.latest=latest;
+  }catch(e){
+    const cached=localStorage.getItem(MSG_KEY+'_'+chatKey(me.uid,p.uid));
+    try{const a=cached?JSON.parse(cached):[];p.latest=a[a.length-1]||null;}catch{}
+  }
+}
+function renderChatList(){
+  if(!chatList) return;
+  const term=(homeSearch?.value||homeSearchTerm||'').trim().toLowerCase();
+  const arr=[...chatProfiles.values()].filter(p=>p.uid!==me?.uid && (!term || (p.name||'').toLowerCase().includes(term) || (p.email||'').toLowerCase().includes(term)));
+  arr.sort((a,b)=>Number(b.latest?.at||0)-Number(a.latest?.at||0) || (a.name||'').localeCompare(b.name||''));
+  chatList.innerHTML='';
+  if(!arr.length){
+    chatList.appendChild(chatEmpty);
+    chatEmpty.style.display='block';
+  }else{
+    chatEmpty.style.display='none';
+    arr.forEach(p=>{
+      const row=document.createElement('button');row.type='button';row.className='chat-row';row.dataset.uid=p.uid;
+      const avatar=p.picture?`<img src="${esc(p.picture)}" alt="">`:esc(initials(p.name));
+      const online=p.online?' online':'';
+      const preview=previewFromMessage(p.latest);
+      const unread=Number(p.unread||0);
+      row.innerHTML=`<div class="chat-avatar${online}">${avatar}<span class="chat-online"></span></div>
+        <div class="chat-row-body"><div class="chat-row-top"><span class="chat-name">${esc(p.name||'Friend')}</span><span class="chat-time">${esc(chatTime(p.latest))}</span></div>
+        <div class="chat-row-bottom"><span class="chat-preview">${esc(preview)}</span><span class="chat-unread${unread?'':' hidden'}">${unread>99?'99+':unread}</span></div></div>`;
+      row.addEventListener('click',()=>openChatFromHome(p));
+      chatList.appendChild(row);
+    });
+  }
+  if(homeChatCount) homeChatCount.textContent=arr.length+' '+(arr.length===1?'chat':'chats');
+}
+async function openChatFromHome(p){
+  await selectPartner(p);
+  setHomeMode(false);
+  render();
+}
+async function refreshChatProfiles(){
+  if(!signedIn()||!db||!me)return;
+  try{
+    const snap=await db.ref('connections/'+me.uid).once('value');
+    const next=new Map();
+    const jobs=[];
+    snap.forEach(c=>{
+      const v=c.val()||{};
+      if(!v.uid||v.uid===me.uid)return;
+      const p={id:v.id||c.key,uid:v.uid,name:v.name||'Friend',email:v.email||'',picture:v.picture||null,online:!!v.online,latest:null,unread:0};
+      const old=chatProfiles.get(p.uid); if(old){p.latest=old.latest;p.unread=old.unread;}
+      next.set(p.uid,p);jobs.push(loadLatestForProfile(p));
+    });
+    chatProfiles=next;
+    await Promise.all(jobs);
+    renderChatList();
+  }catch(e){console.warn('chat list',e);renderChatList();}
+}
+
+function formatCallDate(ts){
+  if(!ts)return '';
+  const d=new Date(Number(ts));
+  return d.toLocaleDateString([], {day:'2-digit',month:'short',year:'numeric'});
+}
+function formatCallTime(ts){
+  if(!ts)return '';
+  return new Date(Number(ts)).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+}
+function callHistoryKind(type){return type==='video'?'Video call':'Voice call';}
+function callHistoryStatusLabel(h){
+  if(h.status==='missed')return 'Missed';
+  if(h.status==='rejected')return 'Declined';
+  if(h.direction==='incoming')return 'Incoming';
+  return 'Outgoing';
+}
+function renderCallHistory(items=[]){
+  if(!callHistoryList||!callHistoryEmpty)return;
+  callHistoryList.innerHTML='';
+  if(!items.length){callHistoryEmpty.style.display='block';return;}
+  callHistoryEmpty.style.display='none';
+  items.forEach(h=>{
+    const row=document.createElement('div'); row.className='call-history-row';
+    const avatar=h.picture?`<img src="${esc(h.picture)}" alt="">`:esc(initials(h.name||'Friend'));
+    const dur=h.durationSec!=null?` · ${fmtDur(h.durationSec)}`:'';
+    const statusClass=(h.status==='missed'||h.status==='rejected')?'missed':h.direction;
+    const icon=h.type==='video'
+      ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>'
+      : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.7 19.7 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.7 19.7 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 2 .7 2.8.2.8 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3c.5-.5 1.3-.7 2.1-.5.9.3 1.8.5 2.8.7A2 2 0 0 1 22 16.9Z"/></svg>';
+    row.innerHTML=`<div class="call-history-avatar">${avatar}</div><div class="call-history-body">
+      <div class="call-history-top"><span class="call-history-name">${esc(h.name||'Friend')}</span><span class="call-history-icon">${icon}</span><span class="call-history-kind">${esc(callHistoryKind(h.type))}</span></div>
+      <div class="call-history-meta"><span class="call-history-status ${statusClass}">${esc(callHistoryStatusLabel(h))}</span><span>${esc(formatCallDate(h.startedAt))}</span><span>${esc(formatCallTime(h.startedAt))}${dur}</span></div>
+    </div>`;
+    callHistoryList.appendChild(row);
+  });
+}
+async function loadCallHistory(){
+  if(!signedIn()||!db||!me){renderCallHistory([]);return;}
+  try{
+    const snap=await db.ref('callHistory/'+me.uid).orderByChild('startedAt').limitToLast(100).once('value');
+    const items=[]; snap.forEach(c=>{const h=c.val();if(h)items.push({...h,_key:c.key});});
+    items.sort((a,b)=>Number(b.startedAt||0)-Number(a.startedAt||0));
+    renderCallHistory(items);
+  }catch(e){console.warn('call history load',e);renderCallHistory([]);}
+}
+if(clearCallHistoryBtn) clearCallHistoryBtn.addEventListener('click',async()=>{
+  if(!signedIn()||!me){showToast('Please sign in with Google first');return;}
+  try{await db.ref('callHistory/'+me.uid).remove();renderCallHistory([]);showToast('Call history cleared');}
+  catch(e){showToast('Could not clear call history');}
+});
+
+function showHomeNotice(tab){
+  if(tab==='chats') return;
+  showToast(tab.charAt(0).toUpperCase()+tab.slice(1)+' section is ready for the next feature.');
+}
+
 function openDrawer(){ drawer.classList.add('open'); drawerOverlay.classList.add('open'); }
 function closeDrawer(){ drawer.classList.remove('open'); drawerOverlay.classList.remove('open'); }
 $('menuBtn').addEventListener('click', openDrawer);
 $('closeDrawer').addEventListener('click', closeDrawer);
 drawerOverlay.addEventListener('click', closeDrawer);
+
+if(homeSearch) homeSearch.addEventListener('input',()=>{homeSearchTerm=homeSearch.value||'';renderChatList();});
+function openConnectChoices(){
+  if(!signedIn()){showToast('Please sign in with Google first');return;}
+  getFirebaseUid();
+  connectChoiceModal.classList.add('open');
+}
+function closeConnectChoices(){connectChoiceModal.classList.remove('open');}
+if(homeNewChatBtn) homeNewChatBtn.addEventListener('click',openConnectChoices);
+if(connectChoiceCancel) connectChoiceCancel.addEventListener('click',closeConnectChoices);
+if(connectChoiceModal) connectChoiceModal.addEventListener('click',e=>{if(e.target===connectChoiceModal)closeConnectChoices();});
+if(choiceMyQr) choiceMyQr.addEventListener('click',()=>{
+  closeConnectChoices(); if(!signedIn())return; getFirebaseUid(); qrShowModal.classList.add('open'); setTimeout(drawMyQR,60);
+});
+if(choiceScanQr) choiceScanQr.addEventListener('click',()=>{
+  closeConnectChoices(); if(!signedIn())return; openScanModal();
+});
+if(choiceUid) choiceUid.addEventListener('click',()=>{
+  closeConnectChoices(); openConnectModal();
+});
+if(homeBackBtn) homeBackBtn.addEventListener('click',()=>{setHomeMode(true);});
+document.querySelectorAll('[data-home-tab]').forEach(btn=>btn.addEventListener('click',()=>{
+  document.querySelectorAll('[data-home-tab]').forEach(x=>x.classList.remove('active'));
+  btn.classList.add('active');
+  if(btn.dataset.homeTab==='calls'){showCallsHome();}else{showChatsHome();}
+}));
+
 
 function openConnectModal(){
   closeDrawer();
@@ -1158,7 +1526,7 @@ function openConnectModal(){
   connectModal.classList.add('open'); setTimeout(()=>connectInput.focus(),250);
 }
 function closeConnectModal(){ connectModal.classList.remove('open'); connectInput.value=''; }
-$('menuConnect').addEventListener('click', openConnectModal);
+
 connectCancel.addEventListener('click', closeConnectModal);
 connectCancelBtn.addEventListener('click', closeConnectModal);
 connectModal.addEventListener('click', e=>{ if(e.target===connectModal) closeConnectModal(); });
@@ -1170,7 +1538,7 @@ function paintMe(){
   else { topAvatar.textContent=ini; drawerAvatar.textContent=ini; }
   drawerName.textContent=me.name || 'Google User';
   drawerEmail.textContent=me.email || 'Not signed in';
-  drawerMyId.textContent=me.uid || '—';
+  
   qrMyId.textContent=me.uid || '—';
   googleLogoBtn.classList.toggle('signed', signedIn());
   if(mainSignInBtn) mainSignInBtn.classList.toggle('signed', signedIn());
@@ -1357,6 +1725,7 @@ async function rejectRequest(r){
 async function selectPartner(p){
   stopCurrentAudio();
   partnerId=p.id; partnerUid=p.uid; partnerName=p.name||'Friend'; LOCAL_ONLY=false;
+  chatProfiles.set(p.uid,{...(chatProfiles.get(p.uid)||{}),...p});
   localStorage.setItem(PARTNER_KEY,partnerId); localStorage.setItem(LOCAL_ONLY_KEY,'false');
   setConnected(true,partnerName); render(); listenMessages();
   setupTypingListeners();
@@ -1368,8 +1737,13 @@ async function restoreConnection(){
   if(!savedUid || savedUid===me.uid || savedUid.startsWith('CL-')) { LOCAL_ONLY=true; setConnected(false); return; }
   try{
     const c=await db.ref(`connections/${me.uid}/${savedUid}`).once('value');
-    if(c.exists()) await selectPartner(c.val());
-    else { localStorage.removeItem(PARTNER_KEY); localStorage.setItem(LOCAL_ONLY_KEY,'true'); LOCAL_ONLY=true; setConnected(false); }
+    if(c.exists()){
+      const profile=c.val();
+      chatProfiles.set(profile.uid,{...profile});
+      await loadLatestForProfile(chatProfiles.get(profile.uid));
+      setConnected(true,profile.name||'Friend');
+      setHomeMode(true);
+    } else { localStorage.removeItem(PARTNER_KEY); localStorage.setItem(LOCAL_ONLY_KEY,'true'); LOCAL_ONLY=true; setConnected(false); setHomeMode(true); }
   }catch(e){ console.error('restore',e); showToast(friendlyFirebaseError(e)); }
 }
 
@@ -1390,12 +1764,12 @@ function listenForConnections(){
     if(!initialLoadDone){
       initialLoadDone = true;
       knownConnectionUids = currentUids;
-      // अगर localStorage साफ़ हो गया पर Firebase में connection पड़ा है, तो पहला वाला auto-select करो
-      if(!partnerUid && currentUids.size > 0){
-        const firstUid = currentUids.values().next().value;
-        const data = snap.child(firstUid).val();
-        if(data && data.uid) handleNewConnection(firstUid, data, true);
-      }
+      currentUids.forEach(uid=>{
+        const data=snap.child(uid).val();
+        if(data && data.uid && data.uid!==me.uid) chatProfiles.set(uid,{...data,uid});
+      });
+      renderChatList();
+      refreshChatProfiles();
       return;
     }
 
@@ -1420,8 +1794,11 @@ async function handleNewConnection(uid, data, silent){
     uid: uid,
     name: data.name || 'Friend',
     email: data.email || '',
-    picture: data.picture || null
+    picture: data.picture || null,
+    online: !!data.online
   };
+  chatProfiles.set(uid,partner);
+  renderChatList();
 
   if(partnerUid === uid) return;
 
@@ -1434,13 +1811,20 @@ async function handleNewConnection(uid, data, silent){
   addSystem('Connected with ' + partner.name);
   render();
   if(!silent) showToast('Connected with ' + partner.name);
+  refreshChatProfiles();
 }
 
 function showProfilePreview(target,opts){pendingConnectTarget={target,opts:opts||{}};profilePreviewName.textContent=target.name||'ConvoLink user';profilePreviewEmail.textContent=target.email||'ConvoLink user';profilePreviewUid.textContent=target.uid||'';profilePreviewAvatar.innerHTML=target.picture?'<img src="'+esc(target.picture)+'" alt="">':initials(target.name);profilePreviewModal.classList.add('open');}
 function closeProfilePreview(){profilePreviewModal.classList.remove('open');pendingConnectTarget=null;}
 async function finishProfileConnection(){const p=pendingConnectTarget;if(!p)return;closeProfilePreview();await connectToId(p.target.uid,{...(p.opts||{}),skipPreview:true});}
 async function previewTargetByUid(uid,opts){uid=String(uid||'').trim();if(!signedIn()){showToast('Please sign in with Google first');return;}if(!uid){showToast('Please enter a Firebase UID');return;}if(uid===me.uid){showToast("That's your own Firebase UID!");return;}setStatus('connecting','Finding user…');try{const snap=await db.ref('users/'+uid).once('value');const t=snap.val();if(!t){showToast('User not found — check the Firebase UID');setStatus('','Ready');return;}setStatus('','Ready');showProfilePreview({id:t.id||uid,uid,name:t.name||'ConvoLink user',email:t.email||'',picture:t.picture||null},opts);}catch(e){setStatus('','Ready');showToast('Could not find user: '+friendlyFirebaseError(e));}}
-async function connectToId(uid,opts){opts=opts||{};uid=String(uid||'').trim();if(!signedIn()){showToast('Please sign in with Google first');return;}if(!uid){showToast('Please enter a Firebase UID');return;}if(uid===me.uid){showToast("That's your own Firebase UID!");return;}if(uid===partnerUid){showToast('Already connected');return;}setStatus('connecting','Connecting securely…');try{const snap=await db.ref('users/'+uid).once('value');const target=snap.val();if(!target){showToast('User not found — check the Firebase UID');setStatus('','Ready');return;}if(!opts.skipPreview){setStatus('','Ready');showProfilePreview({id:target.id||uid,uid,name:target.name||'ConvoLink user',email:target.email||'',picture:target.picture||null},opts);return;}const now=firebase.database.ServerValue.TIMESTAMP;const myProfile={id:me.id,uid:me.uid,name:me.name||'Google User',email:me.email||'',picture:me.picture||null};const other={id:target.id||uid,uid,name:target.name||'Friend',email:target.email||'',picture:target.picture||null};const updates={};updates[`connections/${me.uid}/${uid}`]={...other,connectedAt:now};updates[`connections/${uid}/${me.uid}`]={...myProfile,connectedAt:now};await db.ref().update(updates);await selectPartner(other);addSystem(`Connected with ${other.name}`);render();setStatus('','Ready');showToast(`Connected with ${other.name}`);if(opts.fromQR)closeScanModal();else closeConnectModal();}catch(e){console.error('connectToId',e);setStatus('','Ready');showToast('Connection failed: '+friendlyFirebaseError(e));}}
+async function connectToId(uid,opts){opts=opts||{};uid=String(uid||'').trim();if(!signedIn()){showToast('Please sign in with Google first');return;}if(!uid){showToast('Please enter a Firebase UID');return;}if(uid===me.uid){showToast("That's your own Firebase UID!");return;}if(uid===partnerUid){showToast('Already connected');return;}setStatus('connecting','Connecting securely…');try{const snap=await db.ref('users/'+uid).once('value');const target=snap.val();if(!target){showToast('User not found — check the Firebase UID');setStatus('','Ready');return;}if(!opts.skipPreview){setStatus('','Ready');showProfilePreview({id:target.id||uid,uid,name:target.name||'ConvoLink user',email:target.email||'',picture:target.picture||null},opts);return;}const now=firebase.database.ServerValue.TIMESTAMP;const myProfile={id:me.id,uid:me.uid,name:me.name||'Google User',email:me.email||'',picture:me.picture||null};const other={id:target.id||uid,uid,name:target.name||'Friend',email:target.email||'',picture:target.picture||null};const updates={};updates[`connections/${me.uid}/${uid}`]={...other,connectedAt:now};updates[`connections/${uid}/${me.uid}`]={...myProfile,connectedAt:now};await db.ref().update(updates);
+    chatProfiles.set(other.uid,{...other,online:!!target.online,latest:null,unread:0});
+    await loadLatestForProfile(chatProfiles.get(other.uid));
+    await selectPartner(other); addSystem(`Connected with ${other.name}`);
+    renderChatList(); setHomeMode(true); setStatus('','Ready');
+    showToast(`Connected with ${other.name}`);
+    if(opts.fromQR)closeScanModal();else closeConnectModal();}catch(e){console.error('connectToId',e);setStatus('','Ready');showToast('Connection failed: '+friendlyFirebaseError(e));}}
 connectConfirm.addEventListener('click',()=>previewTargetByUid(connectInput.value));
 connectInput.addEventListener('keydown',e=>{if(e.key==='Enter')connectConfirm.click();});
 
@@ -1557,6 +1941,42 @@ document.addEventListener('visibilitychange', ()=>{
   db.ref('messages/'+key).once('value').then(snap=>{ snap.forEach(child=>{ const m=child.val(); if(m && m.from!==me.uid && m.status!=='read'){ db.ref('messages/'+key+'/'+child.key+'/status').set('read').catch(()=>{}); } }); }).catch(()=>{});
 });
 
+
+const chatClearAllBtn=$('chatClearAllBtn');
+const clearChatsConfirmModal=$('clearChatsConfirmModal');
+const clearChatsConfirm=$('clearChatsConfirm');
+const clearChatsCancel=$('clearChatsCancel');
+const clearChatsConfirmClose=$('clearChatsConfirmClose');
+
+function openClearChatsConfirm(){
+  if(homeMode || !partnerUid){showToast('Open a chat first');return;}
+  if(!signedIn()){showToast('Please sign in with Google first');return;}
+  clearChatsConfirmModal.classList.add('open');
+}
+function closeClearChatsConfirm(){clearChatsConfirmModal.classList.remove('open');}
+chatClearAllBtn?.addEventListener('click',openClearChatsConfirm);
+clearChatsCancel?.addEventListener('click',closeClearChatsConfirm);
+clearChatsConfirmClose?.addEventListener('click',closeClearChatsConfirm);
+clearChatsConfirmModal?.addEventListener('click',e=>{if(e.target===clearChatsConfirmModal)closeClearChatsConfirm();});
+clearChatsConfirm?.addEventListener('click',async()=>{
+  if(homeMode || !partnerUid){closeClearChatsConfirm();return;}
+  try{
+    stopCurrentAudio();
+    const key=chatKey(me.uid,partnerUid);
+    await db.ref('messages/'+key).remove();
+    await db.ref('typing/'+key).remove().catch(()=>{});
+    localStorage.removeItem(MSG_KEY);
+    localStorage.removeItem(messageCacheKey());
+    render();
+    closeClearChatsConfirm();
+    showToast('All messages cleared');
+  }catch(e){
+    console.error(e);
+    closeClearChatsConfirm();
+    showToast('Failed to clear: '+friendlyFirebaseError(e));
+  }
+});
+
 sendBtn.addEventListener('click',send);
 msgInput.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send();}});
 msgInput.addEventListener('input', emitTyping);
@@ -1634,7 +2054,7 @@ function drawMyQR(){
   try{const ok=QRLite.toCanvas(qrCanvas,QR_PREFIX+uid,{width:240,margin:4,color:{dark:'#1f2430',light:'#ffffff'}});if(!ok)showToast('QR generation failed');}
   catch(e){console.error(e);showToast('QR generation failed');}
 }
-$('menuShowQR').addEventListener('click',()=>{closeDrawer();if(!signedIn()){showToast('Please sign in with Google first');return;}getFirebaseUid();qrShowModal.classList.add('open');setTimeout(drawMyQR,60);});
+
 qrShowClose.addEventListener('click',()=>qrShowModal.classList.remove('open'));qrShowModal.addEventListener('click',e=>{if(e.target===qrShowModal)qrShowModal.classList.remove('open');});
 async function copyText(text){try{await navigator.clipboard.writeText(text);}catch{const ta=document.createElement('textarea');ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);}}
 qrCopyId.addEventListener('click',async()=>{const uid=getFirebaseUid();if(!uid)return;await copyText(uid);showToast('Firebase UID copied');});
@@ -1657,7 +2077,7 @@ function stopScanner(){scanActive=false;if(scanRAF){cancelAnimationFrame(scanRAF
 function showFallback(msg){fallbackMsg.textContent=msg;scannerFallback.classList.add('show');}
 function openScanModal(){closeDrawer();if(!signedIn()){showToast('Please sign in with Google first');return;}qrScanModal.classList.add('open');setTimeout(startScanner,300);}
 function closeScanModal(){stopScanner();qrScanModal.classList.remove('open');scannerStatus.textContent='Opening camera…';scannerStatus.className='scanner-status';scannerFallback.classList.remove('show');}
-$('menuScanQR').addEventListener('click',openScanModal);qrScanClose.addEventListener('click',closeScanModal);scanCancelBtn.addEventListener('click',closeScanModal);scanRetryBtn.addEventListener('click',()=>{stopScanner();setTimeout(startScanner,250);});qrScanModal.addEventListener('click',e=>{if(e.target===qrScanModal)closeScanModal();});fallbackPickBtn.addEventListener('click',()=>qrImageInput.click());
+qrScanClose.addEventListener('click',closeScanModal);scanCancelBtn.addEventListener('click',closeScanModal);scanRetryBtn.addEventListener('click',()=>{stopScanner();setTimeout(startScanner,250);});qrScanModal.addEventListener('click',e=>{if(e.target===qrScanModal)closeScanModal();});fallbackPickBtn.addEventListener('click',()=>qrImageInput.click());
 qrImageInput.addEventListener('change',e=>{const f=e.target.files&&e.target.files[0];qrImageInput.value='';if(!f)return;scannerStatus.textContent='Reading image…';scannerStatus.className='scanner-status';const rd=new FileReader();rd.onload=()=>{const img=new Image();img.onload=()=>{const c=document.createElement('canvas');c.width=img.naturalWidth;c.height=img.naturalHeight;const ctx=c.getContext('2d',{willReadFrequently:true});ctx.drawImage(img,0,0);const data=ctx.getImageData(0,0,c.width,c.height);if(typeof jsQR==='undefined'){scannerStatus.textContent='QR reader not loaded';scannerStatus.classList.add('error');return;}const code=jsQR(data.data,c.width,c.height,{inversionAttempts:'attemptBoth'});if(code?.data)handleScanned(code.data);else{scannerStatus.textContent='No QR code found in that image.';scannerStatus.classList.add('error');}};img.onerror=()=>{scannerStatus.textContent='Could not read the image.';scannerStatus.classList.add('error');};img.src=rd.result;};rd.readAsDataURL(f);});
 
 async function copyMyId(){ const id=(signedIn() ? (me?.uid || getFirebaseUid()) : null); if(!id){showToast('Please sign in with Google first');return;} await copyText(id);showToast('Firebase UID copied'); }
@@ -1671,20 +2091,6 @@ async function shareMyProfile(){if(!me)return;const text=`ConvoLink profile\nNam
 profilePhotoBtn?.addEventListener('click',()=>profilePhotoInput?.click());
 profilePhotoInput?.addEventListener('change',async e=>{const file=e.target.files?.[0];e.target.value='';if(!file)return;if(!file.type.startsWith('image/')){showToast('Please choose an image');return}if(file.size>8*1024*1024){showToast('Photo is too large. Choose an image under 8 MB.');return}try{profilePhotoHint.textContent='Preparing photo…';const data=await resizeProfileImage(file,360);pendingProfilePhoto=data;myProfileAvatar.innerHTML='<img src="'+esc(data)+'" alt="">';profilePhotoHint.textContent='New photo selected. Tap Save changes to keep it.';showToast('Profile photo ready')}catch(err){console.error(err);profilePhotoHint.textContent='Could not prepare that photo.';showToast('Could not load photo')}});
 $('menuProfile').addEventListener('click',openMyProfile);$('myProfileClose').addEventListener('click',()=>myProfileModal.classList.remove('open'));$('profileEditCancel').addEventListener('click',()=>myProfileModal.classList.remove('open'));$('profileEditSave').addEventListener('click',saveMyProfile);$('profileCopyUid').addEventListener('click',copyMyId);$('profileMyQr').addEventListener('click',()=>{myProfileModal.classList.remove('open');if(signedIn()){qrShowModal.classList.add('open');setTimeout(drawMyQR,60);}});$('profileShare').addEventListener('click',shareMyProfile);myProfileModal.addEventListener('click',e=>{if(e.target===myProfileModal)myProfileModal.classList.remove('open');});profilePreviewConnect.addEventListener('click',finishProfileConnection);$('profilePreviewClose').addEventListener('click',closeProfilePreview);$('profilePreviewCancel').addEventListener('click',closeProfilePreview);profilePreviewModal.addEventListener('click',e=>{if(e.target===profilePreviewModal)closeProfilePreview();});$('profilePreviewCopy').addEventListener('click',async()=>{if(pendingConnectTarget?.target?.uid){await copyText(pendingConnectTarget.target.uid);showToast('UID copied');}});$('profilePreviewShare').addEventListener('click',async()=>{const t=pendingConnectTarget?.target;if(!t)return;const text=`ConvoLink profile\nName: ${t.name}\nUID: ${t.uid}`;try{if(navigator.share)await navigator.share({title:'ConvoLink Profile',text});else{await copyText(text);showToast('Profile copied');}}catch(e){}});
-
-$('menuClearChats').addEventListener('click', async ()=>{
-  closeDrawer();
-  if(!signedIn()){ showToast('Please sign in with Google first'); return; }
-  if(!confirm('Clear ALL chats? All messages will be permanently deleted.')) return;
-  try{
-    stopCurrentAudio();
-    if(partnerUid){ await db.ref('messages/'+chatKey(me.uid,partnerUid)).remove(); await db.ref('typing/'+chatKey(me.uid,partnerUid)).remove().catch(()=>{}); }
-    Object.keys(localStorage).forEach(k=>{ if(k===MSG_KEY || k.startsWith(MSG_KEY+'_')) localStorage.removeItem(k); });
-    render();
-    showToast('All chats cleared');
-  }catch(e){ console.error(e); showToast('Failed to clear: '+friendlyFirebaseError(e)); }
-});
-
 $('menuReset').addEventListener('click',async()=>{
   if(!me){showToast('Nothing to reset');return;}
   stopScanner();
@@ -1707,7 +2113,7 @@ if(firebaseReady && auth){
       if(user){
         await ensureUserProfile(user);
         listenForIncomingCalls();
-        paintMe();setConnected(false);render();
+        paintMe();setConnected(false);render(); loadCallHistory();
         // Register browser push notifications for incoming calls.
         setupCallNotifications();
         showToast('Signed in · Firebase UID ready');
@@ -1926,7 +2332,7 @@ async function startWebRTCCall(type){
   if(currentCallId||peerConnection){showToast('A call is already active');return;}
   if(!window.RTCPeerConnection){showToast('WebRTC is not supported in this browser');return;}
   if(!window.isSecureContext){showToast('Calls require HTTPS (or localhost)');return;}
-  currentCallType=type;currentCallRole='caller';callEnding=false;pendingRemoteCandidates=[];remoteDescriptionReady=false;
+  currentCallType=type;currentCallRole='caller';callEnding=false;callStartedAt=Date.now();callHistoryWritten=false;callPeerPicture=chatProfiles.get(partnerUid)?.picture||null;pendingRemoteCandidates=[];remoteDescriptionReady=false;
   try{
     setStatus('connecting','Starting '+(type==='video'?'video':'voice')+' call…');
     localStream=await getCallMedia(type);
@@ -2001,8 +2407,8 @@ async function acceptIncomingCall(){
   const callId=incoming.callId,data=incoming.data;
   stopCallTone();
   if(currentCallId||peerConnection){showToast('You are already on a call');return;}
-  currentCallId=callId;currentCallType=data.type==='video'?'video':'voice';currentCallRole='callee';callEnding=false;pendingRemoteCandidates=[];remoteDescriptionReady=false;
-  partnerUid=data.callerUid;partnerName=data.callerName||'Friend';partnerId=data.callerUid;
+  currentCallId=callId;currentCallType=data.type==='video'?'video':'voice';currentCallRole='callee';callEnding=false;callStartedAt=Date.now();callHistoryWritten=false;pendingRemoteCandidates=[];remoteDescriptionReady=false;
+  partnerUid=data.callerUid;partnerName=data.callerName||'Friend';partnerId=data.callerUid;callPeerPicture=data.callerPicture||null;
   try{
     setStatus('connecting','Answering '+partnerName+'…');
     localStream=await getCallMedia(currentCallType);localVideo.srcObject=localStream;localVideo.muted=true;
@@ -2027,7 +2433,18 @@ async function rejectIncomingCall(){
   const incoming=incomingCallData;if(!incoming)return;
   stopCallTone();
   incomingCallData=null;incomingCallModal.classList.remove('open');
-  try{await db.ref('calls/'+incoming.callId+'/status').set('rejected');}catch(e){console.warn(e);}
+  try{
+    await db.ref('calls/'+incoming.callId+'/status').set('rejected');
+    if(me?.uid && incoming.data?.callerUid){
+      await db.ref('callHistory/'+me.uid).push({
+        peerUid:incoming.data.callerUid, name:incoming.data.callerName||'Friend',
+        picture:incoming.data.callerPicture||null, type:incoming.data.type==='video'?'video':'voice',
+        direction:'incoming', status:'rejected', startedAt:Number(incoming.data.createdAt)||Date.now(),
+        endedAt:Date.now(), durationSec:0
+      });
+    }
+  }catch(e){console.warn(e);}
+  if(homeMode) loadCallHistory();
 }
 async function endWebRTCCall(reason='ended',updateRemote=true){
   if(callEnding)return;callEnding=true;
@@ -2035,13 +2452,33 @@ async function endWebRTCCall(reason='ended',updateRemote=true){
   clearReconnectTimers();
   stopCallHeartbeat();
   const id=currentCallId,ref=currentCallRef;
+  const historyUid=me?.uid, historyPeerUid=partnerUid, historyPeerName=partnerName||'Friend';
+  const historyType=currentCallType==='video'?'video':'voice';
+  const historyDirection=currentCallRole==='callee'?'incoming':'outgoing';
+  const historyStarted=callStartedAt||Date.now();
+  const historyEnded=Date.now();
+  const historyDuration=Math.max(0,Math.floor((historyEnded-historyStarted)/1000));
+  const historyStatus=reason==='rejected'?'rejected':(reason==='failed'?'missed':'completed');
+  if(historyUid && historyPeerUid && !callHistoryWritten){
+    callHistoryWritten=true;
+    try{
+      await db.ref('callHistory/'+historyUid).push({
+        peerUid:historyPeerUid, name:historyPeerName,
+        picture:callPeerPicture||null,
+        type:historyType, direction:historyDirection,
+        status:historyStatus, startedAt:historyStarted,
+        endedAt:historyEnded, durationSec:historyDuration
+      });
+    }catch(e){console.warn('call history write',e);}
+  }
   clearCallListeners();stopCallTimer();closePeerConnection();stopLocalMedia();
   if(updateRemote&&ref&&id){ try{await ref.child('status').set(reason==='rejected'?'rejected':reason==='failed'?'ended':'ended');}catch(e){console.warn('call end update',e);} }
   if(activeCallPath){try{await db.ref(activeCallPath).remove();}catch{}}
   activeCallPath=null;closeCallUI();
   currentCallId=null;currentCallType=null;currentCallRole=null;currentCallSignalingStatus=null;currentCallRef=null;currentCallerCandidatesRef=null;currentCalleeCandidatesRef=null;pendingRemoteCandidates=[];remoteDescriptionReady=false;lastRemoteOfferSdp='';lastRemoteAnswerSdp='';callEnding=false;
   setStatus('',partnerUid?'Ready · '+partnerName:'Ready');
-  if(id){clearTimeout(callCleanupTimer);callCleanupTimer=setTimeout(()=>{db.ref('calls/'+id).remove().catch(()=>{});},7000);}
+  callStartedAt=0; callPeerPicture=null;
+  if(homeMode && document.querySelector('[data-home-tab="calls"]')?.classList.contains('active')) loadCallHistory();
 }
 async function switchCallCamera(){
   if(currentCallType!=='video' || !localStream) return;
@@ -2143,6 +2580,7 @@ window.addEventListener('beforeunload',()=>{ try{if(currentCallRef&&currentCallI
 window.addEventListener('error',e=>{console.error('ConvoLink error',e.error||e.message);});
 window.addEventListener('unhandledrejection',e=>console.error('ConvoLink rejection',e.reason));
 render();
+setHomeMode(true);
 </script>
 </body>
 </html>
