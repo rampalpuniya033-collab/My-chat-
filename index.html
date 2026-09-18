@@ -286,6 +286,19 @@
   .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
   .toast svg { width: 15px; height: 15px; color: var(--green); flex-shrink: 0; }
   .hidden { display: none !important; }
+.clear-everyone-option{display:flex;align-items:flex-start;gap:10px;text-align:left;background:#f6f8fc;border:1px solid #e2e7ef;border-radius:13px;padding:11px 12px;cursor:pointer}
+.clear-everyone-option input{width:18px;height:18px;accent-color:var(--brand);flex:none;margin-top:1px;cursor:pointer}
+.clear-everyone-option b{display:block;font-size:12.5px;color:var(--ink)}
+.clear-everyone-option small{display:block;font-size:10.5px;line-height:1.4;color:var(--muted);margin-top:2px}
+.app-confirm-modal{text-align:center;max-width:370px;padding:26px 22px 20px}
+.app-confirm-modal .confirm-icon{width:58px;height:58px;margin:2px auto 13px;border-radius:18px;display:grid;place-items:center}
+.app-confirm-modal .confirm-icon svg{width:25px;height:25px}
+.app-confirm-modal .danger-icon{background:#fff0f1;color:#d9434d;border:1px solid #f4d7da}
+.app-confirm-modal h3{font-size:18px;letter-spacing:-.2px;margin-bottom:7px}
+.app-confirm-modal p{font-size:12.5px;line-height:1.55;color:var(--muted);margin:0 auto 19px;max-width:285px}
+.app-confirm-actions{display:flex;gap:10px}.app-confirm-actions button{flex:1;min-height:44px;border-radius:13px;font:700 13px inherit;cursor:pointer}
+.confirm-secondary{background:#f4f6f9;color:var(--ink-2);border:1px solid #e1e6ee}
+.confirm-danger{background:#e64751;color:#fff;border:1px solid #e64751;box-shadow:0 7px 18px rgba(230,71,81,.20)}
 
   /* ===== WEBRTC CALL UI ===== */
   .call-overlay{position:fixed;inset:0;background:rgba(8,12,22,.94);display:none;align-items:center;justify-content:center;z-index:500;padding:16px}
@@ -577,6 +590,10 @@ html,body{background:linear-gradient(145deg,#f7f9fc 0%,#eef3f9 100%);color:var(-
 .home-nav-btn{border:0;background:transparent;color:#788396;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font:600 10px inherit;cursor:pointer;border-radius:12px}
 .home-nav-btn svg{width:21px;height:21px;stroke-width:2}.home-nav-btn.active{color:#3157a6}.home-nav-btn.active .nav-icon{background:#e7efff;border-radius:15px;padding:4px;width:36px;height:28px;display:grid;place-items:center}.nav-icon{display:grid;place-items:center;width:36px;height:28px}
 .app.chat-mode .home-view{display:none}
+/* Refresh-safe boot state: the Home screen is the default until a user explicitly opens a chat. */
+.app:not(.chat-mode) .home-view{display:flex}
+.app:not(.chat-mode) .messages,.app:not(.chat-mode) .input-bar,.app:not(.chat-mode) .recording-bar,.app:not(.chat-mode) .attach-preview{display:none!important}
+.app:not(.chat-mode) .main-signin{display:none!important}
 .app.chat-mode .main-signin{display:none}
 .home-back{display:none}
 .app.chat-mode .home-back{display:flex}
@@ -757,7 +774,7 @@ html,body{background:linear-gradient(145deg,#f7f9fc 0%,#eef3f9 100%);color:var(-
 </head>
 <body>
 
-<div class="app">
+<div class="app home-mode">
   <header class="topbar">
     <button class="menu-btn" id="menuBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
     <button class="menu-btn home-back" id="homeBackBtn" title="Back to chats" aria-label="Back to chats"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/><path d="M9 12h11"/></svg></button>
@@ -1014,13 +1031,17 @@ html,body{background:linear-gradient(145deg,#f7f9fc 0%,#eef3f9 100%);color:var(-
     <div style="width:56px;height:56px;margin:4px auto 12px;border-radius:18px;background:#fff5d9;color:#ad7a00;display:grid;place-items:center;">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M9 6V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/></svg>
     </div>
-    <h3 style="font-size:17px;margin-bottom:7px;">Clear all chats?</h3>
-    <p style="font-size:12.5px;color:var(--muted);line-height:1.55;margin-bottom:18px;">
-      All messages in this chat will be permanently deleted. This action cannot be undone.
+    <h3 style="font-size:17px;margin-bottom:7px;">Clear this chat?</h3>
+    <p style="font-size:12.5px;color:var(--muted);line-height:1.55;margin-bottom:12px;">
+      Choose whether to clear the messages only for you or for both people.
     </p>
-    <div style="display:flex;gap:10px;">
+    <label class="clear-everyone-option">
+      <input id="clearChatsEveryone" type="checkbox">
+      <span><b>Delete for everyone</b><small>Also remove these messages from the other person's chat.</small></span>
+    </label>
+    <div style="display:flex;gap:10px;margin-top:14px;">
       <button id="clearChatsCancel" type="button" style="flex:1;padding:12px;border-radius:12px;font-size:13px;font-weight:700;cursor:pointer;background:#f5f6fa;color:var(--ink-2);border:1px solid var(--line);">Cancel</button>
-      <button id="clearChatsConfirm" type="button" style="flex:1;padding:12px;border-radius:12px;font-size:13px;font-weight:700;cursor:pointer;background:#d9a900;color:#fff;border:none;">Delete all</button>
+      <button id="clearChatsConfirm" type="button" style="flex:1;padding:12px;border-radius:12px;font-size:13px;font-weight:700;cursor:pointer;background:#d9a900;color:#fff;border:none;">Clear chat</button>
     </div>
   </div>
 </div>
@@ -1089,6 +1110,24 @@ html,body{background:linear-gradient(145deg,#f7f9fc 0%,#eef3f9 100%);color:var(-
 <div class="profile-share-row"><button id="profileCopyUid">Copy UID</button><button id="profileMyQr">My QR</button><button id="profileShare">Share profile</button></div><div class="profile-edit-actions"><button class="cancel" id="profileEditCancel">Close</button><button class="save" id="profileEditSave">Save changes</button></div></div></div>
 <!-- Message actions -->
 <div class="msg-action-pop" id="msgActionPop"><button id="msgEditAction"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m4 20 4.5-1 10.8-10.8a2.1 2.1 0 0 0-3-3L5.5 16z"/><path d="M13.5 6.5 17.5 10.5"/></svg>Edit message</button><button id="msgDeleteMeAction"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16"/><path d="M9 7V4h6v3"/><path d="M7 7l1 13h8l1-13"/></svg>Delete for me</button><button class="danger" id="msgDeleteEveryoneAction"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16"/><path d="M9 7V4h6v3"/><path d="M7 7l1 13h8l1-13"/></svg>Delete for everyone</button></div>
+<!-- Professional message action confirmation -->
+<div class="modal-overlay" id="messageConfirmModal">
+  <div class="modal app-confirm-modal">
+    <button class="m-close" id="messageConfirmClose" type="button" aria-label="Close">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <div class="confirm-icon danger-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16"/><path d="M9 7V4h6v3"/><path d="M7 7l1 13h8l1-13"/></svg>
+    </div>
+    <h3 id="messageConfirmTitle">Delete message?</h3>
+    <p id="messageConfirmText">This message will be deleted for everyone.</p>
+    <div class="app-confirm-actions">
+      <button id="messageConfirmCancel" type="button" class="confirm-secondary">Cancel</button>
+      <button id="messageConfirmOk" type="button" class="confirm-danger">Delete</button>
+    </div>
+  </div>
+</div>
+
 <!-- Image Preview -->
 <div class="img-modal" id="imgModal">
   <button class="close" id="imgClose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
@@ -2203,18 +2242,27 @@ async function selectPartner(p){
 }
 async function restoreConnection(){
   if(!signedIn()) return;
+  /* A page refresh must always land on Home. The previous active chat is not an
+     application boot target; the user can open it explicitly from the chat list. */
   const savedUid=localStorage.getItem(PARTNER_KEY);
-  if(!savedUid || savedUid===me.uid || savedUid.startsWith('CL-')) { LOCAL_ONLY=true; setConnected(false); return; }
+  localStorage.removeItem(PARTNER_KEY);
+  localStorage.setItem(LOCAL_ONLY_KEY,'true');
+  partnerId=null; partnerUid=null; partnerName='Friend'; LOCAL_ONLY=true;
+  setConnected(false);
+  setHomeMode(true);
+
+  /* Keep the saved profile available in Home when it still exists, without
+     reopening its conversation. */
+  if(!savedUid || savedUid===me.uid || savedUid.startsWith('CL-')) return;
   try{
     const c=await db.ref(`connections/${me.uid}/${savedUid}`).once('value');
     if(c.exists()){
       const profile=c.val();
       chatProfiles.set(profile.uid,{...profile});
       await loadLatestForProfile(chatProfiles.get(profile.uid));
-      setConnected(false);
-      setHomeMode(true);
-    } else { localStorage.removeItem(PARTNER_KEY); localStorage.setItem(LOCAL_ONLY_KEY,'true'); LOCAL_ONLY=true; setConnected(false); setHomeMode(true); }
-  }catch(e){ console.error('restore',e); showToast(friendlyFirebaseError(e)); }
+      renderChatList();
+    }
+  }catch(e){ console.warn('restore home profile',e); }
 }
 
 function listenForConnections(){
@@ -2274,6 +2322,14 @@ async function handleNewConnection(uid, data, silent){
     return;
   }
 
+  /* New connections belong on Home. Never force the user into a chat as a side effect
+     of the realtime connection listener (especially during/after a refresh). */
+  if(homeMode || !partnerUid){
+    renderChatList();
+    if(!silent) showToast(partner.name + ' connected with you');
+    refreshChatProfiles();
+    return;
+  }
   await selectPartner(partner);
   addSystem('Connected with ' + partner.name);
   render();
@@ -2500,31 +2556,48 @@ const clearChatsConfirmClose=$('clearChatsConfirmClose');
 function openClearChatsConfirm(){
   if(homeMode || !partnerUid){showToast('Open a chat first');return;}
   if(!signedIn()){showToast('Please sign in with Google first');return;}
+  if(clearChatsEveryone) clearChatsEveryone.checked=false;
   clearChatsConfirmModal.classList.add('open');
 }
-function closeClearChatsConfirm(){clearChatsConfirmModal.classList.remove('open');}
+function closeClearChatsConfirm(){clearChatsConfirmModal.classList.remove('open');if(clearChatsEveryone)clearChatsEveryone.checked=false;}
 chatClearAllBtn?.addEventListener('click',openClearChatsConfirm);
 clearChatsCancel?.addEventListener('click',closeClearChatsConfirm);
 clearChatsConfirmClose?.addEventListener('click',closeClearChatsConfirm);
 clearChatsConfirmModal?.addEventListener('click',e=>{if(e.target===clearChatsConfirmModal)closeClearChatsConfirm();});
+const clearChatsEveryone=$('clearChatsEveryone');
+function resetClearChatsChoice(){ if(clearChatsEveryone) clearChatsEveryone.checked=false; }
 clearChatsConfirm?.addEventListener('click',async()=>{
   if(homeMode || !partnerUid){closeClearChatsConfirm();return;}
   try{
     stopCurrentAudio();
     const key=chatKey(me.uid,partnerUid);
-    await db.ref('messages/'+key).remove();
-    await db.ref('typing/'+key).remove().catch(()=>{});
-    localStorage.removeItem(MSG_KEY);
-    localStorage.removeItem(messageCacheKey());
+    const all=getMsgs().filter(m=>m && m._key);
+    const deleteEveryone=!!clearChatsEveryone?.checked;
+    if(deleteEveryone){
+      await db.ref('messages/'+key).remove();
+      await db.ref('typing/'+key).remove().catch(()=>{});
+      localStorage.removeItem(messageCacheKey());
+      showToast('Chat cleared for everyone');
+    }else{
+      /* Delete only for this user: preserve the shared Firebase messages and
+         mark every current message hidden under this user's own UID. */
+      const updates={};
+      all.forEach(m=>{updates[m._key]=true;hiddenMessageKeys.add(m._key);});
+      if(Object.keys(updates).length) await db.ref('hiddenMessages/'+me.uid+'/'+key).update(updates);
+      localStorage.setItem(messageCacheKey(),JSON.stringify(all.map(m=>({...m,_hiddenForMe:true}))));
+      showToast('Chat cleared for you');
+    }
+    resetClearChatsChoice();
     render();
     closeClearChatsConfirm();
-    showToast('All messages cleared');
   }catch(e){
     console.error(e);
+    resetClearChatsChoice();
     closeClearChatsConfirm();
     showToast('Failed to clear: '+friendlyFirebaseError(e));
   }
 });
+clearChatsConfirmModal?.addEventListener('transitionend',()=>{});
 
 sendBtn.addEventListener('click',()=>{ playSendTap(); send(); });
 msgInput.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send();}});
@@ -2534,7 +2607,26 @@ function closeMessageActions(){msgActionPop.classList.remove('open');activeMessa
 function openMessageActions(msgEl){const key=msgEl?.dataset.msgKey;if(!key)return;const m=getMsgs().find(x=>x._key===key);if(!m)return;activeMessageAction=m;const mine=(m.from===me.uid||m.from===me.id);msgEditAction.style.display=mine&&!m.media?'flex':'none';msgDeleteEveryoneAction.style.display=mine?'flex':'none';const r=msgEl.getBoundingClientRect();msgActionPop.style.left=Math.min(Math.max(8,r.right-178),window.innerWidth-188)+'px';msgActionPop.style.top=Math.min(window.innerHeight-170,r.bottom+6)+'px';msgActionPop.classList.add('open');}
 async function editActiveMessage(){const m=activeMessageAction;closeMessageActions();if(!m||!m._key||!partnerUid||m.media)return;const next=prompt('Edit message',m.text||'');if(next===null)return;const text=next.trim();if(!text){showToast('Message cannot be empty');return;}try{await db.ref('messages/'+chatKey(me.uid,partnerUid)+'/'+m._key).update({text,edited:true,editedAt:firebase.database.ServerValue.TIMESTAMP});showToast('Message edited');}catch(e){showToast('Edit failed: '+friendlyFirebaseError(e));}}
 async function deleteMessageForMe(){const m=activeMessageAction;closeMessageActions();if(!m||!m._key)return;hiddenMessageKeys.add(m._key);const all=getMsgs().map(x=>x._key===m._key?{...x,_hiddenForMe:true}:x);localStorage.setItem(messageCacheKey(),JSON.stringify(all));render();if(signedIn()&&partnerUid){try{await db.ref('hiddenMessages/'+me.uid+'/'+chatKey(me.uid,partnerUid)+'/'+m._key).set(true);}catch(e){console.warn(e);}}showToast('Message deleted for you');}
-async function deleteMessageEveryone(){const m=activeMessageAction;closeMessageActions();if(!m||!m._key||!partnerUid||!(m.from===me.uid||m.from===me.id))return;if(!confirm('Delete this message for everyone?'))return;try{await db.ref('messages/'+chatKey(me.uid,partnerUid)+'/'+m._key).remove();showToast('Message deleted for everyone');}catch(e){showToast('Delete failed: '+friendlyFirebaseError(e));}}
+const messageConfirmModal=$('messageConfirmModal'),messageConfirmClose=$('messageConfirmClose'),messageConfirmCancel=$('messageConfirmCancel'),messageConfirmOk=$('messageConfirmOk'),messageConfirmTitle=$('messageConfirmTitle'),messageConfirmText=$('messageConfirmText');
+let pendingMessageDelete=null;
+function closeMessageConfirm(){messageConfirmModal?.classList.remove('open');pendingMessageDelete=null;}
+function openMessageDeleteConfirm(m){
+  pendingMessageDelete=m||null;
+  if(messageConfirmTitle)messageConfirmTitle.textContent='Delete message for everyone?';
+  if(messageConfirmText)messageConfirmText.textContent='This message will be removed from this chat for both people. This action cannot be undone.';
+  messageConfirmModal?.classList.add('open');
+}
+messageConfirmClose?.addEventListener('click',closeMessageConfirm);
+messageConfirmCancel?.addEventListener('click',closeMessageConfirm);
+messageConfirmModal?.addEventListener('click',e=>{if(e.target===messageConfirmModal)closeMessageConfirm();});
+messageConfirmOk?.addEventListener('click',async()=>{
+  const m=pendingMessageDelete;
+  closeMessageConfirm();
+  if(!m||!m._key||!partnerUid||!(m.from===me.uid||m.from===me.id))return;
+  try{await db.ref('messages/'+chatKey(me.uid,partnerUid)+'/'+m._key).remove();showToast('Message deleted for everyone');}
+  catch(e){showToast('Delete failed: '+friendlyFirebaseError(e));}
+});
+async function deleteMessageEveryone(){const m=activeMessageAction;closeMessageActions();if(!m||!m._key||!partnerUid||!(m.from===me.uid||m.from===me.id))return;openMessageDeleteConfirm(m);}
 let messageLongPressTimer=null, messageLongPressTriggered=false, messageLongPressTarget=null;
 function startMessageLongPress(e){
   const msg=e.target.closest('.msg');
@@ -2843,8 +2935,11 @@ function swapCallVideos(){
   renderCrop();
 }
 function openCallUI(type, status, picture){
+  callSpeakerOn=false;
+  callSpeakerBtn?.classList.remove('active');
   setCallMode(type); setCallPeerVisual(partnerName, picture||null); setCallStatus(status||'Connecting…');
   callModal.classList.add('open');
+  remoteVideo.muted=false; remoteVideo.volume=1; applyCallAudioRoute();
   inputBarMain.classList.add('hide');
   recordingBar.classList.remove('show');
 }
@@ -2891,7 +2986,60 @@ function closePeerConnection(){ if(peerConnection){ try{peerConnection.ontrack=n
 async function getCallMedia(type){
   if(!window.isSecureContext){ throw Object.assign(new Error('Secure context required'),{name:'SecurityError'}); }
   if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) throw new Error('getUserMedia is not supported');
-  return navigator.mediaDevices.getUserMedia({ audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true}, video:type==='video'?{facingMode:{ideal:preferredCameraFacing},width:{ideal:1280},height:{ideal:720}}:false });
+  const audio={
+    echoCancellation:{ideal:true},
+    noiseSuppression:{ideal:true},
+    autoGainControl:{ideal:true},
+    channelCount:{ideal:1},
+    sampleRate:{ideal:48000},
+    sampleSize:{ideal:16},
+    latency:{ideal:0.02}
+  };
+  const video=type==='video'?{
+    facingMode:{ideal:preferredCameraFacing},
+    width:{ideal:1280,max:1280},
+    height:{ideal:720,max:720},
+    frameRate:{ideal:30,max:30},
+    aspectRatio:{ideal:16/9}
+  }:false;
+  return navigator.mediaDevices.getUserMedia({audio,video});
+}
+function tuneCallSenders(){
+  if(!peerConnection)return;
+  peerConnection.getSenders().forEach(sender=>{
+    const track=sender.track;if(!track)return;
+    try{track.contentHint=track.kind==='video'?'motion':'speech';}catch{}
+    if(!sender.setParameters)return;
+    try{
+      const p=sender.getParameters()||{};
+      p.encodings=p.encodings&&p.encodings.length?p.encodings:[{}];
+      if(track.kind==='audio'){
+        p.encodings[0].maxBitrate=32000;
+      }else{
+        p.encodings[0].maxBitrate=2500000;
+        p.encodings[0].maxFramerate=30;
+        p.degradationPreference='maintain-resolution';
+      }
+      sender.setParameters(p).catch(()=>{});
+    }catch{}
+  });
+}
+async function requestHighQualityCodec(){
+  if(!peerConnection?.setCodecPreferences || !window.RTCRtpSender?.getCapabilities)return;
+  try{
+    const audioCaps=RTCRtpSender.getCapabilities('audio')?.codecs||[];
+    const videoCaps=RTCRtpSender.getCapabilities('video')?.codecs||[];
+    const preferOpus=audioCaps.filter(c=>String(c.mimeType||'').toLowerCase()==='audio/opus');
+    const restAudio=audioCaps.filter(c=>!preferOpus.includes(c));
+    const preferH264=videoCaps.filter(c=>String(c.mimeType||'').toLowerCase()==='video/h264');
+    const preferVp8=videoCaps.filter(c=>String(c.mimeType||'').toLowerCase()==='video/vp8');
+    const restVideo=videoCaps.filter(c=>!preferH264.includes(c)&&!preferVp8.includes(c));
+    peerConnection.getTransceivers().forEach(t=>{
+      const kind=t.sender?.track?.kind;
+      if(kind==='audio'&&preferOpus.length)t.setCodecPreferences([...preferOpus,...restAudio]);
+      if(kind==='video'&&(preferH264.length||preferVp8.length))t.setCodecPreferences([...(preferH264.length?preferH264:preferVp8),...(preferH264.length?preferVp8:[]),...restVideo]);
+    });
+  }catch(e){console.warn('codec preference',e);}
 }
 function mediaErrorMessage(err){
   if(err?.name==='NotAllowedError') return 'Microphone/camera permission was denied. Allow access in browser settings.';
@@ -2944,7 +3092,7 @@ async function startWebRTCCall(type){
     await currentCallRef.set({callerUid:me.uid,callerName:me.name||'Google User',callerPicture:me.picture||null,calleeUid:partnerUid,calleeName:partnerName,type,status:'ringing',createdAt:firebase.database.ServerValue.TIMESTAMP,expiresAt:Date.now()+60000});
     currentCallSignalingStatus='ringing';
     await markActiveCall(true);
-    peerConnection=makePeerConnection(currentCallId,'caller');addLocalTracks();
+    peerConnection=makePeerConnection(currentCallId,'caller');addLocalTracks();await requestHighQualityCodec();tuneCallSenders();
     openCallUI(type,'Calling '+partnerName+'…');
     const offer=await peerConnection.createOffer();
     await peerConnection.setLocalDescription(offer);
@@ -3029,7 +3177,7 @@ async function acceptIncomingCall(){
     currentCallRef=db.ref('calls/'+callId);currentCallerCandidatesRef=currentCallRef.child('callerCandidates');currentCalleeCandidatesRef=currentCallRef.child('calleeCandidates');
     const snap=await currentCallRef.once('value');const call=snap.val();
     if(!call||call.status!=='ringing'||!call.offer)throw new Error('This call is no longer available');
-    peerConnection=makePeerConnection(callId,'callee');addLocalTracks();
+    peerConnection=makePeerConnection(callId,'callee');addLocalTracks();await requestHighQualityCodec();tuneCallSenders();
     openCallUI(currentCallType,'Connecting…',data.callerPicture||null);
     lastRemoteOfferSdp=call.offer.sdp||'';
     await peerConnection.setRemoteDescription(new RTCSessionDescription(call.offer));remoteDescriptionReady=true;await flushRemoteCandidates();listenCallerCandidates();
@@ -3188,7 +3336,19 @@ if(callStage){
 }
 callMuteBtn.addEventListener('click',()=>{ if(!localStream)return;const track=localStream.getAudioTracks()[0];if(!track)return;track.enabled=!track.enabled;const muted=!track.enabled;callMuteBtn.classList.toggle('active',muted);callMuteBtn.innerHTML=callIcon('mute',muted);callMuteBtn.title=muted?'Unmute microphone':'Mute microphone'; });
 callCameraBtn.addEventListener('click',()=>{ if(!localStream||currentCallType!=='video')return;const track=localStream.getVideoTracks()[0];if(!track)return;track.enabled=!track.enabled;const off=!track.enabled;callCameraBtn.classList.toggle('active',off);callCameraBtn.innerHTML=callIcon('camera',off);callCameraBtn.title=off?'Turn camera on':'Turn camera off'; });
-if(callSpeakerBtn)callSpeakerBtn.addEventListener('click',()=>{callSpeakerOn=!callSpeakerOn;callSpeakerBtn.classList.toggle('active',callSpeakerOn);callSpeakerBtn.title=callSpeakerOn?'Speaker on':'Speaker';try{if('setSinkId' in remoteVideo)remoteVideo.setSinkId('default').catch(()=>{});showToast(callSpeakerOn?'Speaker on':'Speaker off');}catch(e){showToast('Speaker control is handled by your device');}});
+async function applyCallAudioRoute(){
+  try{
+    /* Use the browser's explicit audio-output routing when available. On mobile
+       browsers without setSinkId, the OS/browser communication route remains in charge. */
+    if(typeof remoteVideo.setSinkId==='function'){
+      try{await remoteVideo.setSinkId({type:callSpeakerOn?'speaker':'communications'});}catch{try{await remoteVideo.setSinkId('default');}catch{}}
+    }
+    if('audioSession' in navigator){try{navigator.audioSession.type=callSpeakerOn?'playback':'play-and-record';}catch{}}
+    remoteVideo.volume=1;remoteVideo.muted=false;
+    await remoteVideo.play().catch(()=>{});
+  }catch(e){console.warn('audio route',e);}
+}
+if(callSpeakerBtn)callSpeakerBtn.addEventListener('click',async()=>{callSpeakerOn=!callSpeakerOn;callSpeakerBtn.classList.toggle('active',callSpeakerOn);callSpeakerBtn.title=callSpeakerOn?'Speaker on':'Speaker off';await applyCallAudioRoute();showToast(callSpeakerOn?'Speaker on':'Speaker off');});
 callEndBtn.addEventListener('click',()=>endWebRTCCall('ended'));
 
 function callActionHaptic(){ if(navigator.vibrate) navigator.vibrate(15); }
@@ -3209,6 +3369,7 @@ window.addEventListener('beforeunload',()=>{ try{if(currentCallRef&&currentCallI
 window.addEventListener('error',e=>{console.error('ConvoLink error',e.error||e.message);});
 window.addEventListener('unhandledrejection',e=>console.error('ConvoLink rejection',e.reason));
 render();
+/* Deterministic refresh destination: Home, never the previously open chat. */
 setHomeMode(true);
 </script>
 </body>
