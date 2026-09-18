@@ -961,7 +961,7 @@ html,body{background:linear-gradient(145deg,#f7f9fc 0%,#eef3f9 100%);color:var(-
   <div class="drawer-body">
     <div class="drawer-section-label">Profile</div>
     <button class="drawer-item primary" id="menuProfile"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c.9-3.3 3.2-5 7-5s6.1 1.7 7 5"/></svg></span><span class="txt">My Profile<small>Photo, name, UID and sharing</small></span></button>
-    <div class="drawer-divider"></div><div class="drawer-divider"></div>
+    <div class="drawer-divider"></div>
     <div class="drawer-section-label">Account</div>
     <button class="drawer-item logout" id="menuLogout">
       <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></span>
@@ -1157,6 +1157,11 @@ try {
   firebase.initializeApp(firebaseConfig);
   db = firebase.database();
   auth = firebase.auth();
+  // Keep the Firebase login session across refreshes and browser restarts.
+  // The Firebase Auth session is the source of truth; localStorage is only a UI cache.
+  try {
+    auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(e => console.warn('Auth persistence setup:', e));
+  } catch(e) { console.warn('Auth persistence setup:', e); }
   firebaseReady = true;
 } catch(e) { console.error('Firebase init failed', e); }
 
@@ -1205,8 +1210,7 @@ const fileInput = $('fileInput'), cameraInput = $('cameraInput'), qrImageInput =
 const statusChip = $('statusChip'), statusText = $('statusText');
 const headerTitleMain = $('headerTitleMain'), headerTitleStatus = $('headerTitleStatus');
 const topAvatar = $('topAvatar'), drawerAvatar = $('drawerAvatar');
-const drawerName = $('drawerName'), drawerEmail = $('drawerEmail'), drawerMyId = $('drawerMyId');
-const drawerCopyId = $('drawerCopyId');
+const drawerName = $('drawerName'), drawerEmail = $('drawerEmail');
 const drawer = $('drawer'), drawerOverlay = $('drawerOverlay');
 const googleLogoBtn = $('googleLogoBtn'), mainSignInBtn = $('mainSignInBtn');
 const connectModal = $('connectModal'), connectInput = $('connectInput'), connectConfirm = $('connectConfirm');
@@ -1741,7 +1745,8 @@ async function restoreConnection(){
       const profile=c.val();
       chatProfiles.set(profile.uid,{...profile});
       await loadLatestForProfile(chatProfiles.get(profile.uid));
-      setConnected(true,profile.name||'Friend');
+      // Preserve the connection in the chat list, but never auto-open the chat on startup.
+      setConnected(false);
       setHomeMode(true);
     } else { localStorage.removeItem(PARTNER_KEY); localStorage.setItem(LOCAL_ONLY_KEY,'true'); LOCAL_ONLY=true; setConnected(false); setHomeMode(true); }
   }catch(e){ console.error('restore',e); showToast(friendlyFirebaseError(e)); }
@@ -1818,13 +1823,93 @@ function showProfilePreview(target,opts){pendingConnectTarget={target,opts:opts|
 function closeProfilePreview(){profilePreviewModal.classList.remove('open');pendingConnectTarget=null;}
 async function finishProfileConnection(){const p=pendingConnectTarget;if(!p)return;closeProfilePreview();await connectToId(p.target.uid,{...(p.opts||{}),skipPreview:true});}
 async function previewTargetByUid(uid,opts){uid=String(uid||'').trim();if(!signedIn()){showToast('Please sign in with Google first');return;}if(!uid){showToast('Please enter a Firebase UID');return;}if(uid===me.uid){showToast("That's your own Firebase UID!");return;}setStatus('connecting','Finding user…');try{const snap=await db.ref('users/'+uid).once('value');const t=snap.val();if(!t){showToast('User not found — check the Firebase UID');setStatus('','Ready');return;}setStatus('','Ready');showProfilePreview({id:t.id||uid,uid,name:t.name||'ConvoLink user',email:t.email||'',picture:t.picture||null},opts);}catch(e){setStatus('','Ready');showToast('Could not find user: '+friendlyFirebaseError(e));}}
-async function connectToId(uid,opts){opts=opts||{};uid=String(uid||'').trim();if(!signedIn()){showToast('Please sign in with Google first');return;}if(!uid){showToast('Please enter a Firebase UID');return;}if(uid===me.uid){showToast("That's your own Firebase UID!");return;}if(uid===partnerUid){showToast('Already connected');return;}setStatus('connecting','Connecting securely…');try{const snap=await db.ref('users/'+uid).once('value');const target=snap.val();if(!target){showToast('User not found — check the Firebase UID');setStatus('','Ready');return;}if(!opts.skipPreview){setStatus('','Ready');showProfilePreview({id:target.id||uid,uid,name:target.name||'ConvoLink user',email:target.email||'',picture:target.picture||null},opts);return;}const now=firebase.database.ServerValue.TIMESTAMP;const myProfile={id:me.id,uid:me.uid,name:me.name||'Google User',email:me.email||'',picture:me.picture||null};const other={id:target.id||uid,uid,name:target.name||'Friend',email:target.email||'',picture:target.picture||null};const updates={};updates[`connections/${me.uid}/${uid}`]={...other,connectedAt:now};updates[`connections/${uid}/${me.uid}`]={...myProfile,connectedAt:now};await db.ref().update(updates);
+async function connectToId(uid,opts){
+  opts=opts||{};
+  uid=String(uid||'').trim();
+  if(!signedIn()){showToast('Please sign in with Google first');return;}
+  if(!uid){showToast('Please enter a Firebase UID');return;}
+  if(uid===me.uid){showToast("That's your own Firebase UID!");return;}
+  if(uid===partnerUid){showToast('Already connected');return;}
+  if(!db){showToast('Firebase database is not ready');return;}
+  if(connectToId._busy){return;}
+  connectToId._busy=true;
+  setStatus('connecting','Connecting securely…');
+  try{
+    const snap=await db.ref('users/'+uid).once('value');
+    const target=snap.val();
+    if(!target){showToast('User not found — check the Firebase UID');setStatus('','Ready');return;}
+
+    if(!opts.skipPreview){
+      setStatus('','Ready');
+      showProfilePreview({id:target.id||uid,uid,name:target.name||'ConvoLink user',email:target.email||'',picture:target.picture||null},opts);
+      return;
+    }
+
+    const now=firebase.database.ServerValue.TIMESTAMP;
+    const myProfile={id:me.id,uid:me.uid,name:me.name||'Google User',email:me.email||'',picture:me.picture||null};
+    const other={id:target.id||uid,uid,name:target.name||'Friend',email:target.email||'',picture:target.picture||null};
+    const connection={...other,connectedAt:now};
+
+    // First write the connection under the signed-in user's own UID.
+    // This is compatible with Firebase rules that allow each user to write
+    // only their own connection list.
+    await db.ref(`connections/${me.uid}/${uid}`).set(connection);
+
+    // Try to create the reciprocal connection as well. Some Firebase rules
+    // intentionally block a client from writing another user's branch.
+    // In that case create a normal request instead of making Connect fail.
+    let reciprocalCreated=false;
+    try{
+      await db.ref(`connections/${uid}/${me.uid}`).set({...myProfile,connectedAt:now});
+      reciprocalCreated=true;
+    }catch(reciprocalError){
+      console.warn('Reciprocal connection write blocked; using request flow',reciprocalError);
+      try{
+        await db.ref(`requests/${uid}`).push({
+          fromUid:me.uid,
+          fromId:me.id,
+          fromName:me.name||'Google User',
+          fromEmail:me.email||'',
+          fromPicture:me.picture||null,
+          toUid:uid,
+          status:'pending',
+          createdAt:now,
+          source:opts.fromQR?'qr':'uid'
+        });
+      }catch(requestError){
+        // Do not leave a misleading half-connection if neither flow can be written.
+        try{await db.ref(`connections/${me.uid}/${uid}`).remove();}catch{}
+        throw requestError;
+      }
+    }
+
     chatProfiles.set(other.uid,{...other,online:!!target.online,latest:null,unread:0});
     await loadLatestForProfile(chatProfiles.get(other.uid));
-    await selectPartner(other); addSystem(`Connected with ${other.name}`);
-    renderChatList(); setHomeMode(true); setStatus('','Ready');
-    showToast(`Connected with ${other.name}`);
-    if(opts.fromQR)closeScanModal();else closeConnectModal();}catch(e){console.error('connectToId',e);setStatus('','Ready');showToast('Connection failed: '+friendlyFirebaseError(e));}}
+
+    // Never open the chat automatically after Connect. The user opens it
+    // explicitly by tapping the chat row on Home.
+    partnerId=null;partnerUid=null;partnerName='Friend';LOCAL_ONLY=true;
+    localStorage.removeItem(PARTNER_KEY);
+    localStorage.setItem(LOCAL_ONLY_KEY,'true');
+    renderChatList();
+    setHomeMode(true);
+    setConnected(false);
+    setStatus('','Ready');
+
+    if(opts.fromQR) closeScanModal(); else closeConnectModal();
+    if(reciprocalCreated){
+      showToast(`Connected with ${other.name}`);
+    }else{
+      showToast(`Connection request sent to ${other.name}`);
+    }
+  }catch(e){
+    console.error('connectToId',e);
+    setStatus('','Ready');
+    showToast('Connection failed: '+friendlyFirebaseError(e));
+  }finally{
+    connectToId._busy=false;
+  }
+}
 connectConfirm.addEventListener('click',()=>previewTargetByUid(connectInput.value));
 connectInput.addEventListener('keydown',e=>{if(e.key==='Enter')connectConfirm.click();});
 
@@ -2081,8 +2166,7 @@ qrScanClose.addEventListener('click',closeScanModal);scanCancelBtn.addEventListe
 qrImageInput.addEventListener('change',e=>{const f=e.target.files&&e.target.files[0];qrImageInput.value='';if(!f)return;scannerStatus.textContent='Reading image…';scannerStatus.className='scanner-status';const rd=new FileReader();rd.onload=()=>{const img=new Image();img.onload=()=>{const c=document.createElement('canvas');c.width=img.naturalWidth;c.height=img.naturalHeight;const ctx=c.getContext('2d',{willReadFrequently:true});ctx.drawImage(img,0,0);const data=ctx.getImageData(0,0,c.width,c.height);if(typeof jsQR==='undefined'){scannerStatus.textContent='QR reader not loaded';scannerStatus.classList.add('error');return;}const code=jsQR(data.data,c.width,c.height,{inversionAttempts:'attemptBoth'});if(code?.data)handleScanned(code.data);else{scannerStatus.textContent='No QR code found in that image.';scannerStatus.classList.add('error');}};img.onerror=()=>{scannerStatus.textContent='Could not read the image.';scannerStatus.classList.add('error');};img.src=rd.result;};rd.readAsDataURL(f);});
 
 async function copyMyId(){ const id=(signedIn() ? (me?.uid || getFirebaseUid()) : null); if(!id){showToast('Please sign in with Google first');return;} await copyText(id);showToast('Firebase UID copied'); }
-drawerCopyId.addEventListener('click',async e=>{e.stopPropagation();await copyMyId();drawerCopyId.classList.add('done');setTimeout(()=>drawerCopyId.classList.remove('done'),1500);});
-$('menuCopyId').addEventListener('click',async()=>{await copyMyId();closeDrawer();});
+// UID copy is available only from My Profile.
 
 function fillMyProfile(){if(!me)return;pendingProfilePhoto=null;myProfileAvatar.innerHTML=me.picture?'<img src="'+esc(me.picture)+'" alt="">':initials(me.name);profileNameInput.value=me.name||'';profileEmailView.value=me.email||'';profileUidView.value=me.uid||'';if(profilePhotoHint)profilePhotoHint.textContent='Tap the pen to choose a new photo.';}
 function openMyProfile(){closeDrawer();if(!signedIn()){showToast('Please sign in with Google first');return;}fillMyProfile();myProfileModal.classList.add('open');}
@@ -2107,13 +2191,44 @@ $('menuReset').addEventListener('click',async()=>{
   localStorage.removeItem(PARTNER_KEY);localStorage.setItem(LOCAL_ONLY_KEY,'true');render();setConnected(false);showToast('Chat selection reset. Your Firebase account and UID are kept.');closeDrawer();
 });
 
+async function signInWithGoogle(){
+  if(!firebaseReady || !auth){ showToast('Firebase unavailable'); return; }
+  try{
+    await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+    const provider = new firebase.auth.GoogleAuthProvider();
+    provider.setCustomParameters({prompt:'select_account'});
+    await auth.signInWithPopup(provider);
+  }catch(e){
+    console.error('Google sign-in',e);
+    showToast(friendlyFirebaseError(e));
+  }
+}
+
+async function signOutFromApp(){
+  try{
+    if(presenceRef){try{await presenceRef.update({online:false,lastSeen:firebase.database.ServerValue.TIMESTAMP});}catch{}}
+    await auth.signOut();
+  }catch(e){ console.error('Sign out',e); showToast('Sign out failed: '+friendlyFirebaseError(e)); }
+}
+
+googleLogoBtn?.addEventListener('click',()=>{ if(!signedIn()) signInWithGoogle(); });
+mainSignInBtn?.addEventListener('click',()=>{ if(!signedIn()) signInWithGoogle(); });
+$('menuLogout')?.addEventListener('click',()=>{ closeDrawer(); signOutFromApp(); });
+
 if(firebaseReady && auth){
   authUnsub=auth.onAuthStateChanged(async user=>{
     try{
       if(user){
         await ensureUserProfile(user);
         listenForIncomingCalls();
-        paintMe();setConnected(false);render(); loadCallHistory();
+        paintMe();
+        // Always start authenticated sessions on Home after app startup/refresh.
+        // A chat is opened only by an explicit Home chat-row tap.
+        setHomeMode(true);
+        setConnected(false);
+        renderChatList();
+        render();
+        loadCallHistory();
         // Register browser push notifications for incoming calls.
         setupCallNotifications();
         showToast('Signed in · Firebase UID ready');
@@ -2133,7 +2248,7 @@ if(firebaseReady && auth){
         if(firebaseConnectionRef){try{firebaseConnectionRef.off();}catch{} firebaseConnectionRef=null;}
         if(presenceRef){try{presenceRef.update({online:false,lastSeen:firebase.database.ServerValue.TIMESTAMP});}catch{}}
         localStorage.removeItem(ME_KEY);localStorage.removeItem(PARTNER_KEY);localStorage.setItem(LOCAL_ONLY_KEY,'true');
-        drawerName.textContent='Guest User';drawerEmail.textContent='Not signed in';drawerMyId.textContent='—';qrMyId.textContent='—';googleLogoBtn.classList.remove('signed'); if(mainSignInBtn) mainSignInBtn.classList.remove('signed');
+        drawerName.textContent='Guest User';drawerEmail.textContent='Not signed in';qrMyId.textContent='—';googleLogoBtn.classList.remove('signed'); if(mainSignInBtn) mainSignInBtn.classList.remove('signed');
         topAvatar.textContent='?';drawerAvatar.textContent='?';setConnected(false);render();
       }
     }catch(e){
