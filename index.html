@@ -542,7 +542,7 @@ html,body{background:linear-gradient(145deg,#f7f9fc 0%,#eef3f9 100%);color:var(-
 .home-view{display:none;flex:1;min-height:0;overflow:hidden;flex-direction:column;background:linear-gradient(180deg,#f7f9fc 0%,#eef3f8 100%)}
 .app.home-mode .home-view{display:flex}
 .app.home-mode .messages,.app.home-mode .input-bar,.app.home-mode .recording-bar,.app.home-mode .attach-preview{display:none!important}
-.app.home-mode .main-signin{display:flex}
+.app.home-mode .main-signin{display:none!important}
 .app.home-mode .topbar .call-actions{display:none}
 .home-head{padding:13px 14px 8px;flex-shrink:0}
 .home-search{height:48px;border:1px solid #e1e7ef;background:#fff;border-radius:24px;display:flex;align-items:center;gap:10px;padding:0 15px;box-shadow:0 4px 14px rgba(24,39,75,.055)}
@@ -2680,7 +2680,7 @@ async function startWebRTCCall(type){
         const answerSdp=data.answer.sdp||'';
         if(answerSdp && answerSdp!==lastRemoteAnswerSdp){
           (async()=>{
-            try{ currentCallSignalingStatus='active'; stopCallTone(); lastRemoteAnswerSdp=answerSdp; await peerConnection.setRemoteDescription(new RTCSessionDescription(data.answer)); remoteDescriptionReady=true; await flushRemoteCandidates(); setCallStatus('Connecting…'); }
+            try{ currentCallSignalingStatus='active'; stopCallTone(); stopIncomingRingtone(); lastRemoteAnswerSdp=answerSdp; await peerConnection.setRemoteDescription(new RTCSessionDescription(data.answer)); remoteDescriptionReady=true; await flushRemoteCandidates(); setCallStatus('Connecting…'); }
             catch(e){ console.error('remote answer',e); setCallStatus('Reconnecting…'); scheduleIceRestart(); }
           })();
         }
@@ -2725,6 +2725,8 @@ function listenForIncomingCalls(){
   incomingCallsRef.on('child_changed',incomingCallChangedHandler);
 }
 async function acceptIncomingCall(){
+  stopIncomingRingtone();
+  stopCallTone();
   const incoming=incomingCallData;if(!incoming)return;
   stopCallTone();
   incomingCallModal.classList.remove('open');incomingCallData=null;
