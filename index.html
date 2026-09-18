@@ -300,6 +300,14 @@
 .confirm-secondary{background:#f4f6f9;color:var(--ink-2);border:1px solid #e1e6ee}
 .confirm-danger{background:#e64751;color:#fff;border:1px solid #e64751;box-shadow:0 7px 18px rgba(230,71,81,.20)}
 
+  /* ===== MINIMIZED ACTIVE VIDEO CALL ===== */
+  #miniVideoCall{position:fixed;right:12px;bottom:calc(14px + env(safe-area-inset-bottom,0px));width:168px;height:112px;background:#05070c;border:1px solid rgba(255,255,255,.24);border-radius:16px;overflow:hidden;display:none;z-index:1200;box-shadow:0 16px 40px rgba(0,0,0,.42);cursor:pointer}
+  #miniVideoCall.open{display:block}
+  #miniVideoCall .mini-remote{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  #miniVideoCall .mini-local{position:absolute;right:7px;bottom:7px;width:54px;height:72px;object-fit:cover;border:1px solid rgba(255,255,255,.8);border-radius:8px}
+  #miniVideoCall .mini-label{position:absolute;left:8px;top:7px;max-width:112px;padding:4px 7px;border-radius:8px;background:rgba(0,0,0,.55);color:#fff;font-size:10px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;pointer-events:none}
+  @media(max-width:600px){#miniVideoCall{right:10px;bottom:calc(10px + env(safe-area-inset-bottom,0px));width:154px;height:103px;border-radius:14px}#miniVideoCall .mini-local{width:48px;height:64px}}
+
   /* ===== WEBRTC CALL UI ===== */
   .call-overlay{position:fixed;inset:0;background:rgba(8,12,22,.94);display:none;align-items:center;justify-content:center;z-index:500;padding:16px}
   .call-overlay.open{display:flex}
@@ -938,6 +946,13 @@ html,body{background:linear-gradient(145deg,#f7f9fc 0%,#eef3f9 100%);color:var(-
   </div>
 </div>
 
+<!-- Minimized active video call -->
+<div id="miniVideoCall" aria-label="Active video call, tap to return to call">
+  <video class="mini-remote" id="miniRemoteVideo" playsinline autoplay></video>
+  <video class="mini-local" id="miniLocalVideo" playsinline autoplay muted></video>
+  <div class="mini-label" id="miniVideoCallLabel">Video call</div>
+</div>
+
 <!-- Incoming WebRTC Call -->
 <div class="call-overlay" id="incomingCallModal">
   <div class="incoming-call-card">
@@ -1440,6 +1455,8 @@ const attachPreview = $('attachPreview'), apThumb = $('apThumb'), apName = $('ap
 const recordingBar = $('recordingBar'), recTimer = $('recTimer'), recCancel = $('recCancel'), recSend = $('recSend');
 const inputBarMain = $('inputBarMain');
 const callModal = $('callModal'), incomingCallModal = $('incomingCallModal');
+const miniVideoCall=$('miniVideoCall'), miniRemoteVideo=$('miniRemoteVideo'), miniLocalVideo=$('miniLocalVideo'), miniVideoCallLabel=$('miniVideoCallLabel');
+let videoCallMinimized=false;
 const remoteVideo = $('remoteVideo'), localVideo = $('localVideo');
 const callStage = document.querySelector('.call-stage');
 const callPeerAvatar = $('callPeerAvatar'), callPeerName = $('callPeerName'), callPeerStatus = $('callPeerStatus');
@@ -1798,6 +1815,7 @@ document.getElementById('disconnectSpecialCheck')?.addEventListener('change', e=
 async function openChatFromHome(p){
   await selectPartner(p);
   setHomeMode(false);
+  try{history.pushState({convLink:'chat'},'',location.href);}catch(e){}
   render();
 }
 async function refreshChatProfiles(){
@@ -2020,6 +2038,30 @@ if(choiceScanQr) choiceScanQr.addEventListener('click',()=>{
 if(choiceUid) choiceUid.addEventListener('click',()=>{
   closeConnectChoices(); openConnectModal();
 });
+/* ===== ANDROID / MOBILE SYSTEM BACK NAVIGATION =====
+   Home is the root. Temporary UI closes first; active video calls minimize. */
+(function(){
+  const HOME={convLink:'home'},APP={convLink:'app'};
+  try{history.replaceState(HOME,'',location.href);}catch(e){}
+  window.addEventListener('popstate',function(){
+    try{
+      if(currentCallId&&currentCallType==='video'&&callModal?.classList.contains('open')){minimizeActiveVideoCall();history.pushState(homeMode?HOME:APP,'',location.href);return;}
+      if(drawer?.classList.contains('open')){closeDrawer();history.pushState(homeMode?HOME:APP,'',location.href);return;}
+      const modal=document.querySelector('.modal-overlay.open');
+      if(modal){modal.classList.remove('open');if(modal===qrScanModal)stopScanner();history.pushState(homeMode?HOME:APP,'',location.href);return;}
+      if(videoCallMinimized&&currentCallId&&currentCallType==='video'){if(!homeMode){setHomeMode(true);renderChatList();}history.pushState(HOME,'',location.href);return;}
+      if(!homeMode){closeMessageActions?.();closeMessageConfirm?.();setHomeMode(true);renderChatList();history.pushState(HOME,'',location.href);return;}
+      /* Home is the root; Android/browser keeps its normal Back/exit behavior. */
+    }catch(e){console.warn('System back handler failed',e);}
+  });
+  setInterval(()=>{
+    try{const nonHome=!homeMode||!!document.querySelector('.modal-overlay.open')||!!drawer?.classList.contains('open');
+      if(nonHome&&history.state?.convLink==='home')history.pushState(APP,'',location.href);
+      else if(!nonHome&&history.state?.convLink!=='home')history.replaceState(HOME,'',location.href);
+    }catch(e){}
+  },400);
+})();
+
 if(homeBackBtn) homeBackBtn.addEventListener('click',()=>{setHomeMode(true);});
 document.querySelectorAll('[data-home-tab]').forEach(btn=>btn.addEventListener('click',()=>{
   document.querySelectorAll('[data-home-tab]').forEach(x=>x.classList.remove('active'));
@@ -2934,7 +2976,24 @@ function swapCallVideos(){
   applyPreviewPosition(nextPreview);
   renderCrop();
 }
+function minimizeActiveVideoCall(){
+  if(currentCallType!=='video'||!currentCallId||!callModal?.classList.contains('open'))return false;
+  videoCallMinimized=true;
+  miniRemoteVideo.srcObject=remoteVideo?.srcObject||null;
+  miniLocalVideo.srcObject=localVideo?.srcObject||null;
+  miniVideoCallLabel.textContent=partnerName?'Video call · '+partnerName:'Video call';
+  callModal.classList.remove('open'); miniVideoCall.classList.add('open'); return true;
+}
+function restoreMinimizedVideoCall(){
+  if(currentCallType!=='video'||!currentCallId)return;
+  videoCallMinimized=false;
+  remoteVideo.srcObject=miniRemoteVideo.srcObject||remoteVideo.srcObject||null;
+  localVideo.srcObject=miniLocalVideo.srcObject||localVideo.srcObject||null;
+  miniVideoCall.classList.remove('open'); callModal.classList.add('open');
+  remoteVideo.muted=false;remoteVideo.volume=1;applyCallAudioRoute();
+}
 function openCallUI(type, status, picture){
+  videoCallMinimized=false;miniVideoCall.classList.remove('open');
   callSpeakerOn=false;
   callSpeakerBtn?.classList.remove('active');
   setCallMode(type); setCallPeerVisual(partnerName, picture||null); setCallStatus(status||'Connecting…');
@@ -2944,6 +3003,7 @@ function openCallUI(type, status, picture){
   recordingBar.classList.remove('show');
 }
 function closeCallUI(){
+  videoCallMinimized=false;miniVideoCall.classList.remove('open');miniRemoteVideo.srcObject=null;miniLocalVideo.srcObject=null;
   callModal.classList.remove('open');
   incomingCallModal.classList.remove('open');
   if(callStage) callStage.classList.remove('swap-local');
@@ -2959,6 +3019,8 @@ function closeCallUI(){
   callMuteBtn.innerHTML=callIcon('mute',false); callCameraBtn.innerHTML=callIcon('camera',false);
   if(!recordingBar.classList.contains('show')) inputBarMain.classList.remove('hide');
 }
+miniVideoCall.addEventListener('click',restoreMinimizedVideoCall);
+
 function startCallTimer(){ if(!callStartedAt) callStartedAt=Date.now(); clearInterval(callTimer); callTimer=setInterval(()=>{ if(callStartedAt) setCallStatus('Connected · '+fmtDur((Date.now()-callStartedAt)/1000)); },1000); }
 function stopCallTimer(){ clearInterval(callTimer); callTimer=null; callStartedAt=0; }
 function startCallHeartbeat(){ clearInterval(callHeartbeatTimer); callHeartbeatTimer=setInterval(()=>{ if(currentCallRef && currentCallSignalingStatus==='active') currentCallRef.update({lastHeartbeat:firebase.database.ServerValue.TIMESTAMP}).catch(()=>{}); },15000); }
@@ -3371,6 +3433,7 @@ window.addEventListener('unhandledrejection',e=>console.error('ConvoLink rejecti
 render();
 /* Deterministic refresh destination: Home, never the previously open chat. */
 setHomeMode(true);
+try{history.replaceState({convLink:'home'},'',location.href);}catch(e){}
 </script>
 </body>
 </html>
