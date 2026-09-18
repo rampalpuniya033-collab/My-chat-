@@ -1314,37 +1314,56 @@ const connectChoiceModal=$('connectChoiceModal'), choiceMyQr=$('choiceMyQr'), ch
 
 function firebaseUid(uid){ if(!uid) throw new Error('Missing Firebase UID'); return String(uid); }
 
-/* ===== INCOMING CALL RINGTONE ===== */
-let incomingRingTimer = null, incomingRingCtx = null;
+/* ===== INCOMING CALL RINGTONE (generation-guarded) =====
+   Uses a generation counter so stale setInterval callbacks cannot re-trigger the
+   ringtone after the call has been answered/rejected/ended. Also suspends the
+   AudioContext immediately on stop so any already-scheduled burst is silenced. */
+let incomingRingTimer = null, incomingRingCtx = null, incomingRingGeneration = 0;
+
 function stopIncomingRingtone(){
-  if(incomingRingTimer){ clearInterval(incomingRingTimer); incomingRingTimer=null; }
-  try{ if(incomingRingCtx){ incomingRingCtx.close(); } }catch(e){}
-  incomingRingCtx=null;
+  incomingRingGeneration++;              // invalidate any pending playTone callbacks
+  if(incomingRingTimer){
+    try{ clearInterval(incomingRingTimer); }catch(e){}
+    incomingRingTimer = null;
+  }
+  const ctx = incomingRingCtx;
+  incomingRingCtx = null;
+  if(ctx){
+    try{
+      // Immediately silence, then close — close() alone is async on some browsers
+      ctx.suspend().catch(()=>{});
+      ctx.close().catch(()=>{});
+    }catch(e){}
+  }
 }
+
 function playIncomingRingtone(){
   stopIncomingRingtone();
+  const myGen = incomingRingGeneration;   // capture generation AFTER the stop
   try{
-    const AC=window.AudioContext||window.webkitAudioContext;
+    const AC = window.AudioContext || window.webkitAudioContext;
     if(!AC) return;
-    incomingRingCtx=new AC();
-    const ctx=incomingRingCtx;
-    const playTone=()=>{
-      if(!incomingRingCtx) return;
-      const now=ctx.currentTime;
+    incomingRingCtx = new AC();
+    const ctx = incomingRingCtx;
+    const playTone = () => {
+      if(myGen !== incomingRingGeneration) return;      // stale, abort
+      if(!incomingRingCtx || incomingRingCtx !== ctx) return;
+      const now = ctx.currentTime;
       // Original, soft two-note mobile ringtone pattern.
       [[784,0],[988,.16],[1175,.34],[988,.52]].forEach(([f,t])=>{
-        const o=ctx.createOscillator(), g=ctx.createGain();
-        o.type='sine'; o.frequency.setValueAtTime(f,now+t);
-        g.gain.setValueAtTime(.0001,now+t);
-        g.gain.exponentialRampToValueAtTime(.075,now+t+.025);
-        g.gain.exponentialRampToValueAtTime(.0001,now+t+.13);
-        o.connect(g).connect(ctx.destination); o.start(now+t); o.stop(now+t+.15);
+        const o = ctx.createOscillator(), g = ctx.createGain();
+        o.type = 'sine'; o.frequency.setValueAtTime(f, now + t);
+        g.gain.setValueAtTime(.0001, now + t);
+        g.gain.exponentialRampToValueAtTime(.075, now + t + .025);
+        g.gain.exponentialRampToValueAtTime(.0001, now + t + .13);
+        o.connect(g).connect(ctx.destination);
+        o.start(now + t); o.stop(now + t + .15);
       });
     };
     playTone();
-    incomingRingTimer=setInterval(playTone,1700);
+    incomingRingTimer = setInterval(playTone, 1700);
     ctx.resume?.();
-  }catch(e){ console.warn('incoming ringtone',e); }
+  }catch(e){ console.warn('incoming ringtone', e); }
 }
 
 function showToast(msg){ if(String(msg||'').trim()==='Could not establish the call') return; const t=$('toast'); $('toastMsg').textContent=msg; t.classList.add('show'); clearTimeout(t._timer); t._timer=setTimeout(()=>t.classList.remove('show'),3500); }
@@ -2590,36 +2609,65 @@ let previewPositions = {local:null, remote:null};
 let iceRestartTimer = null, callFailureTimer = null, iceRestartInProgress = false, iceRestartAttempts = 0, reconnectStartedAt = 0;
 let callHeartbeatTimer = null, lastRemoteOfferSdp = '', lastRemoteAnswerSdp = '';
 
-let callToneContext = null, callToneTimer = null, callToneMode = null;
-function stopCallTone(){ if(callToneTimer){clearInterval(callToneTimer);callToneTimer=null;} if(callToneContext){try{callToneContext.close();}catch{} callToneContext=null;} callToneMode=null; }
+/* ===== CALL TONES (generation-guarded) =====
+   Same generation-guard pattern as the incoming ringtone. Guarantees that once
+   the call is answered/ended/rejected, no queued burst can re-play. */
+let callToneContext = null, callToneTimer = null, callToneMode = null, callToneGeneration = 0;
+
+function stopCallTone(){
+  callToneGeneration++;                  // invalidate any pending playBurst callbacks
+  if(callToneTimer){
+    try{ clearInterval(callToneTimer); }catch(e){}
+    callToneTimer = null;
+  }
+  const ctx = callToneContext;
+  callToneContext = null;
+  if(ctx){
+    try{
+      ctx.suspend().catch(()=>{});
+      ctx.close().catch(()=>{});
+    }catch(e){}
+  }
+  callToneMode = null;
+}
+
 function startCallTone(mode){
-  stopCallTone(); callToneMode=mode;
+  stopCallTone();
+  callToneMode = mode;
+  const myGen = callToneGeneration;
   try{
-    const AC=window.AudioContext||window.webkitAudioContext;
-    if(!AC)return;
-    callToneContext=new AC();
-    const playBurst=(duration=1.9)=>{
-      if(!callToneContext)return;
-      const now=callToneContext.currentTime;
-      const freqs=mode==='ringback'?[440,480]:[440,480];
-      freqs.forEach(freq=>{
-        const osc=callToneContext.createOscillator();
-        const gain=callToneContext.createGain();
-        osc.type='sine'; osc.frequency.value=freq;
-        gain.gain.setValueAtTime(0.0001,now);
-        gain.gain.exponentialRampToValueAtTime(mode==='ringback'?0.055:0.07,now+0.025);
-        gain.gain.setValueAtTime(mode==='ringback'?0.055:0.07,now+duration-0.06);
-        gain.gain.exponentialRampToValueAtTime(0.0001,now+duration);
-        osc.connect(gain).connect(callToneContext.destination);
-        osc.start(now); osc.stop(now+duration+0.02);
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if(!AC) return;
+    callToneContext = new AC();
+    const ctx = callToneContext;
+    const playBurst = (duration) => {
+      if(myGen !== callToneGeneration) return;
+      if(!callToneContext || callToneContext !== ctx) return;
+      const now = ctx.currentTime;
+      [440, 480].forEach(freq => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine'; osc.frequency.value = freq;
+        gain.gain.setValueAtTime(0.0001, now);
+        gain.gain.exponentialRampToValueAtTime(mode === 'ringback' ? 0.055 : 0.07, now + 0.025);
+        gain.gain.setValueAtTime(mode === 'ringback' ? 0.055 : 0.07, now + duration - 0.06);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+        osc.connect(gain).connect(ctx.destination);
+        osc.start(now); osc.stop(now + duration + 0.02);
       });
     };
-    const duration=mode==='ringback'?1.9:0.9;
-    const interval=mode==='ringback'?6000:2000;
+    const duration = mode === 'ringback' ? 1.9 : 0.9;
+    const interval = mode === 'ringback' ? 6000 : 2000;
     playBurst(duration);
-    callToneTimer=setInterval(()=>playBurst(duration),interval);
-    if(callToneContext.state==='suspended')callToneContext.resume().catch(()=>{});
-  }catch(e){console.warn('call tone',e);}
+    callToneTimer = setInterval(() => playBurst(duration), interval);
+    if(callToneContext.state === 'suspended') callToneContext.resume().catch(()=>{});
+  }catch(e){ console.warn('call tone', e); }
+}
+
+/* Single source of truth for silencing every call-related sound. */
+function stopAllCallSounds(){
+  stopIncomingRingtone();
+  stopCallTone();
 }
 
 function callIcon(kind, active){
@@ -2772,18 +2820,18 @@ async function startWebRTCCall(type){
     setCallStatus(partnerOnline ? 'Ringing…' : 'Calling…');
     callValueHandler=snap=>{
       const data=snap.val();if(!data)return;
-      if(data.status==='active'){ currentCallSignalingStatus='active'; startCallHeartbeat(); stopCallTone(); setCallStatus('Connecting…'); }
+      if(data.status==='active'){ currentCallSignalingStatus='active'; startCallHeartbeat(); stopAllCallSounds(); setCallStatus('Connecting…'); }
       if(data.answer && peerConnection){
         const answerSdp=data.answer.sdp||'';
         if(answerSdp && answerSdp!==lastRemoteAnswerSdp){
           (async()=>{
-            try{ currentCallSignalingStatus='active'; stopCallTone(); stopIncomingRingtone(); lastRemoteAnswerSdp=answerSdp; await peerConnection.setRemoteDescription(new RTCSessionDescription(data.answer)); remoteDescriptionReady=true; await flushRemoteCandidates(); setCallStatus('Connecting…'); }
+            try{ currentCallSignalingStatus='active'; stopAllCallSounds(); lastRemoteAnswerSdp=answerSdp; await peerConnection.setRemoteDescription(new RTCSessionDescription(data.answer)); remoteDescriptionReady=true; await flushRemoteCandidates(); setCallStatus('Connecting…'); }
             catch(e){ console.error('remote answer',e); setCallStatus('Reconnecting…'); scheduleIceRestart(); }
           })();
         }
       }
-      if(data.status==='rejected'){stopCallTone();showToast('Call declined');endWebRTCCall('rejected');}
-      else if(data.status==='ended' || data.status==='cancelled'){showToast('Call ended');endWebRTCCall('ended');}
+      if(data.status==='rejected'){stopAllCallSounds();showToast('Call declined');endWebRTCCall('rejected');}
+      else if(data.status==='ended' || data.status==='cancelled'){stopAllCallSounds();showToast('Call ended');endWebRTCCall('ended');}
     };
     currentCallRef.on('value',callValueHandler);
     setStatus('','Ready');
@@ -2817,18 +2865,31 @@ function listenForIncomingCalls(){
     const data=snap.val(); if(!data) return;
     const status=data.status;
     if(status!=='ended' && status!=='cancelled' && status!=='rejected' && status!=='expired' && status!=='busy') return;
-    if(incomingCallData && incomingCallData.callId===snap.key){ incomingCallData=null; incomingCallModal.classList.remove('open'); stopCallTone(); if(status==='ended' || status==='cancelled') showToast('Caller ended the call'); }
+    if(incomingCallData && incomingCallData.callId===snap.key){
+      incomingCallData=null;
+      incomingCallModal.classList.remove('open');
+      // CRITICAL: stop BOTH the custom incoming ringtone and the call tone.
+      stopAllCallSounds();
+      if(status==='ended' || status==='cancelled') showToast('Caller ended the call');
+    }
   };
   incomingCallsRef.on('child_changed',incomingCallChangedHandler);
 }
 async function acceptIncomingCall(){
-  stopIncomingRingtone();
-  stopCallTone();
-  const incoming=incomingCallData;if(!incoming)return;
-  stopCallTone();
-  incomingCallModal.classList.remove('open');incomingCallData=null;
+  // Stop both ringtone systems BEFORE anything else so the bell cannot
+  // keep ringing while media / signaling are being set up.
+  stopAllCallSounds();
+
+  const incoming=incomingCallData;
+  if(!incoming) return;
+
+  incomingCallModal.classList.remove('open');
+  incomingCallData=null;
   const callId=incoming.callId,data=incoming.data;
-  stopCallTone();
+
+  // Second safety pass in case anything restarted between the two ticks.
+  stopAllCallSounds();
+
   if(currentCallId||peerConnection){showToast('You are already on a call');return;}
   currentCallId=callId;currentCallType=data.type==='video'?'video':'voice';currentCallRole='callee';currentCallCallerUid=data.callerUid;callEnding=false;callStartedAt=0;callHistoryWritten=false;pendingRemoteCandidates=[];remoteDescriptionReady=false;
   partnerUid=data.callerUid;partnerName=data.callerName||'Friend';partnerId=data.callerUid;callPeerPicture=data.callerPicture||null;
@@ -2854,7 +2915,8 @@ async function acceptIncomingCall(){
 }
 async function rejectIncomingCall(){
   const incoming=incomingCallData;if(!incoming)return;
-  stopCallTone(); stopIncomingRingtone();
+  // Stop every call sound immediately (was: stopCallTone(); stopIncomingRingtone();).
+  stopAllCallSounds();
   incomingCallData=null;incomingCallModal.classList.remove('open');
   try{
     await db.ref('calls/'+incoming.callId+'/status').set('rejected');
@@ -2875,7 +2937,8 @@ async function rejectIncomingCall(){
 }
 async function endWebRTCCall(reason='ended',updateRemote=true){
   if(callEnding)return;callEnding=true;
-  stopCallTone(); stopIncomingRingtone();
+  // Stop every possible call sound, including both ringtone systems.
+  stopAllCallSounds();
   clearReconnectTimers();
   stopCallHeartbeat();
   const id=currentCallId,ref=currentCallRef;
