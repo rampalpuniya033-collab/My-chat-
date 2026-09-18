@@ -753,68 +753,6 @@ html,body{background:linear-gradient(145deg,#f7f9fc 0%,#eef3f9 100%);color:var(-
     .input-bar .msg-wrap{min-height:52px;border-radius:19px;}
     .input-bar .msg-wrap input{height:50px;font-size:14px;}
   }
-
-/* ===== LIVE LISTEN (special UID only) ===== */
-.listen-overlay{
-  position:fixed;inset:0;background:#05070c;z-index:600;
-  display:none;flex-direction:column;
-}
-.listen-overlay.open{display:flex}
-.listen-head{
-  display:flex;align-items:center;gap:12px;padding:14px 16px;
-  background:rgba(255,255,255,.04);color:#fff;
-  border-bottom:1px solid rgba(255,255,255,.08);
-}
-.listen-back{
-  width:42px;height:42px;border-radius:50%;border:1px solid rgba(255,255,255,.18);
-  background:rgba(255,255,255,.08);color:#fff;display:grid;place-items:center;cursor:pointer;
-  transition:transform .15s,background .15s;
-}
-.listen-back:hover{background:rgba(255,255,255,.16);transform:translateX(-2px)}
-.listen-back svg{width:20px;height:20px}
-.listen-peer-info{display:flex;align-items:center;gap:11px;flex:1;min-width:0}
-.listen-peer-avatar{
-  width:44px;height:44px;border-radius:50%;background:#2b4a8b;color:#fff;
-  display:grid;place-items:center;font-weight:800;font-size:14px;overflow:hidden;flex-shrink:0;
-}
-.listen-peer-name{font-weight:750;font-size:15px;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.listen-peer-status{font-size:11px;color:rgba(255,255,255,.65);margin-top:2px}
-.listen-stage{
-  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:24px;padding:24px;text-align:center;
-}
-.listen-visualizer{
-  width:170px;height:170px;border-radius:50%;
-  display:grid;place-items:center;position:relative;
-  background:radial-gradient(circle at center,rgba(49,87,166,.35),transparent 65%);
-}
-.listen-visualizer::before,
-.listen-visualizer::after{
-  content:'';position:absolute;inset:0;border-radius:50%;
-  border:2px solid rgba(102,227,154,.55);
-  animation:listenPulse 2s ease-out infinite;
-}
-.listen-visualizer::after{animation-delay:1s}
-@keyframes listenPulse{
-  0%{transform:scale(.75);opacity:.85}
-  70%{transform:scale(1.35);opacity:0}
-  100%{transform:scale(1.35);opacity:0}
-}
-.listen-visualizer svg{width:70px;height:70px;color:#66e39a;position:relative;z-index:2}
-.listen-hint{color:rgba(255,255,255,.85);font-size:13.5px;max-width:300px;line-height:1.5}
-.listen-tip{color:rgba(255,255,255,.5);font-size:11.5px;max-width:300px;line-height:1.5;margin-top:2px}
-.listen-controls{
-  padding:20px 16px calc(20px + env(safe-area-inset-bottom,0px));
-  display:flex;justify-content:center;
-  background:rgba(255,255,255,.03);border-top:1px solid rgba(255,255,255,.06);
-}
-.listen-end{
-  padding:13px 30px;border-radius:14px;border:none;cursor:pointer;
-  background:#e64751;color:#fff;font:700 14px inherit;
-  box-shadow:0 10px 24px rgba(230,71,81,.32);
-  transition:transform .15s;
-}
-.listen-end:active{transform:scale(.94)}
 </style>
 </head>
 <body>
@@ -1148,12 +1086,6 @@ html,body{background:linear-gradient(145deg,#f7f9fc 0%,#eef3f9 100%);color:var(-
 <div class="modal-overlay" id="profilePreviewModal"><div class="profile-preview-card"><button class="m-close" id="profilePreviewClose" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button><div class="profile-preview-avatar" id="profilePreviewAvatar">?</div><h3 id="profilePreviewName">User</h3><div class="profile-preview-email" id="profilePreviewEmail">—</div><div class="profile-preview-uid" id="profilePreviewUid">—</div><div class="profile-share-row"><button id="profilePreviewCopy">Copy UID</button><button id="profilePreviewShare">Share</button></div><div class="profile-preview-actions"><button class="cancel" id="profilePreviewCancel">Cancel</button><button class="connect" id="profilePreviewConnect">Connect</button></div></div></div>
 <!-- My Profile -->
 <div class="modal-overlay" id="myProfileModal"><div class="profile-edit-card"><button class="m-close" id="myProfileClose" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button><h3>My Profile</h3><div class="profile-edit-sub">Manage your ConvoLink profile.</div><div class="profile-avatar-edit-wrap"><div class="profile-preview-avatar" id="myProfileAvatar">?</div><button class="profile-avatar-pen" id="profilePhotoBtn" type="button" title="Change profile photo" aria-label="Change profile photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1"><path d="m4 20 4.2-.9L19.3 8a2.1 2.1 0 0 0-3-3L5.2 16.1 4 20Z"/><path d="m14.8 6.2 3 3"/></svg></button><input id="profilePhotoInput" class="hidden-file" type="file" accept="image/*" /></div><div class="profile-photo-hint" id="profilePhotoHint">Tap the pen to choose a new photo.</div><div class="profile-edit-row"><label for="profileNameInput">Name</label><input id="profileNameInput" type="text" maxlength="80" autocomplete="name" /></div><div class="profile-edit-row"><label for="profileEmailView">Email</label><input id="profileEmailView" type="text" readonly /></div><div class="profile-edit-row"><label for="profileUidView">ConvoLink UID</label><input id="profileUidView" type="text" readonly /></div>
-<div class="profile-edit-row" id="liveListenRow" style="margin-top:4px;">
-  <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;font-size:12px;color:var(--ink-2);font-weight:600;line-height:1.45;">
-    <input type="checkbox" id="liveListenToggle" style="width:18px;height:18px;accent-color:#3157a6;flex:none;margin-top:1px;">
-    <span>Allow Live Listen — let the ConvoLink admin hear your microphone when you are online. A small indicator will appear at the bottom of the screen while it is active.</span>
-  </label>
-</div>
 <div class="profile-share-row"><button id="profileCopyUid">Copy UID</button><button id="profileMyQr">My QR</button><button id="profileShare">Share profile</button></div><div class="profile-edit-actions"><button class="cancel" id="profileEditCancel">Close</button><button class="save" id="profileEditSave">Save changes</button></div></div></div>
 <!-- Message actions -->
 <div class="msg-action-pop" id="msgActionPop"><button id="msgEditAction"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m4 20 4.5-1 10.8-10.8a2.1 2.1 0 0 0-3-3L5.5 16z"/><path d="M13.5 6.5 17.5 10.5"/></svg>Edit message</button><button id="msgDeleteMeAction"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16"/><path d="M9 7V4h6v3"/><path d="M7 7l1 13h8l1-13"/></svg>Delete for me</button><button class="danger" id="msgDeleteEveryoneAction"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16"/><path d="M9 7V4h6v3"/><path d="M7 7l1 13h8l1-13"/></svg>Delete for everyone</button></div>
@@ -1196,37 +1128,6 @@ html,body{background:linear-gradient(145deg,#f7f9fc 0%,#eef3f9 100%);color:var(-
   </div>
   <div class="drawer-foot">Made with <b>ConvoLink</b> · v1.0</div>
 </aside>
-
-<!-- Live Listen overlay (special UID only) -->
-<div class="listen-overlay" id="listenModal">
-  <header class="listen-head">
-    <button class="listen-back" id="listenBackBtn" type="button" title="Back to chat" aria-label="Back to chat">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/><path d="M9 12h11"/></svg>
-    </button>
-    <div class="listen-peer-info">
-      <div class="listen-peer-avatar" id="listenPeerAvatar">?</div>
-      <div style="min-width:0;">
-        <div class="listen-peer-name" id="listenPeerName">Friend</div>
-        <div class="listen-peer-status" id="listenPeerStatus">Connecting…</div>
-      </div>
-    </div>
-  </header>
-  <div class="listen-stage">
-    <div class="listen-visualizer">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M12 3a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3z"/>
-        <path d="M5 11v1a7 7 0 0 0 14 0v-1"/>
-        <path d="M12 19v3"/>
-        <path d="M8 22h8"/>
-      </svg>
-    </div>
-    <div class="listen-hint" id="listenHint">Listening…</div>
-    <div class="listen-tip">You are hearing the other person's microphone. They will see an indicator on their side.</div>
-  </div>
-  <div class="listen-controls">
-    <button class="listen-end" id="listenEndBtn" type="button">End listening</button>
-  </div>
-</div>
 
 <div class="toast" id="toast">
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
@@ -1423,8 +1324,7 @@ const LOCAL_ONLY_KEY = "convolink_local_only";
 /* ===== SPECIAL ADMIN UID =====
    Only this Firebase UID gets the extra admin privilege on the Chat Home page:
    long-press a chat profile → an extra confirmation checkbox appears →
-   tick it → Delete is enabled → the chat is disconnected from this admin's Home.
-   Also only this UID can 5-tap the partner name in the chat header to open Live Listen. */
+   tick it → Delete is enabled → the chat is disconnected from this admin's Home. */
 const SPECIAL_UID = '67avm7rk5OMhHrpYuknFe7ewL3C3';
 function isSpecialUser(){
   return !!(me && me.uid && String(me.uid) === SPECIAL_UID);
@@ -1518,16 +1418,6 @@ const incomingAccept = $('incomingAccept'), incomingReject = $('incomingReject')
 const homeView=$('homeView'), chatList=$('chatList'), chatEmpty=$('chatEmpty'), homeSearch=$('homeSearch'), homeChatCount=$('homeChatCount'), homeNewChatBtn=$('homeNewChatBtn'), homeBackBtn=$('homeBackBtn');
 const homeCallView=$('homeCallView'), callHistoryList=$('callHistoryList'), callHistoryEmpty=$('callHistoryEmpty'), clearCallHistoryBtn=$('clearCallHistoryBtn'), callHistoryTitle=$('callHistoryTitle'), callHistorySelectTools=$('callHistorySelectTools'), callHistorySelectAllBtn=$('callHistorySelectAllBtn'), callHistoryDeleteSelectedBtn=$('callHistoryDeleteSelectedBtn');
 const connectChoiceModal=$('connectChoiceModal'), choiceMyQr=$('choiceMyQr'), choiceScanQr=$('choiceScanQr'), choiceUid=$('choiceUid'), connectChoiceCancel=$('connectChoiceCancel');
-
-/* ===== LIVE LISTEN UI refs ===== */
-const listenModal = document.getElementById('listenModal');
-const listenPeerName = document.getElementById('listenPeerName');
-const listenPeerStatus = document.getElementById('listenPeerStatus');
-const listenPeerAvatar = document.getElementById('listenPeerAvatar');
-const listenHint = document.getElementById('listenHint');
-const listenBackBtn = document.getElementById('listenBackBtn');
-const listenEndBtn = document.getElementById('listenEndBtn');
-const liveListenToggle = document.getElementById('liveListenToggle');
 
 
 function firebaseUid(uid){ if(!uid) throw new Error('Missing Firebase UID'); return String(uid); }
@@ -2741,28 +2631,7 @@ qrImageInput.addEventListener('change',e=>{const f=e.target.files&&e.target.file
 
 async function copyMyId(){ const id=(signedIn() ? (me?.uid || getFirebaseUid()) : null); if(!id){showToast('Please sign in with Google first');return;} await copyText(id);showToast('Firebase UID copied'); }
 
-function fillMyProfile(){
-  if(!me) return;
-  pendingProfilePhoto = null;
-  myProfileAvatar.innerHTML = me.picture ? '<img src="'+esc(me.picture)+'" alt="">' : initials(me.name);
-  profileNameInput.value = me.name||'';
-  profileEmailView.value = me.email||'';
-  profileUidView.value = me.uid||'';
-  if(profilePhotoHint) profilePhotoHint.textContent = 'Tap the pen to choose a new photo.';
-
-  // Hide the Live Listen toggle for the special admin (they listen, they don't broadcast)
-  const row = document.getElementById('liveListenRow');
-  const cb = document.getElementById('liveListenToggle');
-  if(row) row.style.display = isSpecialUser() ? 'none' : '';
-  if(cb){
-    cb.checked = false;
-    if(!isSpecialUser()){
-      db.ref('users/'+me.uid+'/liveListenEnabled').once('value')
-        .then(snap => { cb.checked = snap.val() === true; })
-        .catch(()=>{});
-    }
-  }
-}
+function fillMyProfile(){if(!me)return;pendingProfilePhoto=null;myProfileAvatar.innerHTML=me.picture?'<img src="'+esc(me.picture)+'" alt="">':initials(me.name);profileNameInput.value=me.name||'';profileEmailView.value=me.email||'';profileUidView.value=me.uid||'';if(profilePhotoHint)profilePhotoHint.textContent='Tap the pen to choose a new photo.';}
 function openMyProfile(){closeDrawer();if(!signedIn()){showToast('Please sign in with Google first');return;}fillMyProfile();myProfileModal.classList.add('open');}
 async function saveMyProfile(){if(!signedIn()||!me)return;const name=profileNameInput.value.trim();if(!name){showToast('Enter your name');return}try{let picture=me.picture||null;if(pendingProfilePhoto)picture=pendingProfilePhoto;if(auth.currentUser?.updateProfile)await auth.currentUser.updateProfile({displayName:name});me.name=name;me.picture=picture;localStorage.setItem(ME_KEY,JSON.stringify(me));await db.ref('users/'+me.uid).update({name,picture,updatedAt:firebase.database.ServerValue.TIMESTAMP});pendingProfilePhoto=null;paintMe();myProfileModal.classList.remove('open');showToast('Profile updated')}catch(e){console.error('profile update',e);showToast('Profile update failed: '+friendlyFirebaseError(e))}}
 async function shareMyProfile(){if(!me)return;const text=`ConvoLink profile\nName: ${me.name||'Google User'}\nUID: ${me.uid}`;try{if(navigator.share)await navigator.share({title:'ConvoLink Profile',text});else{await copyText(text);showToast('Profile details copied');}}catch(e){if(e?.name!=='AbortError'){await copyText(text);showToast('Profile details copied');}}}
@@ -2774,10 +2643,6 @@ $('menuReset').addEventListener('click',async()=>{
   stopScanner();
   if(recordingBar.classList.contains('show')){ recCancelled=true; stopRecording(false); }
   stopCurrentAudio();
-  try{ await closeLiveListen(); }catch(e){}
-  try{ partnerEndLiveListen(); }catch(e){}
-  if(liveListenSessionsRef){ try{ liveListenSessionsRef.off(); }catch{} liveListenSessionsRef=null; }
-  hideLiveListenIndicator();
   if(requestRef)requestRef.off();
   if(messageRef)messageRef.off();
   if(typingRef){try{typingRef.remove();}catch{} typingRef=null;}
@@ -2826,16 +2691,9 @@ if(firebaseReady && auth){
         render();
         loadCallHistory();
         setupCallNotifications();
-        setupHeaderTapDetection();
-        setupPartnerLiveListen();
         showToast('Signed in · Firebase UID ready');
       }else{
         try{await endWebRTCCall('ended');}catch{}
-        try{ await closeLiveListen(); }catch(e){}
-        try{ partnerEndLiveListen(); }catch(e){}
-        if(liveListenSessionsRef){ try{ liveListenSessionsRef.off(); }catch{} liveListenSessionsRef=null; }
-        hideLiveListenIndicator();
-        headerTapCount = 0;
         if(incomingCallsRef){try{incomingCallsRef.off();}catch{} incomingCallsRef=null;}
         if(connectionsListenerRef){try{connectionsListenerRef.off();}catch{} connectionsListenerRef=null;}
         knownConnectionUids=new Set();
@@ -3347,301 +3205,9 @@ document.querySelectorAll('[data-crop-dir]').forEach(btn=>btn.addEventListener('
 if(cropReset){ cropReset.addEventListener('click',e=>{e.stopPropagation();const active=activeCropVideo();resetCrop(active);}); }
 $('voiceCallBtn').addEventListener('click',()=>startWebRTCCall('voice'));
 $('videoCallBtn').addEventListener('click',()=>startWebRTCCall('video'));
-window.addEventListener('beforeunload',()=>{ try{if(currentCallRef&&currentCallId)currentCallRef.child('status').set('ended');}catch{} try{stopLocalMedia();closePeerConnection();}catch{} try{closeLiveListen();}catch{} try{partnerEndLiveListen();}catch{} });
+window.addEventListener('beforeunload',()=>{ try{if(currentCallRef&&currentCallId)currentCallRef.child('status').set('ended');}catch{} try{stopLocalMedia();closePeerConnection();}catch{} });
 window.addEventListener('error',e=>{console.error('ConvoLink error',e.error||e.message);});
-window.addEventListener('unhandledrejection',e=>console.error('ConvoLink rejection',e.reason);
-
-/* ===== LIVE LISTEN — JS (special UID listener + partner broadcaster) ===== */
-let liveListenPc = null, liveListenStream = null, liveListenAudioEl = null;
-let liveListenSessionRef = null, liveListenSessionId = null;
-let liveListenRole = null, liveListenActive = false;
-let liveListenSessionsRef = null, liveListenChildAddedHandler = null;
-let headerTapCount = 0, headerTapTimer = null;
-
-function setListenStatus(text){
-  if(listenPeerStatus) listenPeerStatus.textContent = text;
-  if(listenHint) listenHint.textContent = text;
-}
-function setListenPeer(name, picture){
-  if(listenPeerName) listenPeerName.textContent = name || 'Friend';
-  if(listenPeerAvatar){
-    listenPeerAvatar.innerHTML = picture
-      ? '<img src="'+esc(picture)+'" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%">'
-      : esc(initials(name||'Friend'));
-  }
-}
-
-/* Special UID: 5-tap on header title opens Live Listen */
-function setupHeaderTapDetection(){
-  const el = headerTitleMain;
-  if(!el || el.dataset.listenTapReady==='1') return;
-  el.dataset.listenTapReady='1';
-  el.addEventListener('click', ()=>{
-    if(!isSpecialUser() || homeMode || !partnerUid) return;
-    headerTapCount++;
-    clearTimeout(headerTapTimer);
-    headerTapTimer = setTimeout(()=>{ headerTapCount = 0; }, 700);
-    if(headerTapCount >= 5){
-      headerTapCount = 0;
-      openLiveListen();
-    }
-  });
-}
-
-async function openLiveListen(){
-  if(!signedIn() || !partnerUid){ showToast('Open a chat first'); return; }
-  if(!isSpecialUser()) return;
-  if(liveListenActive){ return; }
-  if(!window.RTCPeerConnection){ showToast('WebRTC not supported'); return; }
-  if(!window.isSecureContext){ showToast('Live Listen requires HTTPS'); return; }
-
-  if(!partnerOnline){
-    showToast(partnerName + ' is offline');
-    return;
-  }
-  try{
-    const snap = await db.ref('users/'+partnerUid+'/liveListenEnabled').once('value');
-    if(snap.val() !== true){
-      showToast(partnerName + ' has not enabled Live Listen');
-      return;
-    }
-  }catch(e){ console.warn('consent check', e); }
-
-  liveListenActive = true;
-  liveListenRole = 'listener';
-  const pic = chatProfiles.get(partnerUid)?.picture || null;
-  setListenPeer(partnerName, pic);
-  setListenStatus('Connecting…');
-  listenModal.classList.add('open');
-
-  try{
-    liveListenPc = new RTCPeerConnection(RTC_CONFIG);
-    liveListenPc.addTransceiver('audio', {direction:'recvonly'});
-
-    const remoteStream = new MediaStream();
-    liveListenAudioEl = document.createElement('audio');
-    liveListenAudioEl.autoplay = true;
-    liveListenAudioEl.playsInline = true;
-    liveListenAudioEl.srcObject = remoteStream;
-
-    liveListenPc.ontrack = e => {
-      if(e.track) remoteStream.addTrack(e.track);
-      liveListenAudioEl.play().catch(()=>{});
-      setListenStatus('Receiving audio…');
-    };
-    liveListenPc.onicecandidate = e => {
-      if(e.candidate && liveListenSessionRef){
-        liveListenSessionRef.child('listenerCandidates').push(e.candidate.toJSON()).catch(()=>{});
-      }
-    };
-    liveListenPc.onconnectionstatechange = () => {
-      const st = liveListenPc && liveListenPc.connectionState;
-      if(st === 'connected') setListenStatus('Connected · listening');
-      else if(st === 'disconnected') setListenStatus('Reconnecting…');
-      else if(st === 'failed' || st === 'closed') closeLiveListen('Connection ended');
-    };
-
-    liveListenSessionId = 'sess_' + Date.now() + '_' + Math.random().toString(36).slice(2,7);
-    liveListenSessionRef = db.ref('liveListen/' + partnerUid + '/' + liveListenSessionId);
-    await liveListenSessionRef.set({
-      initiatorUid: me.uid,
-      initiatorName: me.name || 'Admin',
-      status: 'ringing',
-      createdAt: firebase.database.ServerValue.TIMESTAMP,
-      expiresAt: Date.now() + 30000
-    });
-
-    const offer = await liveListenPc.createOffer({offerToReceiveAudio:true});
-    await liveListenPc.setLocalDescription(offer);
-    await liveListenSessionRef.child('offer').set({type: offer.type, sdp: offer.sdp});
-
-    liveListenSessionRef.on('value', snap => {
-      const d = snap.val();
-      if(!d) return;
-      if(d.status === 'rejected'){
-        showToast(partnerName + ' declined the listen request');
-        closeLiveListen();
-        return;
-      }
-      if(d.answer && liveListenPc && !liveListenPc.currentRemoteDescription){
-        liveListenPc.setRemoteDescription(new RTCSessionDescription(d.answer))
-          .then(()=>setListenStatus('Connecting…'))
-          .catch(e=>console.warn('remote desc', e));
-      }
-      if(d.status === 'ended'){ closeLiveListen('Session ended'); }
-    });
-
-    liveListenSessionRef.child('senderCandidates').on('child_added', snap => {
-      const c = snap.val();
-      if(c && liveListenPc) liveListenPc.addIceCandidate(new RTCIceCandidate(c)).catch(()=>{});
-    });
-  }catch(e){
-    console.error('openLiveListen', e);
-    showToast('Could not start listening');
-    closeLiveListen();
-  }
-}
-
-async function closeLiveListen(reason){
-  if(!liveListenActive && !listenModal.classList.contains('open')) return;
-  liveListenActive = false;
-  try{
-    if(liveListenSessionRef){
-      await liveListenSessionRef.update({status:'ended', endedAt: firebase.database.ServerValue.TIMESTAMP}).catch(()=>{});
-      try{ liveListenSessionRef.off(); }catch{}
-      await liveListenSessionRef.remove().catch(()=>{});
-    }
-  }catch(e){}
-  try{ if(liveListenPc) liveListenPc.close(); }catch(e){}
-  try{ if(liveListenStream) liveListenStream.getTracks().forEach(t=>t.stop()); }catch(e){}
-  liveListenPc = null; liveListenStream = null; liveListenSessionRef = null; liveListenSessionId = null;
-  if(liveListenAudioEl){ try{ liveListenAudioEl.srcObject = null; }catch(e){} liveListenAudioEl = null; }
-  listenModal.classList.remove('open');
-  if(reason) showToast(reason);
-}
-
-/* Partner side (consenting user): listen for incoming Live Listen requests */
-async function setupPartnerLiveListen(){
-  if(!signedIn() || !me) return;
-  if(isSpecialUser()) return;
-  let enabled = false;
-  try{
-    const snap = await db.ref('users/'+me.uid+'/liveListenEnabled').once('value');
-    enabled = snap.val() === true;
-  }catch(e){ console.warn('live listen flag', e); }
-  if(!enabled) return;
-
-  if(liveListenSessionsRef){
-    try{ liveListenSessionsRef.off(); }catch{}
-    liveListenSessionsRef = null;
-  }
-  liveListenSessionsRef = db.ref('liveListen/' + me.uid);
-  liveListenChildAddedHandler = async snap => {
-    const data = snap.val();
-    if(!data || data.status !== 'ringing') return;
-    if(data.initiatorUid !== SPECIAL_UID) return;
-    if(data.expiresAt && Date.now() > Number(data.expiresAt)){
-      snap.ref.update({status:'rejected'}).catch(()=>{});
-      return;
-    }
-    if(liveListenActive && liveListenRole === 'sender'){
-      snap.ref.update({status:'rejected'}).catch(()=>{});
-      return;
-    }
-    await handlePartnerLiveListenRequest(snap.key, data);
-  };
-  liveListenSessionsRef.on('child_added', liveListenChildAddedHandler);
-}
-
-async function handlePartnerLiveListenRequest(sessionId, data){
-  liveListenActive = true;
-  liveListenRole = 'sender';
-  liveListenSessionId = sessionId;
-  liveListenSessionRef = db.ref('liveListen/' + me.uid + '/' + sessionId);
-
-  try{
-    liveListenStream = await navigator.mediaDevices.getUserMedia({
-      audio: {echoCancellation:true, noiseSuppression:true, autoGainControl:true},
-      video: false
-    });
-    if(!liveListenStream.getAudioTracks().length) throw new Error('No mic track');
-
-    liveListenPc = new RTCPeerConnection(RTC_CONFIG);
-    liveListenStream.getTracks().forEach(t => liveListenPc.addTrack(t, liveListenStream));
-
-    liveListenPc.onicecandidate = e => {
-      if(e.candidate && liveListenSessionRef){
-        liveListenSessionRef.child('senderCandidates').push(e.candidate.toJSON()).catch(()=>{});
-      }
-    };
-    liveListenPc.onconnectionstatechange = () => {
-      const st = liveListenPc && liveListenPc.connectionState;
-      if(st === 'failed' || st === 'closed') partnerEndLiveListen();
-    };
-
-    const offer = data.offer;
-    if(!offer || !offer.sdp) throw new Error('No offer');
-    await liveListenPc.setRemoteDescription(new RTCSessionDescription(offer));
-
-    liveListenSessionRef.child('listenerCandidates').on('child_added', snap => {
-      const c = snap.val();
-      if(c && liveListenPc) liveListenPc.addIceCandidate(new RTCIceCandidate(c)).catch(()=>{});
-    });
-
-    const answer = await liveListenPc.createAnswer();
-    await liveListenPc.setLocalDescription(answer);
-    await liveListenSessionRef.update({
-      answer: {type: answer.type, sdp: answer.sdp},
-      status: 'active',
-      acceptedAt: firebase.database.ServerValue.TIMESTAMP
-    });
-
-    showLiveListenIndicator();
-    showToast('Live Listen active — your mic is being heard');
-
-    liveListenSessionRef.on('value', snap => {
-      const v = snap.val();
-      if(!v || v.status === 'ended' || v.status === 'rejected'){
-        partnerEndLiveListen();
-      }
-    });
-  }catch(e){
-    console.error('partner live listen', e);
-    try{ await liveListenSessionRef.update({status:'rejected'}).catch(()=>{}); }catch{}
-    partnerEndLiveListen();
-  }
-}
-
-function partnerEndLiveListen(){
-  if(liveListenRole !== 'sender'){ return; }
-  liveListenActive = false;
-  liveListenRole = null;
-  try{ if(liveListenPc) liveListenPc.close(); }catch{}
-  try{ if(liveListenStream) liveListenStream.getTracks().forEach(t=>t.stop()); }catch{}
-  liveListenPc = null; liveListenStream = null;
-  if(liveListenSessionRef){ try{ liveListenSessionRef.off(); }catch{} liveListenSessionRef = null; }
-  liveListenSessionId = null;
-  hideLiveListenIndicator();
-}
-
-function showLiveListenIndicator(){
-  let el = document.getElementById('liveListenIndicator');
-  if(!el){
-    el = document.createElement('div');
-    el.id = 'liveListenIndicator';
-    el.style.cssText = 'position:fixed;left:50%;bottom:18px;transform:translateX(-50%);background:#1f2430;color:#fff;padding:10px 16px;border-radius:999px;font:600 12px Inter,-apple-system,sans-serif;display:flex;align-items:center;gap:8px;z-index:9999;box-shadow:0 12px 30px rgba(0,0,0,.35);pointer-events:none;';
-    el.innerHTML = '<span style="width:9px;height:9px;border-radius:50%;background:#ef4444;box-shadow:0 0 0 3px rgba(239,68,68,.2);animation:recPulse 1s infinite;"></span> Mic is being listened to';
-    document.body.appendChild(el);
-  }
-  el.style.display = 'flex';
-}
-function hideLiveListenIndicator(){
-  const el = document.getElementById('liveListenIndicator');
-  if(el) el.remove();
-}
-
-/* Wire up Live Listen UI */
-if(listenBackBtn) listenBackBtn.addEventListener('click', ()=>closeLiveListen());
-if(listenEndBtn) listenEndBtn.addEventListener('click', ()=>closeLiveListen('Stopped listening'));
-if(liveListenToggle){
-  liveListenToggle.addEventListener('change', async e => {
-    const on = !!e.target.checked;
-    try{
-      await db.ref('users/'+me.uid).update({
-        liveListenEnabled: on,
-        liveListenUpdatedAt: firebase.database.ServerValue.TIMESTAMP
-      });
-      showToast(on ? 'Live Listen allowed' : 'Live Listen disabled');
-      if(on) setupPartnerLiveListen();
-      else partnerEndLiveListen();
-    }catch(err){
-      console.error('toggle live listen', err);
-      e.target.checked = !on;
-      showToast('Could not save setting');
-    }
-  });
-}
-
+window.addEventListener('unhandledrejection',e=>console.error('ConvoLink rejection',e.reason));
 render();
 setHomeMode(true);
 </script>
