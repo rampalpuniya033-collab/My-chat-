@@ -493,6 +493,12 @@ html,body{background:linear-gradient(145deg,#f7f9fc 0%,#eef3f9 100%);color:var(-
   .call-shell{width:min(1180px,100%);height:min(820px,100%);}
 }
 
+/* ===== CONVOLINK CALL FULLSCREEN + PROFILE PHOTO + VOICE 2.0 ===== */
+.profile-avatar-edit-wrap{position:relative;width:96px;height:96px;margin:2px auto 0}.profile-avatar-edit-wrap .profile-preview-avatar{width:96px;height:96px;margin:0;border-radius:26px}.profile-avatar-pen{position:absolute;right:-5px;bottom:-5px;width:34px;height:34px;border-radius:50%;border:3px solid var(--card);background:var(--brand);color:#fff;display:grid;place-items:center;cursor:pointer;box-shadow:0 6px 16px rgba(31,58,114,.28);z-index:2}.profile-avatar-pen svg{width:16px;height:16px}.profile-avatar-pen:active{transform:scale(.92)}.profile-photo-hint{text-align:center;font-size:10.5px;color:var(--muted);margin:8px 0 14px}
+.recording-bar{min-height:76px;padding:10px 14px calc(10px + env(safe-area-inset-bottom,0px));background:var(--card);border-top:1px solid var(--line);align-items:center;gap:10px}.rec-left{display:flex;align-items:center;gap:8px;min-width:54px}.rec-wave-wrap{flex:1;min-width:0;display:flex;align-items:center;gap:9px}.rec-wave-wrap .rec-label{font-size:10px;color:var(--red);font-weight:800;white-space:nowrap}.rec-wave{height:34px;flex:1;min-width:80px;display:flex;align-items:center;justify-content:center;gap:2px;overflow:hidden}.rec-wave span{width:3px;min-width:2px;border-radius:5px;background:var(--brand);opacity:.72;transform-origin:center;transition:height .08s linear,opacity .12s}.rec-wave span.live{opacity:1}.rec-timer{font-family:'SF Mono','Menlo',monospace;font-size:13px;font-weight:800;color:var(--ink);min-width:42px}.rec-dot{width:9px;height:9px;border-radius:50%;background:var(--red);box-shadow:0 0 0 3px rgba(239,68,68,.15);animation:recPulse 1s infinite;flex:none}
+.voice-player{min-width:250px;gap:9px;padding:5px 2px}.voice-wave{height:34px;gap:2px;min-width:120px;position:relative}.voice-wave span{width:2.6px;min-width:2px;border-radius:4px;opacity:.38;transition:opacity .12s ease,transform .12s ease}.voice-wave span.played{opacity:.98}.voice-wave .voice-progress-dot{position:absolute;top:50%;left:0;width:7px;height:7px;border-radius:50%;background:currentColor;transform:translate(-50%,-50%);opacity:0;pointer-events:none;transition:left .08s linear,opacity .12s}.voice-player.is-playing .voice-progress-dot{opacity:1}.voice-duration{font-size:10.5px;min-width:48px;text-align:right;font-variant-numeric:tabular-nums}.voice-speed{min-width:30px}
+@media(min-width:720px){.call-overlay{padding:0!important;align-items:stretch;justify-content:stretch}.call-shell{width:100vw!important;height:100vh!important;max-width:none!important;max-height:none!important;border-radius:0!important;border:0!important;box-shadow:none!important}.call-head{height:74px;padding:0 28px}.call-stage{min-height:0}.call-controls{min-height:82px;padding:16px 24px}.call-control{width:52px;height:52px}.call-audio-avatar{width:150px;height:150px;font-size:46px}#localVideo{width:190px;max-width:22%;right:24px;bottom:24px;border-radius:18px}.call-stage.swap-local #remoteVideo{width:190px;max-width:22%;right:24px;bottom:24px;border-radius:18px}}
+@media(max-width:600px){.recording-bar{gap:7px}.rec-wave-wrap{gap:6px}.rec-wave-wrap .rec-label{display:none}.rec-wave span{width:2px}.voice-player{min-width:225px}.voice-wave{min-width:105px}}
 /* ===== PRO CHAT ACTIONS / VOICE PLAYER ===== */
 .msg{position:relative;-webkit-user-select:none;user-select:none;touch-action:pan-y}
 .msg-menu-btn{display:none!important}
@@ -502,26 +508,6 @@ html,body{background:linear-gradient(145deg,#f7f9fc 0%,#eef3f9 100%);color:var(-
 .profile-preview-card{width:min(390px,100%);background:var(--card);border-radius:26px;padding:24px 20px 18px;box-shadow:0 30px 80px rgba(0,0,0,.28);text-align:center;position:relative}.profile-preview-avatar{width:86px;height:86px;border-radius:24px;background:var(--blue-soft);color:var(--brand);display:grid;place-items:center;margin:4px auto 13px;font-size:30px;font-weight:800;overflow:hidden}.profile-preview-avatar img{width:100%;height:100%;object-fit:cover}.profile-preview-card h3{font-size:19px;margin-bottom:4px}.profile-preview-email{font-size:12px;color:var(--muted);margin-bottom:14px;word-break:break-all}.profile-preview-uid{font:700 12px 'SF Mono','Menlo',monospace;background:#f4f6fa;border:1px solid var(--line);border-radius:11px;padding:10px;margin-bottom:16px;color:var(--ink-2);word-break:break-all}.profile-preview-actions{display:flex;gap:8px}.profile-preview-actions button{flex:1;padding:12px;border-radius:12px;border:0;font:700 13px inherit;cursor:pointer}.profile-preview-actions .cancel{background:#f3f5f8;color:#596275}.profile-preview-actions .connect{background:var(--brand);color:#fff}.profile-share-row{display:flex;gap:8px;margin:12px 0}.profile-share-row button{flex:1;border:1px solid var(--line);background:#f7f8fa;color:var(--ink-2);border-radius:10px;padding:9px;font:700 11px inherit;cursor:pointer}.profile-edit-card{width:min(400px,100%);background:var(--card);border-radius:24px;padding:22px 20px 18px;box-shadow:0 28px 75px rgba(0,0,0,.25);position:relative}.profile-edit-card h3{font-size:18px;margin-bottom:5px}.profile-edit-sub{font-size:12px;color:var(--muted);margin-bottom:16px}.profile-edit-row{display:flex;flex-direction:column;gap:6px;margin-bottom:13px}.profile-edit-row label{font-size:11px;font-weight:700;color:var(--ink-2)}.profile-edit-row input{height:44px;border:1px solid var(--line);border-radius:11px;padding:0 12px;outline:none;font:500 13px inherit;color:var(--ink);background:#fafbfd}.profile-edit-row input:focus{border-color:#9db2e1;box-shadow:0 0 0 3px rgba(49,87,166,.08)}.profile-edit-actions{display:flex;gap:8px;margin-top:5px}.profile-edit-actions button{flex:1;padding:12px;border-radius:12px;border:0;font:700 13px inherit;cursor:pointer}.profile-edit-actions .cancel{background:#f3f5f8;color:#596275}.profile-edit-actions .save{background:var(--brand);color:#fff}
 @media(max-width:600px){.msg-action-pop{min-width:180px}.voice-player{min-width:205px}.voice-wave span{width:2.7px}}
 
-
-/* ===== MOBILE OTP VERIFICATION ===== */
-.phone-verify-card{margin:14px 0 2px;padding:14px;border:1px solid #dfe6f1;border-radius:16px;background:#f8faff}
-.phone-verify-head{display:flex;align-items:center;gap:10px;margin-bottom:10px}
-.phone-verify-icon{width:38px;height:38px;border-radius:11px;background:#eaf1ff;color:var(--brand);display:grid;place-items:center;flex:none}
-.phone-verify-icon svg{width:19px;height:19px}
-.phone-verify-title{font-size:13px;font-weight:800;color:var(--ink)}
-.phone-verify-sub{font-size:10.5px;color:var(--muted);margin-top:2px}
-.phone-status-badge{margin-left:auto;font-size:10px;font-weight:800;padding:5px 8px;border-radius:999px;background:#fff0f1;color:#d9434d;white-space:nowrap}
-.phone-status-badge.verified{background:#e8f8f0;color:#138a55}
-.phone-verify-input{width:100%;height:44px;border:1px solid var(--line);border-radius:11px;padding:0 12px;outline:none;font:500 13px inherit;color:var(--ink);background:#fff}
-.phone-verify-input:focus{border-color:#9db2e1;box-shadow:0 0 0 3px rgba(49,87,166,.08)}
-.phone-verify-actions{display:flex;gap:8px;margin-top:9px}
-.phone-verify-actions button{flex:1;height:42px;border-radius:11px;border:0;font:700 12.5px inherit;cursor:pointer}
-.phone-send{background:var(--brand);color:#fff}.phone-resend{background:#eef3ff;color:var(--brand);border:1px solid #d8e2f8!important}
-.phone-otp-row{display:none;margin-top:9px;gap:8px}.phone-otp-row.show{display:flex}
-.phone-otp-row input{flex:1;text-align:center;letter-spacing:5px;font-weight:800}
-.phone-verify-message{font-size:10.5px;line-height:1.45;margin-top:8px;color:var(--muted);min-height:15px}
-.phone-verify-message.error{color:var(--red);font-weight:700}.phone-verify-message.ok{color:var(--green);font-weight:700}
-#phoneRecaptcha{min-height:0}
 
 </style>
 </head>
@@ -592,16 +578,7 @@ html,body{background:linear-gradient(145deg,#f7f9fc 0%,#eef3f9 100%);color:var(-
     <input type="file" id="qrImageInput" class="hidden-file" accept="image/*" />
   </div>
 
-  <div class="recording-bar" id="recordingBar">
-    <div class="rec-info">
-      <span class="rec-dot"></span>
-      <span class="rec-label">Recording</span>
-      <span class="rec-timer" id="recTimer">0:00</span>
-      <span class="rec-hint" id="recHint">Tap ✓ to send, ✕ to cancel</span>
-    </div>
-    <button class="rec-btn cancel" id="recCancel" title="Cancel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-    <button class="rec-btn send" id="recSend" title="Send voice message"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
-  </div>
+  <div class="recording-bar" id="recordingBar"><div class="rec-left"><span class="rec-dot"></span><span class="rec-timer" id="recTimer">0:00</span></div><div class="rec-wave-wrap"><span class="rec-label">Recording</span><div class="rec-wave" id="recWave" aria-hidden="true"></div></div><button class="rec-btn cancel" id="recCancel" title="Delete recording" aria-label="Delete recording"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 7h16"/><path d="M9 7V4h6v3"/><path d="M7 7l1 13h10l1-13"/><path d="M10 11v5M14 11v5"/></svg></button><button class="rec-btn send" id="recSend" title="Send voice message" aria-label="Send voice message"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21.8 2.6 10.5 13.9"/><path d="M21.8 2.6 10.5 13.9"/><path d="m21.8 2.6-7.2 18-4.1-6.7-6.7-4.1 18-7.2Z"/></svg></button></div>
 </div>
 
 <!-- WebRTC Call Modal -->
@@ -734,25 +711,7 @@ html,body{background:linear-gradient(145deg,#f7f9fc 0%,#eef3f9 100%);color:var(-
 <!-- Profile Preview -->
 <div class="modal-overlay" id="profilePreviewModal"><div class="profile-preview-card"><button class="m-close" id="profilePreviewClose" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button><div class="profile-preview-avatar" id="profilePreviewAvatar">?</div><h3 id="profilePreviewName">User</h3><div class="profile-preview-email" id="profilePreviewEmail">—</div><div class="profile-preview-uid" id="profilePreviewUid">—</div><div class="profile-share-row"><button id="profilePreviewCopy">Copy UID</button><button id="profilePreviewShare">Share</button></div><div class="profile-preview-actions"><button class="cancel" id="profilePreviewCancel">Cancel</button><button class="connect" id="profilePreviewConnect">Connect</button></div></div></div>
 <!-- My Profile -->
-<div class="modal-overlay" id="myProfileModal"><div class="profile-edit-card"><button class="m-close" id="myProfileClose" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button><h3>My Profile</h3><div class="profile-edit-sub">Manage your ConvoLink profile.</div><div class="profile-preview-avatar" id="myProfileAvatar">?</div><div class="profile-edit-row"><label for="profileNameInput">Name</label><input id="profileNameInput" type="text" maxlength="80" autocomplete="name" /></div><div class="profile-edit-row"><label for="profileEmailView">Email</label><input id="profileEmailView" type="text" readonly /></div><div class="profile-edit-row"><label for="profileUidView">ConvoLink UID</label><input id="profileUidView" type="text" readonly /></div>
-<div class="phone-verify-card">
-  <div class="phone-verify-head">
-    <div class="phone-verify-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="2" width="12" height="20" rx="2"/><line x1="9" y1="18" x2="15" y2="18"/><path d="M9 6h6"/></svg></div>
-    <div><div class="phone-verify-title">Mobile Number</div><div class="phone-verify-sub">Verify your number with SMS OTP</div></div>
-    <span class="phone-status-badge" id="phoneStatusBadge">Not verified</span>
-  </div>
-  <input class="phone-verify-input" id="profilePhoneInput" type="tel" inputmode="tel" autocomplete="tel" placeholder="+91 9876543210" maxlength="16" />
-  <div class="phone-verify-actions">
-    <button class="phone-send" id="sendPhoneOtpBtn" type="button">Send OTP</button>
-    <button class="phone-resend" id="resendPhoneOtpBtn" type="button" style="display:none">Resend OTP</button>
-  </div>
-  <div class="phone-otp-row" id="phoneOtpRow">
-    <input class="phone-verify-input" id="profileOtpInput" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="6-digit OTP" />
-    <button class="phone-send" id="verifyPhoneOtpBtn" type="button">Verify</button>
-  </div>
-  <div id="phoneRecaptcha"></div>
-  <div class="phone-verify-message" id="phoneVerifyMessage"></div>
-</div>
+<div class="modal-overlay" id="myProfileModal"><div class="profile-edit-card"><button class="m-close" id="myProfileClose" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button><h3>My Profile</h3><div class="profile-edit-sub">Manage your ConvoLink profile.</div><div class="profile-avatar-edit-wrap"><div class="profile-preview-avatar" id="myProfileAvatar">?</div><button class="profile-avatar-pen" id="profilePhotoBtn" type="button" title="Change profile photo" aria-label="Change profile photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1"><path d="m4 20 4.2-.9L19.3 8a2.1 2.1 0 0 0-3-3L5.2 16.1 4 20Z"/><path d="m14.8 6.2 3 3"/></svg></button><input id="profilePhotoInput" class="hidden-file" type="file" accept="image/*" /></div><div class="profile-photo-hint" id="profilePhotoHint">Tap the pen to choose a new photo.</div><div class="profile-edit-row"><label for="profileNameInput">Name</label><input id="profileNameInput" type="text" maxlength="80" autocomplete="name" /></div><div class="profile-edit-row"><label for="profileEmailView">Email</label><input id="profileEmailView" type="text" readonly /></div><div class="profile-edit-row"><label for="profileUidView">ConvoLink UID</label><input id="profileUidView" type="text" readonly /></div>
 <div class="profile-share-row"><button id="profileCopyUid">Copy UID</button><button id="profileMyQr">My QR</button><button id="profileShare">Share profile</button></div><div class="profile-edit-actions"><button class="cancel" id="profileEditCancel">Close</button><button class="save" id="profileEditSave">Save changes</button></div></div></div>
 <!-- Message actions -->
 <div class="msg-action-pop" id="msgActionPop"><button id="msgEditAction"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m4 20 4.5-1 10.8-10.8a2.1 2.1 0 0 0-3-3L5.5 16z"/><path d="M13.5 6.5 17.5 10.5"/></svg>Edit message</button><button id="msgDeleteMeAction"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16"/><path d="M9 7V4h6v3"/><path d="M7 7l1 13h8l1-13"/></svg>Delete for me</button><button class="danger" id="msgDeleteEveryoneAction"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16"/><path d="M9 7V4h6v3"/><path d="M7 7l1 13h8l1-13"/></svg>Delete for everyone</button></div>
@@ -968,6 +927,7 @@ let partnerOnline = false, partnerPresenceRef = null;
 
 /* ===== VOICE RECORDING ===== */
 let mediaRecorder = null, recChunks = [], recStream = null, recTimerInterval = null, recStartTime = 0, recSeconds = 0, recCancelled = false;
+let recAudioContext=null, recAnalyser=null, recWaveSource=null, recWaveRAF=null, pendingProfilePhoto=null;
 const REC_MAX_SECONDS = 60;
 const REC_MAX_BYTES = 600 * 1024;
 
@@ -978,11 +938,6 @@ let hiddenMessageKeys = new Set();
 let callSpeakerOn = false;
 
 const $ = id => document.getElementById(id);
-const phoneInput=$('profilePhoneInput'), profileOtpInput=$('profileOtpInput'), phoneStatusBadge=$('phoneStatusBadge'), phoneOtpRow=$('phoneOtpRow'), sendPhoneOtpBtn=$('sendPhoneOtpBtn'), resendPhoneOtpBtn=$('resendPhoneOtpBtn'), verifyPhoneOtpBtn=$('verifyPhoneOtpBtn'), phoneVerifyMessage=$('phoneVerifyMessage');
-sendPhoneOtpBtn.addEventListener('click',sendProfilePhoneOTP);
-resendPhoneOtpBtn.addEventListener('click',sendProfilePhoneOTP);
-verifyPhoneOtpBtn.addEventListener('click',verifyProfilePhoneOTP);
-
 const messagesEl = $('messages'), emptyState = $('emptyState');
 const msgInput = $('msgInput'), sendBtn = $('sendBtn');
 const attachBtn = $('attachBtn'), cameraBtn = $('cameraBtn'), micBtn = $('micBtn');
@@ -1016,6 +971,7 @@ const callSpeakerBtn=$('callSpeakerBtn');
 const msgActionPop=$('msgActionPop'),msgEditAction=$('msgEditAction'),msgDeleteMeAction=$('msgDeleteMeAction'),msgDeleteEveryoneAction=$('msgDeleteEveryoneAction');
 const profilePreviewModal=$('profilePreviewModal'),profilePreviewAvatar=$('profilePreviewAvatar'),profilePreviewName=$('profilePreviewName'),profilePreviewEmail=$('profilePreviewEmail'),profilePreviewUid=$('profilePreviewUid'),profilePreviewConnect=$('profilePreviewConnect');
 const myProfileModal=$('myProfileModal'),myProfileAvatar=$('myProfileAvatar'),profileNameInput=$('profileNameInput'),profileEmailView=$('profileEmailView'),profileUidView=$('profileUidView');
+const profilePhotoBtn=$('profilePhotoBtn'),profilePhotoInput=$('profilePhotoInput'),profilePhotoHint=$('profilePhotoHint'),recWave=$('recWave');
 const incomingCameraSwitch = $('incomingCameraSwitch');
 const callCropToggle = $('callCropToggle'), callCropPanel = $('callCropPanel'), cropZoom = $('cropZoom'), cropReset = $('cropReset');
 const incomingCallAvatar = $('incomingCallAvatar'), incomingCallName = $('incomingCallName'), incomingCallType = $('incomingCallType');
@@ -1220,6 +1176,10 @@ function emitTyping(){
   typingTimeout=setTimeout(()=>{ if(typingRef) typingRef.remove().catch(()=>{}); }, 2500);
 }
 
+function initRecordingWave(){if(!recWave)return;recWave.innerHTML='';for(let i=0;i<38;i++){const b=document.createElement('span');b.style.height=(7+Math.round(Math.random()*17))+'px';recWave.appendChild(b)}try{recAudioContext=new (window.AudioContext||window.webkitAudioContext)();recAnalyser=recAudioContext.createAnalyser();recAnalyser.fftSize=128;recWaveSource=recAudioContext.createMediaStreamSource(recStream);recWaveSource.connect(recAnalyser);const data=new Uint8Array(recAnalyser.frequencyBinCount),bars=[...recWave.children];const draw=()=>{if(!recAnalyser)return;recAnalyser.getByteFrequencyData(data);bars.forEach((b,i)=>{const idx=Math.min(data.length-1,Math.floor(i/data.length*data.length));const amp=data[idx]/255;b.style.height=(6+Math.max(2,Math.round(amp*27)))+'px';b.classList.toggle('live',amp>.18)});recWaveRAF=requestAnimationFrame(draw)};draw()}catch(e){console.warn('recording waveform',e)}}
+function stopRecordingWave(){if(recWaveRAF)cancelAnimationFrame(recWaveRAF);recWaveRAF=null;try{recWaveSource?.disconnect()}catch{}try{recAudioContext?.close()}catch{}recWaveSource=null;recAnalyser=null;recAudioContext=null}
+function renderFallbackRecordingWave(){if(!recWave)return;recWave.innerHTML='';for(let i=0;i<38;i++){const b=document.createElement('span');b.style.height=(7+Math.round(Math.abs(Math.sin(i*.73))*20))+'px';recWave.appendChild(b)}}
+function resizeProfileImage(file,max=360){return new Promise((resolve,reject)=>{const rd=new FileReader();rd.onerror=()=>reject(new Error('Could not read image'));rd.onload=()=>{const img=new Image();img.onerror=()=>reject(new Error('Could not decode image'));img.onload=()=>{const scale=Math.min(1,max/Math.max(img.naturalWidth,img.naturalHeight));const c=document.createElement('canvas');c.width=Math.max(1,Math.round(img.naturalWidth*scale));c.height=Math.max(1,Math.round(img.naturalHeight*scale));const ctx=c.getContext('2d');ctx.drawImage(img,0,0,c.width,c.height);resolve(c.toDataURL('image/jpeg',.82))};img.src=rd.result};rd.readAsDataURL(file)})}
 async function startRecording(){
   if(!signedIn()){ showToast('Please sign in with Google first'); return; }
   if(!partnerUid){ showToast('Connect with a friend first'); return; }
@@ -1237,7 +1197,7 @@ async function startRecording(){
   mediaRecorder.onstop = handleRecordingStop;
   try{ mediaRecorder.start(); }catch(e){ console.error(e); showToast('Recording failed'); stopRecStream(); return; }
   recStartTime = Date.now(); recSeconds = 0; recTimer.textContent = '0:00';
-  recordingBar.classList.add('show'); inputBarMain.classList.add('hide');
+  recordingBar.classList.add('show'); inputBarMain.classList.add('hide'); initRecordingWave();
   recTimerInterval = setInterval(()=>{ recSeconds = Math.floor((Date.now()-recStartTime)/1000); recTimer.textContent = fmtDur(recSeconds); if(recSeconds >= REC_MAX_SECONDS) stopRecording(true); }, 200);
 }
 function stopRecStream(){ if(recStream){ try{ recStream.getTracks().forEach(t=>t.stop()); }catch{} recStream=null; } }
@@ -1246,7 +1206,7 @@ function stopRecording(sendIt){
   if(mediaRecorder && mediaRecorder.state!=='inactive'){ mediaRecorder._sendIt = !!sendIt; try{ mediaRecorder.stop(); }catch(e){ console.error(e); cleanupRecUI(); stopRecStream(); } }
   else { cleanupRecUI(); stopRecStream(); }
 }
-function cleanupRecUI(){ recordingBar.classList.remove('show'); inputBarMain.classList.remove('hide'); recTimer.textContent = '0:00'; }
+function cleanupRecUI(){ stopRecordingWave(); recordingBar.classList.remove('show'); inputBarMain.classList.remove('hide'); recTimer.textContent = '0:00'; renderFallbackRecordingWave(); }
 async function handleRecordingStop(){
   const sendIt = mediaRecorder && mediaRecorder._sendIt;
   stopRecStream(); cleanupRecUI();
@@ -1273,10 +1233,10 @@ recSend.addEventListener('click', ()=>{ recCancelled = false; stopRecording(true
 
 function voiceBars(seed){const out=[];let x=0;for(let i=0;i<32;i++){x=(x*9301+49297+(seed||17))%233280;out.push(Math.round(7+(x/233280)*19));}return out;}
 function setVoiceIcon(player,playing){const btn=player.querySelector('.voice-play-btn');if(!btn)return;btn.innerHTML=playing?'<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>':'<svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20"/></svg>';}
-function updateVoiceProgress(player,audio){const pct=audio.duration&&isFinite(audio.duration)?audio.currentTime/audio.duration:0;player.querySelectorAll('.voice-wave span').forEach((b,i)=>b.classList.toggle('played',i<(pct*32)));const d=player.querySelector('.voice-duration');if(d)d.textContent=fmtDur(audio.currentTime)+' / '+fmtDur(audio.duration||player.dataset.total||0);}
+function updateVoiceProgress(player,audio){const pct=audio.duration&&isFinite(audio.duration)?audio.currentTime/audio.duration:0;const bars=player.querySelectorAll('.voice-wave span');bars.forEach((b,i)=>b.classList.toggle('played',i<(pct*bars.length)));const dot=player.querySelector('.voice-progress-dot');if(dot)dot.style.left=(pct*100)+'%';const d=player.querySelector('.voice-duration');if(d)d.textContent=fmtDur(audio.currentTime)+' / '+fmtDur(audio.duration||player.dataset.total||0);}
 function cycleVoiceSpeed(player){const next=currentVoiceSpeed===1?1.5:currentVoiceSpeed===1.5?2:1;currentVoiceSpeed=next;if(currentAudio)currentAudio.playbackRate=next;const b=player.querySelector('.voice-speed');if(b)b.textContent=next+'x';showToast('Playback speed '+next+'x');}
-function stopCurrentAudio(){if(currentAudio){try{currentAudio.pause();}catch{}}if(currentPlayerEl){setVoiceIcon(currentPlayerEl,false);currentPlayerEl.querySelectorAll('.voice-wave span').forEach(b=>b.classList.remove('played'));const d=currentPlayerEl.querySelector('.voice-duration');if(d)d.textContent=fmtDur(Number(currentPlayerEl.dataset.total||0));}currentAudio=null;currentPlayerEl=null;currentVoiceSpeed=1;}
-function toggleVoice(player){const src=player.dataset.src;if(!src)return;if(currentPlayerEl===player&&currentAudio&&!currentAudio.paused){stopCurrentAudio();return;}stopCurrentAudio();const audio=new Audio(src);audio.preload='metadata';audio.playbackRate=currentVoiceSpeed;audio.onloadedmetadata=()=>updateVoiceProgress(player,audio);audio.ontimeupdate=()=>updateVoiceProgress(player,audio);audio.onended=()=>{setVoiceIcon(player,false);if(currentAudio===audio){currentAudio=null;currentPlayerEl=null;currentVoiceSpeed=1;}};audio.onerror=()=>{showToast('Could not play voice');setVoiceIcon(player,false);};currentAudio=audio;currentPlayerEl=player;audio.play().then(()=>setVoiceIcon(player,true)).catch(err=>{console.error(err);showToast('Playback failed');setVoiceIcon(player,false);});}
+function stopCurrentAudio(){if(currentAudio){try{currentAudio.pause()}catch{}}if(currentPlayerEl){currentPlayerEl.classList.remove('is-playing');setVoiceIcon(currentPlayerEl,false);currentPlayerEl.querySelectorAll('.voice-wave span').forEach(b=>b.classList.remove('played'));const dot=currentPlayerEl.querySelector('.voice-progress-dot');if(dot)dot.style.left='0%';const d=currentPlayerEl.querySelector('.voice-duration');if(d)d.textContent=fmtDur(Number(currentPlayerEl.dataset.total||0))}currentAudio=null;currentPlayerEl=null;currentVoiceSpeed=1;}
+function toggleVoice(player){const src=player.dataset.src;if(!src)return;if(currentPlayerEl===player&&currentAudio&&!currentAudio.paused){stopCurrentAudio();return}stopCurrentAudio();const audio=new Audio(src);audio.preload='metadata';audio.playbackRate=currentVoiceSpeed;audio.onloadedmetadata=()=>updateVoiceProgress(player,audio);audio.ontimeupdate=()=>updateVoiceProgress(player,audio);audio.onended=()=>{player.classList.remove('is-playing');setVoiceIcon(player,false);const dot=player.querySelector('.voice-progress-dot');if(dot)dot.style.left='100%';if(currentAudio===audio){currentAudio=null;currentPlayerEl=null;currentVoiceSpeed=1}};audio.onerror=()=>{showToast('Could not play voice');player.classList.remove('is-playing');setVoiceIcon(player,false)};currentAudio=audio;currentPlayerEl=player;audio.play().then(()=>{player.classList.add('is-playing');setVoiceIcon(player,true)}).catch(err=>{console.error(err);showToast('Playback failed');setVoiceIcon(player,false)})}
 
 function closeRequestModal(){ if(requestModalEl){ requestModalEl.remove(); requestModalEl=null; } setTimeout(showNextRequest,80); }
 async function listenRequests(){
@@ -1432,6 +1392,7 @@ function updateChatTypingIndicator(){
   }
 }
 
+async function buildActualVoiceWave(player){const src=player?.dataset?.src,wave=player?.querySelector('.voice-wave');if(!src||!wave||wave.dataset.decoded==='1')return;try{const response=await fetch(src),buffer=await response.arrayBuffer(),AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;const ctx=new AC(),audio=await ctx.decodeAudioData(buffer.slice(0)),data=audio.getChannelData(0),count=42,step=Math.max(1,Math.floor(data.length/count)),bars=[];for(let i=0;i<count;i++){const start=i*step,end=Math.min(data.length,(i+1)*step);let peak=0,sum=0,n=0;for(let j=start;j<end;j+=Math.max(1,Math.floor((end-start)/45))){const a=Math.abs(data[j]||0);peak=Math.max(peak,a);sum+=a;n++}const rms=n?sum/n:0;bars.push(Math.max(5,Math.min(31,Math.round((peak*.72+rms*.65)*31))))}wave.querySelectorAll('span').forEach((b,i)=>{if(bars[i])b.style.height=bars[i]+'px'});wave.dataset.decoded='1';try{ctx.close()}catch{}}catch(e){}}
 function render(){
   const all=getMsgs();
   messagesEl.innerHTML='';
@@ -1456,8 +1417,8 @@ function render(){
       if(m.media&&m.media.type==='image') inner+=`<img class="msg-media" src="${m.media.data}" data-full="${m.media.data}" />`;
       else if(m.media&&m.media.type==='file') inner+=`<div class="file-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg><a href="${m.media.data}" download="${esc(m.media.name)}">${esc(m.media.name)}</a></div>`;
       else if(m.media&&m.media.type==='voice'){
-        const dur=Number(m.media.duration||0),bars=voiceBars(String(m._key||m.time||'').length+dur);
-        inner+=`<div class="voice-player" data-src="${m.media.data}" data-total="${dur}"><button class="voice-play-btn" type="button" aria-label="Play voice message"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20"/></svg></button><div class="voice-wave">${bars.map(h=>`<span style="height:${h}px"></span>`).join('')}</div><button class="voice-speed" type="button">1x</button><span class="voice-duration">${fmtDur(dur)}</span></div>`;
+        const dur=Number(m.media.duration||0),bars=voiceBars(String(m._key||m.time||'').length+dur).slice(0,42);
+        inner+=`<div class="voice-player" data-src="${m.media.data}" data-total="${dur}"><button class="voice-play-btn" type="button" aria-label="Play voice message"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20"/></svg></button><div class="voice-wave">${bars.map(h=>`<span style="height:${h}px"></span>`).join('')}<i class="voice-progress-dot"></i></div><button class="voice-speed" type="button">1x</button><span class="voice-duration">${fmtDur(dur)}</span></div>`;
       }
       if(m.text) inner+=esc(m.text);
       const tick=mine?`<span class="tick ${m.status==='read'?'read':''}">${m.status==='read'?'✓✓':'✓'}</span>`:'';
@@ -1469,6 +1430,7 @@ function render(){
     messagesEl.appendChild(div);
   });
   messagesEl.querySelectorAll('.voice-player').forEach(player=>{
+    buildActualVoiceWave(player);
     player.querySelector('.voice-play-btn')?.addEventListener('click',e=>{e.stopPropagation();toggleVoice(player);});
     player.querySelector('.voice-speed')?.addEventListener('click',e=>{e.stopPropagation();cycleVoiceSpeed(player);});
     player.querySelector('.voice-wave')?.addEventListener('click',e=>{
@@ -1620,95 +1582,12 @@ async function copyMyId(){ const id=(signedIn() ? (me?.uid || getFirebaseUid()) 
 drawerCopyId.addEventListener('click',async e=>{e.stopPropagation();await copyMyId();drawerCopyId.classList.add('done');setTimeout(()=>drawerCopyId.classList.remove('done'),1500);});
 $('menuCopyId').addEventListener('click',async()=>{await copyMyId();closeDrawer();});
 
-function updatePhoneVerificationUI(){
-  const user=auth?.currentUser;
-  const phone=user?.phoneNumber||'';
-  if(!phone){
-    phoneStatusBadge.textContent='Not verified';
-    phoneStatusBadge.classList.remove('verified');
-    phoneInput.value=''; phoneInput.disabled=false;
-    sendPhoneOtpBtn.style.display=''; resendPhoneOtpBtn.style.display='none';
-    return;
-  }
-  phoneStatusBadge.textContent='Verified';
-  phoneStatusBadge.classList.add('verified');
-  phoneInput.value=phone; phoneInput.disabled=true;
-  sendPhoneOtpBtn.style.display='none'; resendPhoneOtpBtn.style.display='none';
-  phoneOtpRow.classList.remove('show');
-  phoneVerifyMessage.textContent='Mobile number verified and linked to this account.';
-  phoneVerifyMessage.className='phone-verify-message ok';
-}
-
-function phoneErrorMessage(e){
-  const c=e?.code||'';
-  if(c.includes('auth/invalid-phone-number')) return 'Enter a valid mobile number in international format, e.g. +919876543210.';
-  if(c.includes('auth/invalid-verification-code')) return 'Incorrect OTP. Please check the SMS and try again.';
-  if(c.includes('auth/code-expired')) return 'OTP expired. Please request a new OTP.';
-  if(c.includes('auth/too-many-requests')) return 'Too many attempts. Please wait and try again later.';
-  if(c.includes('auth/quota-exceeded')) return 'SMS quota reached. Please try again later.';
-  if(c.includes('auth/provider-already-linked')) return 'A phone number is already linked to this account.';
-  if(c.includes('auth/credential-already-in-use')) return 'This mobile number is already linked to another account.';
-  if(c.includes('auth/operation-not-allowed')) return 'Phone sign-in is not enabled in Firebase Authentication.';
-  if(c.includes('auth/unauthorized-domain')) return 'This website domain is not authorized in Firebase Authentication.';
-  if(c.includes('auth/requires-recent-login')) return 'Please sign in again, then verify your mobile number.';
-  return e?.message||'OTP verification failed. Please try again.';
-}
-
-async function setupPhoneRecaptcha(){
-  if(window.phoneRecaptchaVerifier) return window.phoneRecaptchaVerifier;
-  window.phoneRecaptchaVerifier=new firebase.auth.RecaptchaVerifier('phoneRecaptcha',{size:'invisible'});
-  await window.phoneRecaptchaVerifier.render();
-  return window.phoneRecaptchaVerifier;
-}
-
-async function sendProfilePhoneOTP(){
-  if(!signedIn()||!auth?.currentUser){showToast('Please sign in first');return;}
-  const phone=phoneInput.value.trim().replace(/\s+/g,'');
-  if(!/^\+[1-9]\d{7,14}$/.test(phone)){phoneVerifyMessage.textContent='Use international format, for example +919876543210.';phoneVerifyMessage.className='phone-verify-message error';return;}
-  try{
-    sendPhoneOtpBtn.disabled=true; resendPhoneOtpBtn.disabled=true;
-    phoneVerifyMessage.textContent='Sending OTP…';phoneVerifyMessage.className='phone-verify-message';
-    const verifier=await setupPhoneRecaptcha();
-    const provider=new firebase.auth.PhoneAuthProvider(auth);
-    window.phoneVerificationId=await provider.verifyPhoneNumber({phoneNumber:phone,session:await auth.currentUser.getIdToken(true)},verifier);
-    window.phonePendingNumber=phone;
-    phoneOtpRow.classList.add('show');
-    sendPhoneOtpBtn.style.display='none'; resendPhoneOtpBtn.style.display='';
-    phoneVerifyMessage.textContent='OTP sent to '+phone+'.';phoneVerifyMessage.className='phone-verify-message';
-    profileOtpInput.focus();
-  }catch(e){
-    console.error('phone otp send',e);
-    phoneVerifyMessage.textContent=phoneErrorMessage(e);phoneVerifyMessage.className='phone-verify-message error';
-    try{window.phoneRecaptchaVerifier?.clear();}catch{} window.phoneRecaptchaVerifier=null;
-    sendPhoneOtpBtn.disabled=false; resendPhoneOtpBtn.disabled=false;
-  }
-}
-
-async function verifyProfilePhoneOTP(){
-  const code=profileOtpInput.value.trim();
-  if(!window.phoneVerificationId){phoneVerifyMessage.textContent='Send an OTP first.';phoneVerifyMessage.className='phone-verify-message error';return;}
-  if(!/^\d{6}$/.test(code)){phoneVerifyMessage.textContent='Enter the 6-digit OTP.';phoneVerifyMessage.className='phone-verify-message error';return;}
-  try{
-    verifyPhoneOtpBtn.disabled=true;
-    phoneVerifyMessage.textContent='Verifying…';phoneVerifyMessage.className='phone-verify-message';
-    const credential=firebase.auth.PhoneAuthProvider.credential(window.phoneVerificationId,code);
-    await auth.currentUser.linkWithCredential(credential);
-    await auth.currentUser.reload();
-    updatePhoneVerificationUI();
-    await db.ref('users/'+auth.currentUser.uid).update({phoneNumber:auth.currentUser.phoneNumber||window.phonePendingNumber,phoneVerified:true,phoneVerifiedAt:firebase.database.ServerValue.TIMESTAMP,updatedAt:firebase.database.ServerValue.TIMESTAMP});
-    if(me){me.phoneNumber=auth.currentUser.phoneNumber||window.phonePendingNumber;localStorage.setItem(ME_KEY,JSON.stringify(me));}
-    phoneVerifyMessage.textContent='Mobile number verified successfully.';phoneVerifyMessage.className='phone-verify-message ok';
-    window.phoneVerificationId=null;window.phonePendingNumber=null;
-  }catch(e){
-    console.error('phone otp verify',e);
-    phoneVerifyMessage.textContent=phoneErrorMessage(e);phoneVerifyMessage.className='phone-verify-message error';
-  }finally{verifyPhoneOtpBtn.disabled=false;}
-}
-
-function fillMyProfile(){if(!me)return;updatePhoneVerificationUI();myProfileAvatar.innerHTML=me.picture?'<img src="'+esc(me.picture)+'" alt="">':initials(me.name);profileNameInput.value=me.name||'';profileEmailView.value=me.email||'';profileUidView.value=me.uid||'';}
+function fillMyProfile(){if(!me)return;pendingProfilePhoto=null;myProfileAvatar.innerHTML=me.picture?'<img src="'+esc(me.picture)+'" alt="">':initials(me.name);profileNameInput.value=me.name||'';profileEmailView.value=me.email||'';profileUidView.value=me.uid||'';if(profilePhotoHint)profilePhotoHint.textContent='Tap the pen to choose a new photo.';}
 function openMyProfile(){closeDrawer();if(!signedIn()){showToast('Please sign in with Google first');return;}fillMyProfile();myProfileModal.classList.add('open');}
-async function saveMyProfile(){if(!signedIn()||!me)return;const name=profileNameInput.value.trim();if(!name){showToast('Enter your name');return;}try{if(auth.currentUser?.updateProfile)await auth.currentUser.updateProfile({displayName:name,photoURL:me.picture||null});me.name=name;localStorage.setItem(ME_KEY,JSON.stringify(me));await db.ref('users/'+me.uid).update({name,updatedAt:firebase.database.ServerValue.TIMESTAMP});paintMe();myProfileModal.classList.remove('open');showToast('Profile updated');}catch(e){showToast('Profile update failed: '+friendlyFirebaseError(e));}}
+async function saveMyProfile(){if(!signedIn()||!me)return;const name=profileNameInput.value.trim();if(!name){showToast('Enter your name');return}try{let picture=me.picture||null;if(pendingProfilePhoto)picture=pendingProfilePhoto;if(auth.currentUser?.updateProfile)await auth.currentUser.updateProfile({displayName:name});me.name=name;me.picture=picture;localStorage.setItem(ME_KEY,JSON.stringify(me));await db.ref('users/'+me.uid).update({name,picture,updatedAt:firebase.database.ServerValue.TIMESTAMP});pendingProfilePhoto=null;paintMe();myProfileModal.classList.remove('open');showToast('Profile updated')}catch(e){console.error('profile update',e);showToast('Profile update failed: '+friendlyFirebaseError(e))}}
 async function shareMyProfile(){if(!me)return;const text=`ConvoLink profile\nName: ${me.name||'Google User'}\nUID: ${me.uid}`;try{if(navigator.share)await navigator.share({title:'ConvoLink Profile',text});else{await copyText(text);showToast('Profile details copied');}}catch(e){if(e?.name!=='AbortError'){await copyText(text);showToast('Profile details copied');}}}
+profilePhotoBtn?.addEventListener('click',()=>profilePhotoInput?.click());
+profilePhotoInput?.addEventListener('change',async e=>{const file=e.target.files?.[0];e.target.value='';if(!file)return;if(!file.type.startsWith('image/')){showToast('Please choose an image');return}if(file.size>8*1024*1024){showToast('Photo is too large. Choose an image under 8 MB.');return}try{profilePhotoHint.textContent='Preparing photo…';const data=await resizeProfileImage(file,360);pendingProfilePhoto=data;myProfileAvatar.innerHTML='<img src="'+esc(data)+'" alt="">';profilePhotoHint.textContent='New photo selected. Tap Save changes to keep it.';showToast('Profile photo ready')}catch(err){console.error(err);profilePhotoHint.textContent='Could not prepare that photo.';showToast('Could not load photo')}});
 $('menuProfile').addEventListener('click',openMyProfile);$('myProfileClose').addEventListener('click',()=>myProfileModal.classList.remove('open'));$('profileEditCancel').addEventListener('click',()=>myProfileModal.classList.remove('open'));$('profileEditSave').addEventListener('click',saveMyProfile);$('profileCopyUid').addEventListener('click',copyMyId);$('profileMyQr').addEventListener('click',()=>{myProfileModal.classList.remove('open');if(signedIn()){qrShowModal.classList.add('open');setTimeout(drawMyQR,60);}});$('profileShare').addEventListener('click',shareMyProfile);myProfileModal.addEventListener('click',e=>{if(e.target===myProfileModal)myProfileModal.classList.remove('open');});profilePreviewConnect.addEventListener('click',finishProfileConnection);$('profilePreviewClose').addEventListener('click',closeProfilePreview);$('profilePreviewCancel').addEventListener('click',closeProfilePreview);profilePreviewModal.addEventListener('click',e=>{if(e.target===profilePreviewModal)closeProfilePreview();});$('profilePreviewCopy').addEventListener('click',async()=>{if(pendingConnectTarget?.target?.uid){await copyText(pendingConnectTarget.target.uid);showToast('UID copied');}});$('profilePreviewShare').addEventListener('click',async()=>{const t=pendingConnectTarget?.target;if(!t)return;const text=`ConvoLink profile\nName: ${t.name}\nUID: ${t.uid}`;try{if(navigator.share)await navigator.share({title:'ConvoLink Profile',text});else{await copyText(text);showToast('Profile copied');}}catch(e){}});
 
 $('menuClearChats').addEventListener('click', async ()=>{
